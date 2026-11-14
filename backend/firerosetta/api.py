@@ -20,7 +20,7 @@ from pydantic import BaseModel
 from starlette.middleware.gzip import GZipMiddleware
 
 from .config import COUNTRIES, GRID_DEG, MANIFEST, PROCESSED, STAGED
-from .risk import GRID_LEVELS_KM, RiskMonitor
+from .risk import GRID_LEVELS_KM, RiskMonitor, count_visible_grid
 
 app = FastAPI(title="FireRosetta - harmonized MODIS/VIIRS burning calendar")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
@@ -61,6 +61,10 @@ class HotspotQuery(Area):
 
 class RiskQuery(Area):
     grid_km: int = 10
+
+
+class RiskViewQuery(RiskQuery):
+    bounds: list[float]
 
 
 def _geom(area: Area):
@@ -123,7 +127,7 @@ def risk(response: Response, country: str = "Turkey", grid_km: int = 10,
     if country not in COUNTRIES:
         raise HTTPException(400, "Select a supported country.")
     if grid_km not in GRID_LEVELS_KM:
-        raise HTTPException(400, "Grid size must be 5 or 10 km.")
+        raise HTTPException(400, "Grid size must be 5, 10 or 20 km.")
     response.headers["Cache-Control"] = "no-store"
     bounds = None
     if view is not None:
@@ -142,13 +146,28 @@ def risk(response: Response, country: str = "Turkey", grid_km: int = 10,
 @app.post("/risk")
 def risk_area(query: RiskQuery, response: Response):
     if query.grid_km not in GRID_LEVELS_KM:
-        raise HTTPException(400, "Grid size must be 5 or 10 km.")
+        raise HTTPException(400, "Grid size must be 5, 10 or 20 km.")
     geometry = _geom(query)
     if geometry is None:
         raise HTTPException(400, "Draw an area on the map or select a bounding box.")
     response.headers["Cache-Control"] = "no-store"
     try:
         return RISK_MONITOR.get_area(geometry.__geo_interface__, grid_km=query.grid_km)
+    except ValueError as error:
+        raise HTTPException(400, str(error)) from None
+
+
+@app.post("/risk/grid-count")
+def risk_grid_count(query: RiskViewQuery):
+    if query.grid_km not in GRID_LEVELS_KM:
+        raise HTTPException(400, "Grid size must be 5, 10 or 20 km.")
+    geometry = _geom(query)
+    if geometry is None:
+        if query.country not in COUNTRIES:
+            raise HTTPException(400, "Select a supported country or draw an area.")
+        geometry = shapely.box(*COUNTRIES[query.country])
+    try:
+        return {"total_cells": count_visible_grid(geometry.__geo_interface__, query.bounds, query.grid_km)}
     except ValueError as error:
         raise HTTPException(400, str(error)) from None
 

@@ -26,7 +26,7 @@ from .config import COUNTRIES, FIRMS, SNPP_END
 from .fetch import UA, _availability, _load_key
 from .ingest import MASK_DEG, MASK_MIN
 
-GRID_LEVELS_KM = (5, 10)
+GRID_LEVELS_KM = (5, 10, 20)
 CACHE_SECONDS = 300
 MAX_DATA_AGE_DAYS = 1
 HISTORY_FIRST = 2013  # first complete S-NPP calendar year
@@ -34,7 +34,7 @@ HISTORY_LAST = int(SNPP_END[:4]) - 1
 
 
 class MetricGrid:
-    """One fixed UTM lattice per selection: 10 -> 5 km nests exactly.
+    """One fixed UTM lattice per selection: 20 -> 10 -> 5 km nests exactly.
 
     Distances are nominal projected metres; small ground-scale distortion is expected
     away from the central meridian. Never substitute degrees for kilometres.
@@ -71,7 +71,10 @@ class MetricGrid:
         empty = {"type": "FeatureCollection", "features": []}
         if w >= e or s >= n:
             return empty
-        east, north = self.forward.transform([w, e, e, w], [s, s, n, n])
+        # Geographic rectangle edges curve in UTM; corners alone can omit a strip
+        # of cells inside a wide selection, including cells in the view counter.
+        perimeter = shapely.get_coordinates(shapely.segmentize(box(w, s, e, n), 0.05))
+        east, north = self.forward.transform(perimeter[:, 0], perimeter[:, 1])
         size = self.metres
         x0, x1 = math.floor(min(east) / size), math.ceil(max(east) / size)
         y0, y1 = math.floor(min(north) / size), math.ceil(max(north) / size)
@@ -90,6 +93,55 @@ class MetricGrid:
 @lru_cache(maxsize=30)
 def metric_grid(country, km=10):
     return MetricGrid(country, km)
+
+
+def risk_region(geometry):
+    region = shape(geometry)
+    if region.geom_type not in ("Polygon", "MultiPolygon") or region.is_empty or not region.is_valid:
+        raise ValueError("Draw a valid area.")
+    w, s, e, n = region.bounds
+    if not all(math.isfinite(value) for value in region.bounds) or not (-180 <= w < e <= 180 and -85 <= s < n <= 85):
+        raise ValueError("Invalid area coordinates.")
+    if e - w > 25 or n - s > 40:
+        raise ValueError("For 5 km detail, select a smaller area (at most 25 degrees longitude and 40 degrees latitude).")
+    countries = [name for name, extent in COUNTRIES.items() if region.intersects(box(*extent))]
+    if not countries:
+        raise ValueError("The selection is outside the loaded historical coverage. Choose an area in or near Türkiye, Greece, Spain, Portugal, Italy or Argentina.")
+    return region, countries
+
+
+def count_visible_grid(geometry, bounds, grid_km=10):
+    """Count all cells, including empty ones, without reading fire data or calling NASA."""
+    if len(bounds) != 4 or not all(math.isfinite(value) for value in bounds):
+        raise ValueError("Invalid map bounds.")
+    w, s, e, n = bounds
+    if not (-180 <= w < e <= 180 and -85 <= s < n <= 85):
+        raise ValueError("Invalid map bounds.")
+    region, _ = risk_region(geometry)
+    grid = MetricGrid("view", grid_km, region.bounds)
+    visible = region.intersection(box(w, s, e, n))
+    if visible.is_empty or visible.area == 0:
+        return 0
+    # Densify before projection so curved geographic edges cannot hide candidate rows.
+    coordinates = shapely.get_coordinates(shapely.segmentize(visible, 0.05))
+    east, north = grid.forward.transform(coordinates[:, 0], coordinates[:, 1])
+    size = grid.metres
+    x0, x1 = math.floor(min(east) / size) - 1, math.ceil(max(east) / size) + 1
+    y0, y1 = math.floor(min(north) / size) - 1, math.ceil(max(north) / size) + 1
+    width = x1 - x0
+    count = 0
+    shapely.prepare(visible)
+    # Bound temporary memory even when a whole country is visible.
+    for start in range(0, width * (y1 - y0), 2048):
+        index = np.arange(start, min(start + 2048, width * (y1 - y0)))
+        xs, ys = (x0 + index % width) * size, (y0 + index // width) * size
+        eastings = np.stack([xs, xs + size, xs + size, xs, xs], axis=-1)
+        northings = np.stack([ys, ys, ys + size, ys + size, ys], axis=-1)
+        lons, lats = grid.inverse.transform(eastings, northings)
+        polygons = shapely.polygons(np.round(np.stack([lons, lats], axis=-1), 7))
+        # A shared edge alone has no visible cell area. Holes and clipped selections count correctly.
+        count += int(np.count_nonzero(shapely.intersects(visible, polygons) & ~shapely.touches(visible, polygons)))
+    return count
 
 
 @dataclass(frozen=True)
@@ -214,18 +266,8 @@ class RiskMonitor:
 
     def get_area(self, geometry, today=None, grid_km=10):
         today = today or dt.date.today()
-        region = shape(geometry)
-        if region.geom_type not in ("Polygon", "MultiPolygon") or region.is_empty or not region.is_valid:
-            raise ValueError("Draw a valid area.")
+        region, countries = risk_region(geometry)
         bounds = region.bounds
-        w, s, e, n = bounds
-        if not all(math.isfinite(value) for value in bounds) or not (-180 <= w < e <= 180 and -85 <= s < n <= 85):
-            raise ValueError("Invalid area coordinates.")
-        if e - w > 25 or n - s > 40:
-            raise ValueError("For 5 km detail, select a smaller area (at most 25 degrees longitude and 40 degrees latitude).")
-        countries = [name for name, extent in COUNTRIES.items() if region.intersects(box(*extent))]
-        if not countries:
-            raise ValueError("The selection is outside the loaded historical coverage. Choose an area in or near Türkiye, Greece, Spain, Portugal, Italy or Argentina.")
         area_id = "area-" + hashlib.sha256(region.wkb).hexdigest()[:16]
         key = (area_id, today, grid_km)
         with self.lock:

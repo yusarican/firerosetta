@@ -4,9 +4,10 @@ from unittest.mock import Mock, patch
 
 import duckdb
 import httpx
-from shapely.geometry import shape
+from shapely.geometry import shape, mapping
+import shapely
 
-from firerosetta.risk import Observation, RiskMonitor, Snapshot, load_live, metric_grid, prioritize, summarize
+from firerosetta.risk import MetricGrid, Observation, RiskMonitor, Snapshot, count_visible_grid, load_live, metric_grid, prioritize, summarize
 
 
 TODAY = dt.date(2026, 11, 14)
@@ -124,8 +125,8 @@ class RiskTests(unittest.TestCase):
         self.assertAlmostEqual(x1 - x0, 5000, delta=0.03)
         self.assertAlmostEqual(y2 - y1, 5000, delta=0.03)
 
-    def test_grid_never_exceeds_ten_kilometres(self):
-        for size in (20, 40, 80):
+    def test_grid_supports_twenty_kilometres_and_rejects_larger_sizes(self):
+        for size in (40, 80):
             with self.assertRaises(ValueError):
                 metric_grid("Turkey", size)
         self.assertEqual(metric_grid("Turkey").km, 10)
@@ -133,8 +134,10 @@ class RiskTests(unittest.TestCase):
         self.assertEqual(monitor.get("Turkey", TODAY)["grid_km"], 10)
         polygon = {"type": "Polygon", "coordinates": [[[28,38],[28.2,38],[28.2,38.2],[28,38.2],[28,38]]]}
         self.assertEqual(monitor.get_area(polygon, TODAY)["grid_km"], 10)
+        self.assertEqual(monitor.get("Turkey", TODAY, grid_km=20)["grid_km"], 20)
+        self.assertEqual(monitor.get_area(polygon, TODAY, grid_km=20)["grid_km"], 20)
         with self.assertRaises(ValueError):
-            monitor.get_area(polygon, TODAY, grid_km=20)
+            monitor.get_area(polygon, TODAY, grid_km=40)
 
     def test_refinement_uses_point_coordinates_and_reuses_live_snapshot(self):
         parent, child = metric_grid("Turkey", 10), metric_grid("Turkey", 5)
@@ -198,6 +201,52 @@ class RiskTests(unittest.TestCase):
             snapshot = load_live("Turkey", TODAY)
         self.assertEqual(len(snapshot.observations), 1)
         self.assertEqual(snapshot.through, TODAY)
+
+    def test_visible_grid_includes_empty_cells_and_clips_to_the_view(self):
+        grid = MetricGrid("test", 10, (32.8, 38, 33.4, 38.4))
+        x, y = grid.key(33.05, 38.05)
+        a = shape(grid.shape(x, y)[0])
+        b = shape(grid.shape(x + 3, y)[0])
+        geometry = mapping(shapely.union_all([a, b]))
+        bounds = shape(geometry).bounds
+        self.assertEqual(count_visible_grid(geometry, bounds), 2)
+        self.assertEqual(count_visible_grid(geometry, a.bounds), 1)
+        self.assertEqual(count_visible_grid(geometry, (40, 40, 41, 41)), 0)
+
+    def test_visible_grid_respects_holes_and_counts_each_cell_once(self):
+        grid = MetricGrid("test", 10, (32.8, 38, 33.4, 38.4))
+        x, y = grid.key(33.05, 38.05)
+        cells = [shape(grid.shape(x + dx, y + dy)[0]) for dx in range(3) for dy in range(3)]
+        centre = shape(grid.shape(x + 1, y + 1)[0])
+        ring = shapely.union_all(cells).difference(centre)
+        self.assertEqual(count_visible_grid(mapping(ring), ring.bounds), 8)
+        fine = MetricGrid("test", 5, (32.8, 38, 33.4, 38.4))
+        children = shapely.union_all([shape(fine.shape(2 * x + dx, 2 * y + dy)[0]) for dx in range(2) for dy in range(2)])
+        self.assertEqual(count_visible_grid(mapping(children), children.bounds, 5), 4)
+
+    def test_visible_grid_rejects_invalid_bounds_and_oversized_grid(self):
+        polygon = {"type": "Polygon", "coordinates": [[[33,38],[33.2,38],[33.2,38.2],[33,38.2],[33,38]]]}
+        for bounds in ((0, 0, 1), (33, 38, float("nan"), 39), (34, 38, 33, 39)):
+            with self.assertRaises(ValueError):
+                count_visible_grid(polygon, bounds)
+        with self.assertRaises(ValueError):
+            count_visible_grid(polygon, (33, 38, 34, 39), 40)
+
+    def test_visible_grid_counts_twenty_kilometre_cells(self):
+        grid = MetricGrid("test", 20, (32.8, 38, 33.4, 38.4))
+        x, y = grid.key(33.05, 38.05)
+        geometry = grid.shape(x, y)[0]
+        self.assertEqual(count_visible_grid(geometry, shape(geometry).bounds, 20), 1)
+
+    def test_neutral_lattice_covers_curved_edges_of_a_wide_selection(self):
+        grid = metric_grid("Turkey", 10)
+        lines = grid.lattice(grid.bounds)["features"][0]["geometry"]["coordinates"]
+        coords = [point for line in lines for point in line]
+        east, north = grid.forward.transform(*zip(*coords))
+        central_south = grid.forward.transform(33, grid.bounds[1])
+        self.assertLessEqual(min(north), central_south[1])
+        self.assertLessEqual(min(east), central_south[0])
+        self.assertGreaterEqual(max(east), central_south[0])
 
 
 if __name__ == "__main__":

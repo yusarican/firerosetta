@@ -125,7 +125,7 @@ async function call<T>(path: string, body?: unknown, signal?: AbortSignal): Prom
 export const getMeta = () => call<Meta>("/meta");
 
 export type RiskLevel = "high" | "elevated" | "watch";
-export type RiskGridKm = 5 | 10;
+export type RiskGridKm = 5 | 10 | 20;
 export type RiskView = { gridKm: RiskGridKm; bounds: [number, number, number, number] };
 export type RiskCell = {
   id: string;
@@ -174,6 +174,8 @@ export const getRisk = (country: string, signal?: AbortSignal, view?: { gridKm: 
 };
 export const getAreaRisk = (geometry: Polygon, gridKm: RiskGridKm, signal?: AbortSignal) =>
   call<RiskReport>("/risk", { geometry, grid_km: gridKm }, signal);
+export const getRiskGridCount = (geometry: Polygon, view: RiskView, signal?: AbortSignal) =>
+  call<{ total_cells: number }>("/risk/grid-count", { geometry, grid_km: view.gridKm, bounds: view.bounds }, signal);
 export const getValidation = () => call<Validation>("/validation");
 export const getCalendar = (a: Area, s?: AbortSignal) => call<Calendar>("/calendar", areaBody(a), s);
 export const getHotspots = (a: Area, start: string, end: string, s?: AbortSignal) =>

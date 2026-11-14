@@ -10,10 +10,13 @@ import { Button } from "@/components/ui/button";
 import { createMapStyleSync } from "./map-style-sync";
 import { RISK_FILL_COLOR } from "@/lib/risk-colors";
 import { addCountryHighlight, showCountryHighlight } from "./country-highlight";
+import { cn } from "@/lib/utils";
+import { riskGridForZoom } from "@/lib/risk-view";
 
 maplibregl.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
 
-export function RiskMap({ layers, levelFilter, bbox, selected, gridKm, busy, area, country, drawRequest, onDraw, onSelect, onViewChange }: {
+export function RiskMap({ layers, levelFilter, bbox, selected, gridKm, busy, area, country, drawRequest, onDraw, onSelect, onViewChange, className }: {
+  className?: string;
   layers: RiskReport[];
   levelFilter: "all" | RiskLevel;
   bbox: [number, number, number, number];
@@ -118,7 +121,7 @@ export function RiskMap({ layers, levelFilter, bbox, selected, gridKm, busy, are
       window.clearTimeout(viewTimer);
       viewTimer = undefined;
       const zoom = instance.getZoom();
-      const gridKm: RiskGridKm = zoom >= 8 ? 5 : 10;
+      const gridKm = riskGridForZoom(zoom);
       const extent = instance.getBounds();
       const bounds = [Math.max(-180, extent.getWest()), Math.max(-85, extent.getSouth()),
         Math.min(180, extent.getEast()), Math.min(85, extent.getNorth())].map((value) => +value.toFixed(4)) as RiskView["bounds"];
@@ -127,6 +130,12 @@ export function RiskMap({ layers, levelFilter, bbox, selected, gridKm, busy, are
     const reportView = () => { if (viewTimer === undefined) viewTimer = window.setTimeout(flushView, 50); };
     instance.on("move", reportView);
     instance.on("moveend", flushView);
+    let resizeFrame = 0;
+    const resizeObserver = new ResizeObserver(() => {
+      window.cancelAnimationFrame(resizeFrame);
+      resizeFrame = window.requestAnimationFrame(() => instance.resize());
+    });
+    resizeObserver.observe(container.current);
     instance.on("click", (event) => {
       if (!sync.ready) return;
       if (drawingRef.current) {
@@ -155,6 +164,7 @@ export function RiskMap({ layers, levelFilter, bbox, selected, gridKm, busy, are
     window.addEventListener("keydown", key);
     return () => {
       window.clearTimeout(timeout); window.clearTimeout(viewTimer); window.removeEventListener("keydown", key);
+      resizeObserver.disconnect(); window.cancelAnimationFrame(resizeFrame);
       sync.dispose();
       if (styleSync.current === sync) styleSync.current = null;
       instance.remove();
@@ -169,7 +179,7 @@ export function RiskMap({ layers, levelFilter, bbox, selected, gridKm, busy, are
     if (!instance || !sync) return;
     sync.update("risk-layers", () => {
       for (const km of loadedLayers.current.keys()) {
-        if (km > 10) for (const id of [`grid-lines-${km}`, `fill-${km}`, `outline-${km}`, `selected-${km}`]) if (instance.getLayer(id)) instance.setLayoutProperty(id, "visibility", "none");
+        if (km > 20) for (const id of [`grid-lines-${km}`, `fill-${km}`, `outline-${km}`, `selected-${km}`]) if (instance.getLayer(id)) instance.setLayoutProperty(id, "visibility", "none");
       }
       const regionKey = JSON.stringify(area);
       if (loadedArea.current !== regionKey) {
@@ -239,18 +249,8 @@ export function RiskMap({ layers, levelFilter, bbox, selected, gridKm, busy, are
     return () => sync.cancel("bounds");
   }, [west, south, east, north]);
 
-  const selectedId = selected?.id, selectedLon = selected?.lon, selectedLat = selected?.lat;
-  useEffect(() => {
-    const instance = map.current, sync = styleSync.current;
-    if (!instance || !sync) return;
-    if (selectedId && selectedLon !== undefined && selectedLat !== undefined) {
-      sync.update("focus", () => instance.easeTo({ center: [selectedLon, selectedLat], duration: 500 }), false);
-    }
-    return () => sync.cancel("focus");
-  }, [selectedId, selectedLon, selectedLat]);
-
   return (
-    <div className="relative h-[410px] overflow-hidden rounded-lg border bg-muted sm:h-[480px] lg:h-[520px]">
+    <div className={cn("relative overflow-hidden rounded-lg border bg-muted", className ?? "h-[410px] sm:h-[480px] lg:h-[520px]")}>
       <div ref={container} className="h-full w-full" role="region" aria-label="Fire alert map. You can also select cells from the alert list." />
       <div className="absolute left-3 top-3 flex gap-2">
         {drawing ? <><Button onClick={() => finishDraw(true)} disabled={vertices < 3}>Finish selection ({vertices})</Button><Button variant="outline" onClick={() => finishDraw(false)}>Cancel</Button></> : <Button variant="outline" disabled={!ready} onClick={startDraw}>Draw area</Button>}

@@ -37,9 +37,10 @@ test("country requests fetch full coverage without a viewport filter", async (t)
     requests.push({ url, options });
     return new Response(JSON.stringify(report()), { status: 200 });
   });
-  for (const gridKm of [10, 5]) await getRisk("Turkey", undefined, { gridKm });
+  for (const gridKm of [20, 10, 5]) await getRisk("Turkey", undefined, { gridKm });
   await getRisk("Turkey");
   assert.deepEqual(requests.map((request) => request.url), [
+    "/api/risk?country=Turkey&grid_km=20",
     "/api/risk?country=Turkey&grid_km=10", "/api/risk?country=Turkey&grid_km=5",
     "/api/risk?country=Turkey&grid_km=10",
   ]);

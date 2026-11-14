@@ -1,12 +1,13 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AlertTriangle, ArrowDownToLine, ArrowUpRight, BellRing, Clock3, Info, MapPin, RefreshCw, ShieldCheck } from "lucide-react";
+import { AlertTriangle, ArrowDownToLine, ArrowUpRight, BellRing, ChevronLeft, ChevronRight, Clock3, Info, MapPin, RefreshCw, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getAreaRisk, getRisk, type RiskCell, type RiskGridKm, type RiskLevel, type RiskReport, type RiskView } from "@/lib/api";
+import { getAreaRisk, getRisk, getRiskGridCount, type Polygon, type RiskCell, type RiskGridKm, type RiskLevel, type RiskReport, type RiskView } from "@/lib/api";
 import { areaBox, riskAreaKey, RISK_COUNTRIES, RISK_PLACES, type RiskArea } from "@/lib/fire-areas";
 import { selectionReport } from "@/lib/risk-summary";
+import { visiblePriorities } from "@/lib/risk-view";
 import { HIGH_PRIORITY_SHADES, highPriorityColor } from "@/lib/risk-colors";
 import { AppHeader } from "./app-header";
 import { RiskMap } from "./risk-map";
@@ -57,6 +58,7 @@ export function RiskDashboard() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [visible, setVisible] = useState(20);
   const [gridKm, setGridKm] = useState<RiskGridKm>(10);
+  const [mapView, setMapView] = useState<{ areaKey: string; view: RiskView } | null>(null);
   const layerCache = useRef(new Map<string, RiskReport>());
   const requestedGrid = useRef<RiskGridKm>(10);
   const [preloaded, setPreloaded] = useState<RiskReport[]>([]);
@@ -93,8 +95,7 @@ export function RiskDashboard() {
   useEffect(() => {
     const controller = new AbortController();
     const load = async (force = false) => {
-      requestedGrid.current = requestedGrid.current === 5 ? 5 : 10;
-      const levels = [...new Set<RiskGridKm>([requestedGrid.current, 10, 5])];
+      const levels = [...new Set<RiskGridKm>([requestedGrid.current, 10, 5, 20])];
       await Promise.all(levels.map(async (gridKm) => {
         const key = `${areaKey}:${gridKm}`;
         try {
@@ -127,11 +128,13 @@ export function RiskDashboard() {
   const today = clientDay ?? state.report?.as_of ?? "1970-01-01";
   const report = useMemo(() => state.report ? selectionReport(state.report, today) : null, [state.report, today]);
   const cells = useMemo(() => report?.cells.filter((cell) => filter === "all" || cell.level === filter) ?? [], [report, filter]);
-  const mapLayers = useMemo(() => preloaded.filter((layer) => layer.grid_km <= 10).map((layer) => selectionReport(layer, today)), [preloaded, today]);
+  const mapLayers = useMemo(() => preloaded.filter((layer) => layer.grid_km <= 20).map((layer) => selectionReport(layer, today)), [preloaded, today]);
   const selected = report?.cells.find((cell) => cell.id === selectedId) ?? null;
   const fresh = report?.current_evidence_enabled ?? false;
   const refresh = () => { setState((previous) => ({ ...previous, busy: true })); setRevision((value) => value + 1); };
   const changeView = useCallback((next: RiskView) => {
+    setMapView((previous) => previous?.areaKey === areaKey && previous.view.gridKm === next.gridKm &&
+      previous.view.bounds.join(",") === next.bounds.join(",") ? previous : { areaKey, view: next });
     if (requestedGrid.current === next.gridKm) return;
     requestedGrid.current = next.gridKm;
     setGridKm(next.gridKm);
@@ -143,7 +146,7 @@ export function RiskDashboard() {
   const chooseArea = (next: RiskArea) => {
     if (riskAreaKey(next) === areaKey) { setAreaError(null); return; }
     requestedGrid.current = 10;
-    setArea(next); setGridKm(10); setSelectedId(null); setFilter("all"); setVisible(20);
+    setArea(next); setGridKm(10); setMapView(null); setSelectedId(null); setFilter("all"); setVisible(20);
     setPreloaded([]); setAreaError(null); setDrawRequest(0); setState({ report: null, error: null, busy: true });
     try { sessionStorage.setItem("firerosetta-selected-area", JSON.stringify(next.country
       ? { kind: "country", name: next.country, bbox: [next.geometry.coordinates[0][0][0], next.geometry.coordinates[0][0][1], next.geometry.coordinates[0][2][0], next.geometry.coordinates[0][2][1]] }
@@ -224,9 +227,13 @@ export function RiskDashboard() {
 
           <div className="mt-3 grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
             <div>
-              <RiskMap layers={mapLayers} levelFilter={filter} bbox={report?.bbox ?? areaBounds} selected={selected} onSelect={setSelectedId}
-                area={area.geometry} country={area.country} drawRequest={drawRequest} onDraw={(geometry) => chooseArea({ label: "Drawn area", geometry })}
-                gridKm={report?.grid_km ?? gridKm} busy={state.busy} onViewChange={changeView} />
+              <div className="flex h-[calc(100dvh-1.5rem)] min-h-[440px] flex-col" aria-label="Map and visible-area summary">
+                <RiskMap className="min-h-[220px] flex-1 rounded-b-none" layers={mapLayers} levelFilter={filter} bbox={report?.bbox ?? areaBounds} selected={selected} onSelect={setSelectedId}
+                  area={area.geometry} country={area.country} drawRequest={drawRequest} onDraw={(geometry) => chooseArea({ label: "Drawn area", geometry })}
+                  gridKm={report?.grid_km ?? gridKm} busy={state.busy} onViewChange={changeView} />
+                <ViewportSummary areaKey={areaKey} geometry={area.geometry} selectionBounds={areaBounds} report={report} filter={filter}
+                  view={mapView?.areaKey === areaKey ? mapView.view : null} selectedId={selectedId} onSelect={setSelectedId} />
+              </div>
               <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
                 <Legend level="high" label="Recent 7-day detections" /><Legend level="elevated" label="Seasonal / recent priority" /><Legend level="watch" label="Historical activity · watch" />
                 {area.country && <span className="inline-flex items-center gap-1.5"><span className="size-2.5 rounded-sm border border-[#2563eb] bg-[#2563eb]/15" />Selected country</span>}
@@ -234,7 +241,7 @@ export function RiskDashboard() {
               <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] text-muted-foreground" aria-label="Red intensity by detections in the last 7 days">
                 <span>Darker red = more detections in 7 days:</span>{HIGH_PRIORITY_SHADES.map((shade) => <span key={shade.min} className="inline-flex items-center gap-1"><span className="size-3 rounded-sm" style={{ backgroundColor: shade.color }} />{shade.label}</span>)}
               </div>
-              <p className="mt-2 text-[11px] text-muted-foreground">10 → 5 km · All selected-area layers are preloaded, including off-screen cells. Uncoloured cells are not necessarily risk-free; cells are not fire boundaries.</p>
+              <p className="mt-2 text-[11px] text-muted-foreground">20 → 10 → 5 km · 20 km cells appear only in wider, zoomed-out views. All layers are preloaded. Uncoloured cells are not necessarily risk-free; cells are not fire boundaries.</p>
               {selected && report && <CellDetails cell={selected} report={report} />}
             </div>
 
@@ -266,7 +273,7 @@ export function RiskDashboard() {
               <p><strong className="text-foreground">High priority:</strong> At least one nominal- or high-confidence NOAA-20 VIIRS detection in the last 7 days. Known static heat sources are screened using a mask from standard historical records. Darker red means more screened detections in this window. Detections need field verification and are not a count of separate fires.</p>
               <p><strong className="text-foreground">Elevated priority:</strong> Activity in the last 30 days, or observations in {MONTHS[report.season_month - 1]} across at least 3 years during {report.history_first}–{report.history_last}, with a monthly mean in the top quarter of positive means for this selection (at least {number(report.seasonal_threshold)} detections/month). Means use all {report.history_years} complete years, including zero years. Historical context uses S-NPP only.</p>
               <p><strong className="text-foreground">When data become stale:</strong> If coverage is more than 1 day old, recent detections no longer raise priority. If the live connection fails, the dated local copy is used. Refreshing does not retrain the historical calendar.</p>
-              <p><strong className="text-foreground">Zoom and totals:</strong> The metre-based grid splits each square into four smaller cells, from 10 × 10 km down to 5 × 5 km. Detections are regrouped at their actual coordinates; parent-cell alerts are not copied into child cells. Totals, the list and CSV cover the entire selected area at the displayed grid size. Panning does not change them. Cell counts can change with grid size. Dimensions are measured in the map projection, with small differences on the ground.</p>
+              <p><strong className="text-foreground">Zoom and totals:</strong> Broad, zoomed-out views use 20 × 20 km cells. Closer views use 10 × 10 km and then 5 × 5 km. Each square splits into four smaller cells. Detections are regrouped at their actual coordinates; parent-cell alerts are not copied into child cells. Totals, the list and CSV cover the entire selected area at the displayed grid size. Panning does not change them. Cell counts can change with grid size. Dimensions are measured in the map projection, with small differences on the ground.</p>
               <p>These thresholds support screening; they are not an official alarm or a forecast validated against actual fires. Clouds, overpass timing and cover can hide activity. Use local official warnings and field verification alongside this information.</p>
               <p className="text-xs"><a href="https://firms.modaps.eosdis.nasa.gov/" target="_blank" rel="noreferrer" className="underline underline-offset-2">NASA FIRMS</a> · <a href="https://confluence.ecmwf.int/spaces/CKB/pages/283569774/Fire+Weather+Index+FWI+%E2%80%93+Dataset+Description" target="_blank" rel="noreferrer" className="underline underline-offset-2">Fire weather danger and FWI inputs</a></p>
             </div>
@@ -282,6 +289,118 @@ function SummaryCard({ title, value, note, color, icon }: { title: string; value
 
 function Legend({ level, label }: { level: RiskLevel; label: string }) {
   return <span className="inline-flex items-center gap-1.5"><span className={`size-2.5 rounded-sm ${LEVELS[level].dot}`} />{label}</span>;
+}
+
+function ViewportSummary({ areaKey, geometry, selectionBounds, report, filter, view, selectedId, onSelect }: {
+  areaKey: string; geometry: Polygon; selectionBounds: RiskView["bounds"]; report: RiskReport | null; filter: "all" | RiskLevel;
+  view: RiskView | null; selectedId: string | null; onSelect: (id: string) => void;
+}) {
+  const cache = useRef(new Map<string, number>());
+  const [countState, setCountState] = useState<{ key: string; total: number | null; error: boolean }>({ key: "", total: null, error: false });
+  const [retry, setRetry] = useState(0);
+  const [shown, setShown] = useState({ key: "", count: 8 });
+  const strip = useRef<HTMLDivElement>(null);
+  const stripKey = useRef("");
+  const [navigation, setNavigation] = useState({ previous: false, next: false });
+  const viewKey = view ? `${areaKey}:${view.gridKm}:${view.bounds.join(",")}` : "";
+  const listKey = `${viewKey}:${filter}`;
+  const limit = shown.key === listKey ? shown.count : 8;
+  const inView = useMemo(() => report && view && report.grid_km === view.gridKm
+    ? visiblePriorities(report.cells, view.bounds, filter, selectionBounds) : null, [report, view, filter, selectionBounds]);
+
+  useEffect(() => {
+    const lane = strip.current;
+    if (!lane) return;
+    const updateNavigation = () => {
+      const next = { previous: lane.scrollLeft > 1, next: lane.scrollLeft + lane.clientWidth < lane.scrollWidth - 1 };
+      setNavigation((previous) => previous.previous === next.previous && previous.next === next.next ? previous : next);
+    };
+    const frame = window.requestAnimationFrame(() => {
+      if (stripKey.current !== listKey) { lane.scrollLeft = 0; stripKey.current = listKey; }
+      updateNavigation();
+    });
+    const wheel = (event: WheelEvent) => {
+      if (event.ctrlKey || lane.scrollWidth <= lane.clientWidth) return;
+      const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+      if (!delta) return;
+      event.preventDefault();
+      lane.scrollLeft += delta * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? lane.clientWidth : 1);
+    };
+    const observer = new ResizeObserver(updateNavigation);
+    observer.observe(lane);
+    lane.addEventListener("scroll", updateNavigation, { passive: true });
+    lane.addEventListener("wheel", wheel, { passive: false });
+    return () => {
+      window.cancelAnimationFrame(frame); observer.disconnect();
+      lane.removeEventListener("scroll", updateNavigation); lane.removeEventListener("wheel", wheel);
+    };
+  }, [listKey, limit, inView?.priorities.length]);
+
+  const scrollCards = (direction: number) => {
+    const lane = strip.current;
+    if (lane) lane.scrollBy({ left: direction * Math.max(264, lane.clientWidth * 0.85), behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    if (!view) return;
+    const controller = new AbortController();
+    const timer = window.setTimeout(async () => {
+      try {
+        const cached = cache.current.get(viewKey);
+        const total = cached ?? (await getRiskGridCount(geometry, view, controller.signal)).total_cells;
+        if (controller.signal.aborted) return;
+        cache.current.delete(viewKey);
+        cache.current.set(viewKey, total);
+        while (cache.current.size > 32) cache.current.delete(cache.current.keys().next().value!);
+        setCountState({ key: viewKey, total, error: false });
+      } catch (error) {
+        if (!controller.signal.aborted && (error as Error).name !== "AbortError") setCountState({ key: viewKey, total: null, error: true });
+      }
+    }, cache.current.has(viewKey) ? 0 : 150);
+    return () => { controller.abort(); window.clearTimeout(timer); };
+  }, [geometry, view, viewKey, retry]);
+
+  const total = countState.key === viewKey ? countState.total : null;
+  const countError = countState.key === viewKey && countState.error;
+  return <section className="shrink-0 rounded-b-lg border border-t-0 bg-card p-3" aria-label="Current map view">
+    <div className="flex items-center justify-between gap-2">
+      <h2 className="flex items-center gap-1.5 text-xs font-semibold"><MapPin className="size-3.5 text-primary" />Current map view</h2>
+      {view && <span className="num text-[10px] text-muted-foreground">{view.gridKm} × {view.gridKm} km · updates as you pan</span>}
+    </div>
+    {!view ? <p role="status" className="mt-4 text-sm text-muted-foreground">Waiting for the map view…</p> : <>
+      <div className="mt-2 grid grid-cols-3 divide-x rounded-md border bg-background/50 py-1.5" aria-live="polite" aria-atomic="true">
+        <ViewCount title="Grid cells in view" value={total} color="text-primary" hint={total === null && !countError ? "Updating visible grid count…" : "Includes uncoloured and partially visible cells inside the selected area"} />
+        <ViewCount title="High priority in view" value={inView?.high ?? null} color="text-[#b43b2f]" hint="Recent 7-day detections" />
+        <ViewCount title="Elevated priority in view" value={inView?.elevated ?? null} color="text-[#986316]" hint="Seasonal or recent activity" />
+      </div>
+      {countError && <div role="status" className="mt-2 flex flex-wrap items-center gap-2 text-xs text-destructive"><span>Visible grid count could not be loaded.</span><Button size="sm" variant="outline" onClick={() => setRetry((value) => value + 1)}>Try again</Button></div>}
+      <div className="mt-2 flex items-center justify-between gap-2">
+        <h3 className="text-[11px] font-semibold">Priority cells in this view{inView && <span className="num ml-1 font-normal text-muted-foreground">({number(inView.priorities.length)})</span>}<span className="ml-2 hidden font-normal text-muted-foreground sm:inline">Highest priority first</span></h3>
+        <div className="flex shrink-0 items-center gap-1">
+          <span className="mr-1 hidden text-[10px] text-muted-foreground sm:inline" title={inView ? `${number(inView.dataCells)} visible cells with observations match this filter` : "Loading priorities for this grid size…"}>{filter === "all" ? "All priorities" : LEVELS[filter].label}</span>
+          <Button size="icon" variant="outline" className="size-6" aria-label="Scroll priority cells left" aria-controls="visible-priority-strip" disabled={!navigation.previous} onClick={() => scrollCards(-1)}><ChevronLeft className="size-3.5" /></Button>
+          <Button size="icon" variant="outline" className="size-6" aria-label="Scroll priority cells right" aria-controls="visible-priority-strip" disabled={!navigation.next} onClick={() => scrollCards(1)}><ChevronRight className="size-3.5" /></Button>
+        </div>
+      </div>
+      <div ref={strip} id="visible-priority-strip" className="mt-1.5 flex h-[104px] snap-x snap-proximity items-start gap-2 overflow-x-auto overflow-y-hidden overscroll-x-contain pb-1 focus-visible:outline-2 focus-visible:outline-primary" role="region" aria-label="Visible priority cells" tabIndex={0} onKeyDown={(event) => {
+        if (event.target !== event.currentTarget) return;
+        if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); scrollCards(event.key === "ArrowLeft" ? -1 : 1); }
+        if (event.key === "Home" || event.key === "End") { event.preventDefault(); strip.current?.scrollTo({ left: event.key === "Home" ? 0 : event.currentTarget.scrollWidth, behavior: "smooth" }); }
+      }}>
+      {inView && inView.priorities.length === 0 && <p className="py-3 text-xs text-muted-foreground">No priority cells in the current view for this filter.</p>}
+        {inView?.priorities.slice(0, limit).map((cell, index) => <button key={cell.id} type="button" aria-pressed={selectedId === cell.id} onClick={() => onSelect(cell.id)}
+          className={`w-64 shrink-0 snap-start rounded-md border p-2 text-left transition-colors hover:bg-secondary/60 focus-visible:outline-2 focus-visible:outline-primary ${selectedId === cell.id ? "border-primary bg-secondary" : ""}`}>
+          <div className="flex items-center gap-2"><span className="num text-sm font-semibold text-primary">{index + 1}.</span><Badge level={cell.level} detections={cell.recent_7d} /><ArrowUpRight className="ml-auto size-3.5 shrink-0 text-muted-foreground" /></div>
+          <p className="num mt-1 text-xs font-medium">{coordinates(cell)}</p><p className="mt-0.5 truncate text-[10px] text-muted-foreground" title={reason(cell, report?.current_evidence_enabled ?? false)}>{reason(cell, report?.current_evidence_enabled ?? false)}</p>
+        </button>)}
+      {inView && inView.priorities.length > limit && <Button size="sm" variant="outline" className="h-[80px] w-40 shrink-0 snap-start whitespace-normal" onClick={() => setShown({ key: listKey, count: limit + 8 })}>Show 8 more visible cells</Button>}
+      </div>
+    </>}
+  </section>;
+}
+
+function ViewCount({ title, value, color, hint }: { title: string; value: number | null; color: string; hint: string }) {
+  return <div className="min-w-0 px-2" title={hint}><h3 className="text-[10px] leading-tight text-muted-foreground">{title}</h3><p className={`num mt-0.5 text-xl font-semibold leading-none ${color}`}>{value === null ? "—" : number(value)}</p></div>;
 }
 
 function CellDetails({ cell, report }: { cell: RiskCell; report: RiskReport }) {

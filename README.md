@@ -16,12 +16,14 @@ sonraki açılışlar hazır veriyi kullanır. Kapatmak için başlatıcı pence
 Verileri yeniden indirmek ve işlemek için `powershell -ExecutionPolicy Bypass -File .\start.ps1 -Rebuild`
 çalıştır. Windows başlatıcısı proje içindeki `.runtime` araçlarını veya kurulu `uv`, Node.js ve npm'i kullanır.
 
-### Risk Uyarıları
+### Risk Alerts
 
-Üst menüdeki **Risk Uyarıları** (`/risk`) sekmesi, önleyici inceleme ve gözetim için alanları
-işaretler. Harita yakınlaştıkça **10 → 5 km** karelere ayrılır; her düzeyde
-güncel ve geçmiş tespitler gerçek koordinatlarından yeniden gruplanır. Sayılar görünen karelere aittir.
-Ülke listesi yerine haritada çokgen çizilir, hazır bir bölge seçilir veya koordinat kutusu girilir.
+Üst menüdeki **Risk Alerts** (`/risk`) sekmesi, önleyici inceleme ve gözetim için alanları
+işaretler. Harita yakınlaştıkça **20 → 10 → 5 km** karelere ayrılır; 20 km yalnızca daha geniş,
+uzaklaştırılmış görünümlerde (zoom < 4,5) kullanılır. Her düzeyde güncel ve geçmiş tespitler gerçek
+koordinatlarından yeniden gruplanır. Üstteki özet ve CSV seçimin tamamını, harita altındaki sayaçlar
+ve öncelik listesi yalnızca görüntülenen alanı kapsar. Kare seçimi haritayı otomatik ortalamaz.
+Hazır ülke veya bölge seçilir, haritada çokgen çizilir ya da koordinat kutusu girilir.
 Takvimde çizilen son alan uyarı sekmesine taşınır. Tespitler seçimin gerçek çokgeniyle süzülür;
 yalnız çevreleyen kutunun içindekiler sayılmaz. Geçmiş veri kapsamı ilk yüklenen altı ülkeyle sınırlıdır.
 Kareler seçimin merkezine göre seçilen sabit UTM koordinat sisteminde ölçülür; arazi üzerindeki
@@ -78,7 +80,7 @@ backend/firerosetta/
   grid.py        Kalite filtresi + 0.1° × ay yoğun tablo (sıfırlar dahil)
   harmonize.py   MODIS→VIIRS modeli, yıl-bloklu 5 katlı CV, metrics.json
   api.py         FastAPI + DuckDB: /meta /calendar /hotspots /hotspots.csv /validation
-  risk.py        /risk: canlı tespitler + mevsimsel geçmiş, 10–5 km uyarlanabilir öncelik ızgarası
+  risk.py        /risk: canlı tespitler + mevsimsel geçmiş, 20–5 km uyarlanabilir öncelik ızgarası
 web/             Next.js 16 + shadcn/ui + MapLibre
 data/            (git'e girmez) raw / staged / processed / manifest.json
 ```
