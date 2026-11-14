@@ -313,9 +313,18 @@ her yerde değil — İtalya'da tersine dönüyor:
 | Portekiz | %0,10 | %1,06 |
 
 Bu işaretler **hattı kendiliğinden değiştirmiyor**: `grid.py` hâlâ yalnız FIRMS'in `type`
-etiketine göre eliyor. Dedektör çıktısı ayrı bir tabloda (`static_sites.parquet`) ve
-`/static-sources` uç noktasında duruyor, böylece bir modelin kararıyla sessizce veri silinmiyor;
-ne atılacağı görülüp değerlendirilebiliyor.
+etiketine göre eliyor ve takvim serisi aynı kalıyor. Dedektör çıktısı ayrı bir tabloda
+(`static_sites.parquet`) ve `/static-sources` uç noktasında duruyor, böylece bir modelin
+kararıyla sessizce veri silinmiyor; ne atılacağı görülüp değerlendirilebiliyor.
+
+Ama haritada susmak da yanıltıcıydı: işaretli bir baca, yangın noktasıyla aynı renkte
+çiziliyordu. `/hotspots` artık her tespite `static_source` bayrağını (noktanın 7. alanı) ve
+`static_total` sayısını ekliyor — eşleşme, dedektörün kullandığı anahtarın aynısı: ~1,1 km'lik
+hücre **ve** FIRMS `type` ayrımı. Harita bu noktaları gri çiziyor ("persistent heat source,
+not a fire"), sayaç kaçının yangın olmadığını yazıyor, bir anahtar da onları gizlemeye yarıyor.
+Varsayılan **gizlemek değil göstermek**: hiçbir tespit atılmıyor, yalnızca doğru etiketleniyor.
+`/hotspots.csv` de aynı sütunu taşıyor. Dedektör kurulu değilse bayrak hep `false` ve arayüz
+bu bölümü hiç göstermiyor.
 
 ### Derin modeller neden yok
 

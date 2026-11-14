@@ -62,14 +62,23 @@ export type Meta = {
   reference: string;
   data_through: string; // YYYY-MM-DD
   nrt_from: Record<string, string>; // platform -> first near-real-time day
+  has_forecast: boolean;
+  has_static_sources: boolean; // the unsupervised persistent-heat-source detector has been run
 };
 
-// [lon, lat, date, platform, frp, day/night]
-export type Point = [number, number, string, string, number | null, string];
+// [lon, lat, date, platform, frp, day/night, 1 if it sits on a flagged persistent heat source]
+export type Point = [number, number, string, string, number | null, string, 0 | 1];
+export const isStatic = (p: Point) => p[6] === 1;
 export type Hotspots = {
   total: number;
   returned: number;
   by_platform: Record<string, number>;
+  // Detections on sites the unsupervised detector flagged as permanent non-fire heat sources
+  // (chimneys, gas flares, steel mills). They are inside `total`: that is what the satellites
+  // reported. The map marks them so they are not read as fires.
+  has_static_sources: boolean;
+  static_total: number;
+  static_by_platform: Record<string, number>;
   points: Point[];
 };
 

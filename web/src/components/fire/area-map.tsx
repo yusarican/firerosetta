@@ -110,9 +110,11 @@ export function AreaMap({
         source: "pts",
         paint: {
           "circle-radius": ["interpolate", ["linear"], ["zoom"], 4, 2, 9, 4.5],
-          "circle-color": ["case", ["get", "modis"], "#2a78d6", "#eb6834"],
-          "circle-stroke-color": "#ffffff",
-          "circle-stroke-width": 0.6,
+          // grey, ringed in dark: a flagged persistent heat source is not a fire and must not
+          // read as one, whatever sensor saw it
+          "circle-color": ["case", ["get", "stat"], "#8d95a0", ["get", "modis"], "#2a78d6", "#eb6834"],
+          "circle-stroke-color": ["case", ["get", "stat"], "#3d4650", "#ffffff"],
+          "circle-stroke-width": ["case", ["get", "stat"], 1, 0.6],
           "circle-opacity": 0.85,
         },
       });
@@ -133,11 +135,14 @@ export function AreaMap({
     const popup = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 8 });
     m.on("mousemove", "pts", (e) => {
       if (drawingRef.current || !e.features?.length) return;
-      const p = e.features[0].properties as { date: string; platform: string; frp: number; dn: string };
+      const p = e.features[0].properties as { date: string; platform: string; frp: number; dn: string; stat: boolean };
       m.getCanvas().style.cursor = "pointer";
       popup
         .setLngLat(e.lngLat)
-        .setText(`${p.date} · ${p.platform} · ${p.dn === "D" ? "day" : "night"}${p.frp != null ? ` · ${p.frp} MW` : ""}`)
+        .setText(
+          `${p.date} · ${p.platform} · ${p.dn === "D" ? "day" : "night"}${p.frp != null ? ` · ${p.frp} MW` : ""}` +
+            (p.stat ? " · persistent heat source, not a fire" : ""),
+        )
         .addTo(m);
     });
     m.on("mouseleave", "pts", () => {
@@ -176,9 +181,9 @@ export function AreaMap({
     if (!ready) return;
     setData("pts", {
       type: "FeatureCollection",
-      features: points.map(([lon, lat, date, platform, frp, dn]) => ({
+      features: points.map(([lon, lat, date, platform, frp, dn, stat]) => ({
         type: "Feature",
-        properties: { date, platform, frp, dn, modis: platform === "Terra" || platform === "Aqua" },
+        properties: { date, platform, frp, dn, stat: stat === 1, modis: platform === "Terra" || platform === "Aqua" },
         geometry: { type: "Point", coordinates: [lon, lat] },
       })),
     });

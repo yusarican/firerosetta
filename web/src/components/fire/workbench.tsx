@@ -8,10 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   type Area, type Calendar, downloadCsv, type Forecast, getCalendar, getForecast, getHotspots, getMeta,
-  type Hotspots, type Meta, type Polygon,
+  type Hotspots, isStatic, type Meta, type Polygon,
 } from "@/lib/api";
 import { calendarPng, monthlyCsv, seasonCsv, slug, svgPng, yearlyCsv } from "@/lib/export";
 import { fmt, full, monthRange, MONTHS_LONG } from "@/lib/scale";
@@ -99,6 +100,9 @@ export function Workbench() {
   const [spots, setSpots] = useState<Hotspots | null>(null);
   const [busyCsv, setBusyCsv] = useState(false);
   const [bbox, setBbox] = useState({ w: "", s: "", e: "", n: "" });
+  // flagged persistent heat sources are drawn, greyed, by default: hiding them by default would
+  // delete data from the map on a model's say-so. The toggle lets the user take them out.
+  const [hideStatic, setHideStatic] = useState(false);
   const [view, setView] = useState<View>("calendar");
   // tagged with the area they belong to, so a stale result reads as "still loading"
   // instead of needing a synchronous reset inside the effect
@@ -155,6 +159,11 @@ export function Workbench() {
   }, []);
   const selectYear = useCallback((y: number) => setRange({ start: `${y}-01-01`, end: `${y}-12-31` }), []);
 
+  const shown = useMemo(() => {
+    const pts = spots?.points ?? [];
+    return hideStatic ? pts.filter((p) => !isStatic(p)) : pts;
+  }, [spots, hideStatic]);
+
   const year = range ? +range.start.slice(0, 4) : 0;
   const story = useMemo(() => (cal ? describe(cal) : null), [cal]);
   const label = area.kind === "country" ? area.name : area.label;
@@ -196,7 +205,7 @@ export function Workbench() {
           <div className="h-[380px] lg:h-[440px]">
             <AreaMap
               area={area}
-              points={spots?.points ?? []}
+              points={shown}
               onDraw={(geometry) => setArea({ kind: "polygon", label: "Drawn area", geometry })}
             />
           </div>
@@ -296,7 +305,27 @@ export function Workbench() {
                       {{ Terra: "MODIS Terra", Aqua: "MODIS Aqua", SNPP: "VIIRS S-NPP", NOAA20: "VIIRS NOAA-20" }[p]} {full(spots.by_platform[p] ?? 0)}
                     </li>
                   ))}
+                  {spots.static_total > 0 && (
+                    <li className="flex items-center gap-1.5">
+                      <span className="size-2.5 rounded-full border border-[#3d4650] bg-[#8d95a0]" />
+                      Not a fire {full(spots.static_total)}
+                    </li>
+                  )}
                 </ul>
+                {spots.has_static_sources && spots.static_total > 0 && (
+                  <div className="mt-3 rounded-md border border-border bg-muted/40 px-3 py-2">
+                    <p className="text-xs leading-relaxed">
+                      <span className="num font-semibold">{full(spots.static_total)}</span> of these (
+                      <span className="num">{((100 * spots.static_total) / spots.total).toFixed(1)}%</span>) land on sites
+                      flagged as permanent heat sources — factory chimneys, gas flares, steel mills — so they are burning
+                      every month rather than on fire. They are greyed on the map, not deleted.
+                    </p>
+                    <label className="mt-2 flex cursor-pointer items-center gap-2 text-xs">
+                      <Switch size="sm" checked={hideStatic} onCheckedChange={setHideStatic} />
+                      Hide them on the map
+                    </label>
+                  </div>
+                )}
               </div>
             )}
           </section>
