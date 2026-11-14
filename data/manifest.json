@@ -2595,7 +2595,7 @@
   "current/modis/2026/modis_2026_Argentina.csv": {
    "bytes": 2197520,
    "coverage": "2026-01-01..2026-08-31",
-   "fetched_at": "2026-11-14T09:16:54+00:00",
+   "fetched_at": "2026-11-14T12:05:58+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/modis/2026/modis_2026_Argentina.csv",
    "product": "MODIS_SP via area API (country bbox, not country-clipped)",
@@ -2605,7 +2605,7 @@
   "current/modis/2026/modis_2026_Greece.csv": {
    "bytes": 189200,
    "coverage": "2026-01-01..2026-08-31",
-   "fetched_at": "2026-11-14T09:16:09+00:00",
+   "fetched_at": "2026-11-14T12:05:15+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/modis/2026/modis_2026_Greece.csv",
    "product": "MODIS_SP via area API (country bbox, not country-clipped)",
@@ -2615,7 +2615,7 @@
   "current/modis/2026/modis_2026_Italy.csv": {
    "bytes": 536209,
    "coverage": "2026-01-01..2026-08-31",
-   "fetched_at": "2026-11-14T09:16:09+00:00",
+   "fetched_at": "2026-11-14T12:05:15+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/modis/2026/modis_2026_Italy.csv",
    "product": "MODIS_SP via area API (country bbox, not country-clipped)",
@@ -2625,7 +2625,7 @@
   "current/modis/2026/modis_2026_Portugal.csv": {
    "bytes": 223041,
    "coverage": "2026-01-01..2026-08-31",
-   "fetched_at": "2026-11-14T09:16:09+00:00",
+   "fetched_at": "2026-11-14T12:05:15+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/modis/2026/modis_2026_Portugal.csv",
    "product": "MODIS_SP via area API (country bbox, not country-clipped)",
@@ -2635,7 +2635,7 @@
   "current/modis/2026/modis_2026_Spain.csv": {
    "bytes": 611903,
    "coverage": "2026-01-01..2026-08-31",
-   "fetched_at": "2026-11-14T09:16:09+00:00",
+   "fetched_at": "2026-11-14T12:05:15+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/modis/2026/modis_2026_Spain.csv",
    "product": "MODIS_SP via area API (country bbox, not country-clipped)",
@@ -2645,7 +2645,7 @@
   "current/modis/2026/modis_2026_Turkey.csv": {
    "bytes": 623546,
    "coverage": "2026-01-01..2026-08-31",
-   "fetched_at": "2026-11-14T09:16:09+00:00",
+   "fetched_at": "2026-11-14T12:05:15+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/modis/2026/modis_2026_Turkey.csv",
    "product": "MODIS_SP via area API (country bbox, not country-clipped)",
@@ -2655,7 +2655,7 @@
   "current/viirs-jpss1/2026/viirs-jpss1_2026_Argentina.csv": {
    "bytes": 8347733,
    "coverage": "2026-01-01..2026-07-31",
-   "fetched_at": "2026-11-14T09:20:57+00:00",
+   "fetched_at": "2026-11-14T12:09:24+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/viirs-jpss1/2026/viirs-jpss1_2026_Argentina.csv",
    "product": "VIIRS_NOAA20_SP via area API (country bbox, not country-clipped)",
@@ -2665,7 +2665,7 @@
   "current/viirs-jpss1/2026/viirs-jpss1_2026_Greece.csv": {
    "bytes": 528962,
    "coverage": "2026-01-01..2026-07-31",
-   "fetched_at": "2026-11-14T09:20:14+00:00",
+   "fetched_at": "2026-11-14T12:08:50+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/viirs-jpss1/2026/viirs-jpss1_2026_Greece.csv",
    "product": "VIIRS_NOAA20_SP via area API (country bbox, not country-clipped)",
@@ -2675,7 +2675,7 @@
   "current/viirs-jpss1/2026/viirs-jpss1_2026_Italy.csv": {
    "bytes": 1761996,
    "coverage": "2026-01-01..2026-07-31",
-   "fetched_at": "2026-11-14T09:20:14+00:00",
+   "fetched_at": "2026-11-14T12:08:51+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/viirs-jpss1/2026/viirs-jpss1_2026_Italy.csv",
    "product": "VIIRS_NOAA20_SP via area API (country bbox, not country-clipped)",
@@ -2685,7 +2685,7 @@
   "current/viirs-jpss1/2026/viirs-jpss1_2026_Portugal.csv": {
    "bytes": 378327,
    "coverage": "2026-01-01..2026-07-31",
-   "fetched_at": "2026-11-14T09:20:14+00:00",
+   "fetched_at": "2026-11-14T12:08:50+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/viirs-jpss1/2026/viirs-jpss1_2026_Portugal.csv",
    "product": "VIIRS_NOAA20_SP via area API (country bbox, not country-clipped)",
@@ -2695,7 +2695,7 @@
   "current/viirs-jpss1/2026/viirs-jpss1_2026_Spain.csv": {
    "bytes": 1835376,
    "coverage": "2026-01-01..2026-07-31",
-   "fetched_at": "2026-11-14T09:20:14+00:00",
+   "fetched_at": "2026-11-14T12:08:50+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/viirs-jpss1/2026/viirs-jpss1_2026_Spain.csv",
    "product": "VIIRS_NOAA20_SP via area API (country bbox, not country-clipped)",
@@ -2705,7 +2705,7 @@
   "current/viirs-jpss1/2026/viirs-jpss1_2026_Turkey.csv": {
    "bytes": 1906988,
    "coverage": "2026-01-01..2026-07-31",
-   "fetched_at": "2026-11-14T09:20:14+00:00",
+   "fetched_at": "2026-11-14T12:08:50+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/viirs-jpss1/2026/viirs-jpss1_2026_Turkey.csv",
    "product": "VIIRS_NOAA20_SP via area API (country bbox, not country-clipped)",
@@ -2715,7 +2715,7 @@
   "current/viirs-snpp/2026/viirs-snpp_2026_Argentina.csv": {
    "bytes": 7581522,
    "coverage": "2026-01-01..2026-07-31",
-   "fetched_at": "2026-11-14T09:18:43+00:00",
+   "fetched_at": "2026-11-14T12:07:49+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/viirs-snpp/2026/viirs-snpp_2026_Argentina.csv",
    "product": "VIIRS_SNPP_SP via area API (country bbox, not country-clipped)",
@@ -2725,7 +2725,7 @@
   "current/viirs-snpp/2026/viirs-snpp_2026_Greece.csv": {
    "bytes": 450444,
    "coverage": "2026-01-01..2026-07-31",
-   "fetched_at": "2026-11-14T09:17:56+00:00",
+   "fetched_at": "2026-11-14T12:07:02+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/viirs-snpp/2026/viirs-snpp_2026_Greece.csv",
    "product": "VIIRS_SNPP_SP via area API (country bbox, not country-clipped)",
@@ -2735,7 +2735,7 @@
   "current/viirs-snpp/2026/viirs-snpp_2026_Italy.csv": {
    "bytes": 1542395,
    "coverage": "2026-01-01..2026-07-31",
-   "fetched_at": "2026-11-14T09:17:56+00:00",
+   "fetched_at": "2026-11-14T12:07:03+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/viirs-snpp/2026/viirs-snpp_2026_Italy.csv",
    "product": "VIIRS_SNPP_SP via area API (country bbox, not country-clipped)",
@@ -2745,7 +2745,7 @@
   "current/viirs-snpp/2026/viirs-snpp_2026_Portugal.csv": {
    "bytes": 373803,
    "coverage": "2026-01-01..2026-07-31",
-   "fetched_at": "2026-11-14T09:17:56+00:00",
+   "fetched_at": "2026-11-14T12:07:03+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/viirs-snpp/2026/viirs-snpp_2026_Portugal.csv",
    "product": "VIIRS_SNPP_SP via area API (country bbox, not country-clipped)",
@@ -2755,7 +2755,7 @@
   "current/viirs-snpp/2026/viirs-snpp_2026_Spain.csv": {
    "bytes": 1714879,
    "coverage": "2026-01-01..2026-07-31",
-   "fetched_at": "2026-11-14T09:17:56+00:00",
+   "fetched_at": "2026-11-14T12:07:03+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/viirs-snpp/2026/viirs-snpp_2026_Spain.csv",
    "product": "VIIRS_SNPP_SP via area API (country bbox, not country-clipped)",
@@ -2765,7 +2765,7 @@
   "current/viirs-snpp/2026/viirs-snpp_2026_Turkey.csv": {
    "bytes": 1667298,
    "coverage": "2026-01-01..2026-07-31",
-   "fetched_at": "2026-11-14T09:17:56+00:00",
+   "fetched_at": "2026-11-14T12:07:02+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "current/viirs-snpp/2026/viirs-snpp_2026_Turkey.csv",
    "product": "VIIRS_SNPP_SP via area API (country bbox, not country-clipped)",
@@ -2773,19 +2773,19 @@
    "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_SNPP_SP/-9.6,34.7,44.9,47.1/5/<date>"
   },
   "nrt/modis/2026/modis_2026_Argentina.csv": {
-   "bytes": 1385289,
+   "bytes": 1385727,
    "coverage": "2026-09-01..2026-11-14",
-   "fetched_at": "2026-11-14T09:17:05+00:00",
+   "fetched_at": "2026-11-14T12:06:15+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/modis/2026/modis_2026_Argentina.csv",
    "product": "MODIS_NRT via area API (country bbox, not country-clipped)",
-   "sha256": "ae092627105779949a990b96184b33ae88fb1dc79bf109c2ed519ccf01d1e350",
+   "sha256": "763708ad8bb646c85689896afab094301406ac8d3e4e1b9461922e4a64b8c595",
    "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/MODIS_NRT/-73.6,-55.1,-53.6,-21.7/5/<date>"
   },
   "nrt/modis/2026/modis_2026_Greece.csv": {
    "bytes": 72438,
    "coverage": "2026-09-01..2026-11-14",
-   "fetched_at": "2026-11-14T09:17:00+00:00",
+   "fetched_at": "2026-11-14T12:06:06+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/modis/2026/modis_2026_Greece.csv",
    "product": "MODIS_NRT via area API (country bbox, not country-clipped)",
@@ -2793,19 +2793,19 @@
    "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/MODIS_NRT/-9.6,34.7,44.9,47.1/5/<date>"
   },
   "nrt/modis/2026/modis_2026_Italy.csv": {
-   "bytes": 184020,
+   "bytes": 184442,
    "coverage": "2026-09-01..2026-11-14",
-   "fetched_at": "2026-11-14T09:17:00+00:00",
+   "fetched_at": "2026-11-14T12:06:06+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/modis/2026/modis_2026_Italy.csv",
    "product": "MODIS_NRT via area API (country bbox, not country-clipped)",
-   "sha256": "1c58a875f12de17d9f234ed7a13cf8fb63d919afd692c2e3e25b41caf631fdf8",
+   "sha256": "2f2cd7ab2800cc80a55fa705d88bac68ec6d7edf978f7b11fca18dcfa1f678cb",
    "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/MODIS_NRT/-9.6,34.7,44.9,47.1/5/<date>"
   },
   "nrt/modis/2026/modis_2026_Portugal.csv": {
    "bytes": 40613,
    "coverage": "2026-09-01..2026-11-14",
-   "fetched_at": "2026-11-14T09:17:00+00:00",
+   "fetched_at": "2026-11-14T12:06:06+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/modis/2026/modis_2026_Portugal.csv",
    "product": "MODIS_NRT via area API (country bbox, not country-clipped)",
@@ -2815,7 +2815,7 @@
   "nrt/modis/2026/modis_2026_Spain.csv": {
    "bytes": 111391,
    "coverage": "2026-09-01..2026-11-14",
-   "fetched_at": "2026-11-14T09:17:00+00:00",
+   "fetched_at": "2026-11-14T12:06:06+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/modis/2026/modis_2026_Spain.csv",
    "product": "MODIS_NRT via area API (country bbox, not country-clipped)",
@@ -2825,7 +2825,7 @@
   "nrt/modis/2026/modis_2026_Turkey.csv": {
    "bytes": 351460,
    "coverage": "2026-09-01..2026-11-14",
-   "fetched_at": "2026-11-14T09:17:00+00:00",
+   "fetched_at": "2026-11-14T12:06:06+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/modis/2026/modis_2026_Turkey.csv",
    "product": "MODIS_NRT via area API (country bbox, not country-clipped)",
@@ -2835,7 +2835,7 @@
   "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Argentina.csv": {
    "bytes": 6083439,
    "coverage": "2026-08-01..2026-11-14",
-   "fetched_at": "2026-11-14T09:21:46+00:00",
+   "fetched_at": "2026-11-14T12:10:16+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Argentina.csv",
    "product": "VIIRS_NOAA20_NRT via area API (country bbox, not country-clipped)",
@@ -2845,7 +2845,7 @@
   "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Greece.csv": {
    "bytes": 656612,
    "coverage": "2026-08-01..2026-11-14",
-   "fetched_at": "2026-11-14T09:21:24+00:00",
+   "fetched_at": "2026-11-14T12:09:47+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Greece.csv",
    "product": "VIIRS_NOAA20_NRT via area API (country bbox, not country-clipped)",
@@ -2855,7 +2855,7 @@
   "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Italy.csv": {
    "bytes": 1917208,
    "coverage": "2026-08-01..2026-11-14",
-   "fetched_at": "2026-11-14T09:21:24+00:00",
+   "fetched_at": "2026-11-14T12:09:47+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Italy.csv",
    "product": "VIIRS_NOAA20_NRT via area API (country bbox, not country-clipped)",
@@ -2865,7 +2865,7 @@
   "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Portugal.csv": {
    "bytes": 410554,
    "coverage": "2026-08-01..2026-11-14",
-   "fetched_at": "2026-11-14T09:21:24+00:00",
+   "fetched_at": "2026-11-14T12:09:47+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Portugal.csv",
    "product": "VIIRS_NOAA20_NRT via area API (country bbox, not country-clipped)",
@@ -2875,7 +2875,7 @@
   "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Spain.csv": {
    "bytes": 903579,
    "coverage": "2026-08-01..2026-11-14",
-   "fetched_at": "2026-11-14T09:21:24+00:00",
+   "fetched_at": "2026-11-14T12:09:47+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Spain.csv",
    "product": "VIIRS_NOAA20_NRT via area API (country bbox, not country-clipped)",
@@ -2885,7 +2885,7 @@
   "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Turkey.csv": {
    "bytes": 2775681,
    "coverage": "2026-08-01..2026-11-14",
-   "fetched_at": "2026-11-14T09:21:24+00:00",
+   "fetched_at": "2026-11-14T12:09:46+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Turkey.csv",
    "product": "VIIRS_NOAA20_NRT via area API (country bbox, not country-clipped)",
@@ -2895,7 +2895,7 @@
   "nrt/viirs-snpp/2026/viirs-snpp_2026_Argentina.csv": {
    "bytes": 5324859,
    "coverage": "2026-08-01..2026-11-02",
-   "fetched_at": "2026-11-14T09:19:26+00:00",
+   "fetched_at": "2026-11-14T12:08:23+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/viirs-snpp/2026/viirs-snpp_2026_Argentina.csv",
    "product": "VIIRS_SNPP_NRT via area API (country bbox, not country-clipped)",
@@ -2905,7 +2905,7 @@
   "nrt/viirs-snpp/2026/viirs-snpp_2026_Greece.csv": {
    "bytes": 633212,
    "coverage": "2026-08-01..2026-11-02",
-   "fetched_at": "2026-11-14T09:19:07+00:00",
+   "fetched_at": "2026-11-14T12:08:09+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/viirs-snpp/2026/viirs-snpp_2026_Greece.csv",
    "product": "VIIRS_SNPP_NRT via area API (country bbox, not country-clipped)",
@@ -2915,7 +2915,7 @@
   "nrt/viirs-snpp/2026/viirs-snpp_2026_Italy.csv": {
    "bytes": 1792148,
    "coverage": "2026-08-01..2026-11-02",
-   "fetched_at": "2026-11-14T09:19:07+00:00",
+   "fetched_at": "2026-11-14T12:08:10+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/viirs-snpp/2026/viirs-snpp_2026_Italy.csv",
    "product": "VIIRS_SNPP_NRT via area API (country bbox, not country-clipped)",
@@ -2925,7 +2925,7 @@
   "nrt/viirs-snpp/2026/viirs-snpp_2026_Portugal.csv": {
    "bytes": 372124,
    "coverage": "2026-08-01..2026-11-02",
-   "fetched_at": "2026-11-14T09:19:07+00:00",
+   "fetched_at": "2026-11-14T12:08:09+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/viirs-snpp/2026/viirs-snpp_2026_Portugal.csv",
    "product": "VIIRS_SNPP_NRT via area API (country bbox, not country-clipped)",
@@ -2935,7 +2935,7 @@
   "nrt/viirs-snpp/2026/viirs-snpp_2026_Spain.csv": {
    "bytes": 810810,
    "coverage": "2026-08-01..2026-11-02",
-   "fetched_at": "2026-11-14T09:19:07+00:00",
+   "fetched_at": "2026-11-14T12:08:09+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/viirs-snpp/2026/viirs-snpp_2026_Spain.csv",
    "product": "VIIRS_SNPP_NRT via area API (country bbox, not country-clipped)",
@@ -2945,7 +2945,7 @@
   "nrt/viirs-snpp/2026/viirs-snpp_2026_Turkey.csv": {
    "bytes": 2503420,
    "coverage": "2026-08-01..2026-11-02",
-   "fetched_at": "2026-11-14T09:19:07+00:00",
+   "fetched_at": "2026-11-14T12:08:09+00:00",
    "license": "NASA EOSDIS open data (CC0)",
    "path": "nrt/viirs-snpp/2026/viirs-snpp_2026_Turkey.csv",
    "product": "VIIRS_SNPP_NRT via area API (country bbox, not country-clipped)",

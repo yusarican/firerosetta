@@ -10,3 +10,5 @@ node_modules/
 !.env.example
 .DS_Store
 web/public/maplibre/
+.runtime/
+.logs/

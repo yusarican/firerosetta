@@ -13,8 +13,6 @@ vegetation-count error +12.8% -> -1.5% for VIIRS, +6.5% -> +1.5% for MODIS.
 """
 from __future__ import annotations
 
-import resource
-
 import duckdb
 
 from .config import GRID_DEG, RAW, STAGED
@@ -24,7 +22,7 @@ MASK_DEG, MASK_MIN = 0.005, 3
 SQL = """
 CREATE TEMP TABLE typed AS
   WITH src AS (
-    SELECT *, filename AS f
+    SELECT *, replace(filename, chr(92), '/') AS f
     FROM read_csv('{raw}/*/*/*/*.csv', union_by_name=true, filename=true,
                   types={{'confidence':'VARCHAR','acq_time':'VARCHAR','satellite':'VARCHAR',
                           'version':'VARCHAR','type':'VARCHAR'}})
@@ -77,6 +75,10 @@ COPY (
 
 def _raise_fd_limit(target: int = 10240) -> None:
     # union_by_name opens every CSV at once; macOS shells default to 256 fds.
+    try:
+        import resource
+    except ImportError:  # Windows has no POSIX file-descriptor limit.
+        return
     soft, hard = resource.getrlimit(resource.RLIMIT_NOFILE)
     want = target if hard == resource.RLIM_INFINITY else min(target, hard)
     if soft < want:

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Download } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -18,6 +17,7 @@ import { calendarPng, monthlyCsv, seasonCsv, slug, svgPng, yearlyCsv } from "@/l
 import { fmt, full, monthRange, MONTHS_LONG } from "@/lib/scale";
 
 import { AreaMap } from "./area-map";
+import { AppHeader } from "./app-header";
 import { BurnCalendar, type CalendarMode } from "./burn-calendar";
 import { SeasonChart, SkillChart, YearChart } from "./charts";
 import { ForecastView } from "./forecast";
@@ -111,6 +111,12 @@ export function Workbench() {
   const areaKey = useMemo(() => JSON.stringify(area), [area]);
 
   useEffect(() => {
+    if (area.kind === "polygon") {
+      try { sessionStorage.setItem("firerosetta-selected-area", JSON.stringify(area)); } catch {}
+    }
+  }, [area]);
+
+  useEffect(() => {
     getMeta().then(setMeta).catch((e) => setError(e.message));
   }, []);
 
@@ -179,20 +185,7 @@ export function Workbench() {
 
   return (
     <div className="mx-auto w-full max-w-[1400px] px-4 pb-16 sm:px-6">
-      <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 py-5">
-        <div className="flex items-baseline gap-3">
-          <span className="display text-xl">FireRosetta</span>
-          <span className="text-sm text-muted-foreground">
-            Burning calendar from MODIS and VIIRS, on one scale
-          </span>
-        </div>
-        <nav className="flex gap-5 text-sm">
-          <span className="font-semibold">Calendar</span>
-          <Link href="/method" className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
-            How the harmonization works
-          </Link>
-        </nav>
-      </header>
+      <AppHeader active="calendar" />
 
       {error && (
         <p role="alert" className="mb-4 rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2 text-sm">

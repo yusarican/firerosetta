@@ -33,6 +33,40 @@ bu yüzden üçü de aynı şekilde açılıyor ve indirme tarafında dosya yön
 `fetch` açmadan önce sha256'yı doğruluyor; eşleşmezse açmayı reddediyor. `gh` kuruluysa onu
 tercih ediyor (depo özelken de çalışır), yoksa düz `curl`'e düşüyor.
 
+Windows'ta masaüstündeki **FireRosetta** kısayoluna çift tıkla veya proje kökünde
+`powershell -ExecutionPolicy Bypass -File .\start.ps1` çalıştır. Başlatıcı eksik verileri
+hazırlar, API ve arayüzü başlatır, ardından tarayıcıyı açar. İlk hazırlık uzun sürebilir;
+sonraki açılışlar hazır veriyi kullanır. Kapatmak için başlatıcı penceresinde `Ctrl+C` kullan.
+Verileri yeniden indirmek ve işlemek için `powershell -ExecutionPolicy Bypass -File .\start.ps1 -Rebuild`
+çalıştır. Windows başlatıcısı proje içindeki `.runtime` araçlarını veya kurulu `uv`, Node.js ve npm'i kullanır.
+
+### Risk Alerts
+
+Üst menüdeki **Risk Alerts** (`/risk`) sekmesi, önleyici inceleme ve gözetim için alanları
+işaretler. Harita yakınlaştıkça **20 → 10 → 5 km** karelere ayrılır; 20 km yalnızca daha geniş,
+uzaklaştırılmış görünümlerde (zoom < 4,5) kullanılır. Her düzeyde güncel ve geçmiş tespitler gerçek
+koordinatlarından yeniden gruplanır. Üstteki özet ve CSV seçimin tamamını, harita altındaki sayaçlar
+ve öncelik listesi yalnızca görüntülenen alanı kapsar. Kare seçimi haritayı otomatik ortalamaz.
+Hazır ülke veya bölge seçilir, haritada çokgen çizilir ya da koordinat kutusu girilir.
+Takvimde çizilen son alan uyarı sekmesine taşınır. Tespitler seçimin gerçek çokgeniyle süzülür;
+yalnız çevreleyen kutunun içindekiler sayılmaz. Geçmiş veri kapsamı ilk yüklenen altı ülkeyle sınırlıdır.
+Kareler seçimin merkezine göre seçilen sabit UTM koordinat sisteminde ölçülür; arazi üzerindeki
+genişlik projeksiyon nedeniyle küçük farklar gösterebilir. Nötr çizgili karelerde gözlem olmaması
+risksiz oldukları anlamına gelmez.
+
+Son 30 günlük NOAA-20 verileri MAP_KEY ile NASA'dan kontrol edilir ve 5 dakika önbelleğe alınır;
+yakınlaştırmak yeniden veri indirmez. Son 7 günde tespit olan kareler yüksek önceliklidir.
+Seçilen alanın tüm ölçekleri arka planda önceden yüklenir ve haritada hazır kaynaklar olarak tutulur.
+Kaydırma ve yakınlaştırma yeni API isteği başlatmaz; ekran dışındaki seçili alan da bellekte kalır.
+Mevsimsel bağlam, 2013–2025 S-NPP kayıtlarının içinde bulunulan aya ait tam yıl ortalamalarıdır
+(sıfır yıllar dahil). Aynı ayda en az 3 yılda tespit ve pozitif ortalamaların üst çeyreğinde yer alma
+ya da son 30 günde tespit, artmış öncelik üretir. Düşük güven ve bilinen sabit ısı kaynakları ayıklanır.
+Canlı erişim yoksa yerel veriye geçilir; veri 1 günden eskiyse güncel tespitler alarmı yükseltmez.
+
+Bu bir **önlem önceliği** katmanıdır; meteorolojik yangın tahmini veya yangın olasılığı değildir.
+Hava, yakıt/bitki örtüsü ve saha doğrulaması eklenmeden resmî erken uyarı olarak kullanılmamalıdır.
+Kontroller: `cd backend` ardından `.venv\Scripts\python -m unittest discover -s tests -v`.
+
 Adım adım (ya da `start.sh` içinde ne olduğunu görmek için):
 
 ```bash
@@ -118,6 +152,7 @@ backend/firerosetta/
                  /forecast /static-sources
 scripts/
   release.sh     Üç model paketini üretir / yayınlar / indirir (sha256 doğrulamalı)
+  risk.py        /risk: canlı tespitler + mevsimsel geçmiş, 20–5 km uyarlanabilir öncelik ızgarası
 web/             Next.js 16 + shadcn/ui + MapLibre
 data/            (git'e girmez) raw / staged / processed / models / manifest.json
 ```

@@ -7,6 +7,8 @@ import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import type { Area, Point, Polygon } from "@/lib/api";
+import { addCountryHighlight, showCountryHighlight } from "./country-highlight";
+import { createMapStyleSync } from "./map-style-sync";
 
 const STYLE = "https://tiles.openfreemap.org/styles/positron";
 // v6 ships its worker as a separate module; serve it from /public (copied on npm install)
@@ -32,6 +34,7 @@ export function AreaMap({
 }) {
   const el = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
+  const styleSync = useRef<ReturnType<typeof createMapStyleSync> | null>(null);
   const draft = useRef<number[][]>([]);
   const drawingRef = useRef(false);
   const onDrawRef = useRef(onDraw);
@@ -44,8 +47,12 @@ export function AreaMap({
     onDrawRef.current = onDraw;
   }, [onDraw]);
 
-  const setData = (id: string, data: unknown) =>
-    (map.current?.getSource(id) as maplibregl.GeoJSONSource | undefined)?.setData(data as never);
+  const setData = (id: string, data: unknown) => {
+    const instance = map.current;
+    if (!instance) return;
+    styleSync.current?.update(`data-${id}`, () =>
+      (instance.getSource(id) as maplibregl.GeoJSONSource | undefined)?.setData(data as never));
+  };
 
   const paintDraft = () => {
     const pts = draft.current;
@@ -98,13 +105,17 @@ export function AreaMap({
     }
     map.current = m;
     m.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
-    m.on("load", () => {
-      m.addSource("aoi", { type: "geojson", data: EMPTY });
-      m.addSource("pts", { type: "geojson", data: EMPTY });
-      m.addSource("draft", { type: "geojson", data: EMPTY });
-      m.addLayer({ id: "aoi-fill", type: "fill", source: "aoi", paint: { "fill-color": "#1d5a48", "fill-opacity": 0.06 } });
-      m.addLayer({ id: "aoi-line", type: "line", source: "aoi", paint: { "line-color": "#1d5a48", "line-width": 2 } });
-      m.addLayer({
+    const sync = createMapStyleSync(m, (loaded) => { if (map.current === m) setReady(loaded); });
+    styleSync.current = sync;
+    queueMicrotask(() => { if (styleSync.current === sync) setReady(sync.ready); });
+    sync.update("bootstrap", () => {
+      if (!m.getSource("aoi")) m.addSource("aoi", { type: "geojson", data: EMPTY });
+      if (!m.getSource("pts")) m.addSource("pts", { type: "geojson", data: EMPTY });
+      if (!m.getSource("draft")) m.addSource("draft", { type: "geojson", data: EMPTY });
+      if (!m.getLayer("aoi-fill")) m.addLayer({ id: "aoi-fill", type: "fill", source: "aoi", paint: { "fill-color": "#1d5a48", "fill-opacity": 0.06 } });
+      if (!m.getLayer("aoi-line")) m.addLayer({ id: "aoi-line", type: "line", source: "aoi", paint: { "line-color": "#1d5a48", "line-width": 2 } });
+      addCountryHighlight(m);
+      if (!m.getLayer("pts")) m.addLayer({
         id: "pts",
         type: "circle",
         source: "pts",
@@ -118,9 +129,8 @@ export function AreaMap({
           "circle-opacity": 0.85,
         },
       });
-      m.addLayer({ id: "draft-line", type: "line", source: "draft", filter: ["==", "$type", "LineString"], paint: { "line-color": "#15211d", "line-width": 1.5, "line-dasharray": [2, 2] } });
-      m.addLayer({ id: "draft-pt", type: "circle", source: "draft", filter: ["==", "$type", "Point"], paint: { "circle-radius": 4.5, "circle-color": "#ffffff", "circle-stroke-color": "#15211d", "circle-stroke-width": 2 } });
-      setReady(true);
+      if (!m.getLayer("draft-line")) m.addLayer({ id: "draft-line", type: "line", source: "draft", filter: ["==", "$type", "LineString"], paint: { "line-color": "#15211d", "line-width": 1.5, "line-dasharray": [2, 2] } });
+      if (!m.getLayer("draft-pt")) m.addLayer({ id: "draft-pt", type: "circle", source: "draft", filter: ["==", "$type", "Point"], paint: { "circle-radius": 4.5, "circle-color": "#ffffff", "circle-stroke-color": "#15211d", "circle-stroke-width": 2 } });
     });
     m.on("click", (e) => {
       if (!drawingRef.current) return;
@@ -157,28 +167,34 @@ export function AreaMap({
     window.addEventListener("keydown", key);
     return () => {
       window.removeEventListener("keydown", key);
+      sync.dispose();
+      if (styleSync.current === sync) styleSync.current = null;
       m.remove();
-      map.current = null;
+      if (map.current === m) map.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if (!ready || !map.current) return;
+    const instance = map.current, sync = styleSync.current;
+    if (!instance || !sync) return;
     const [w, s, e, n] = bboxOf(area);
     const geometry =
       area.kind === "polygon"
         ? area.geometry
         : { type: "Polygon", coordinates: [[[w, s], [e, s], [e, n], [w, n], [w, s]]] };
-    setData("aoi", {
-      type: "FeatureCollection",
-      features: area.kind === "polygon" ? [{ type: "Feature", properties: {}, geometry }] : [],
+    sync.update("area", () => {
+      showCountryHighlight(instance, area.kind === "country" ? area.name : undefined);
+      (instance.getSource("aoi") as maplibregl.GeoJSONSource).setData({
+        type: "FeatureCollection",
+        features: area.kind === "polygon" ? [{ type: "Feature", properties: {}, geometry }] : [],
+      } as never);
     });
-    map.current.fitBounds([[w, s], [e, n]], { padding: 36, duration: 600, maxZoom: 10 });
-  }, [area, ready]);
+    sync.update("bounds", () => instance.fitBounds([[w, s], [e, n]], { padding: 36, duration: 600, maxZoom: 10 }), false);
+    return () => { sync.cancel("area"); sync.cancel("bounds"); };
+  }, [area]);
 
   useEffect(() => {
-    if (!ready) return;
     setData("pts", {
       type: "FeatureCollection",
       features: points.map(([lon, lat, date, platform, frp, dn, stat]) => ({
@@ -187,10 +203,10 @@ export function AreaMap({
         geometry: { type: "Point", coordinates: [lon, lat] },
       })),
     });
-  }, [points, ready]);
+  }, [points]);
 
   const start = () => {
-    if (!map.current) return;
+    if (!map.current || !styleSync.current?.ready) return;
     drawingRef.current = true;
     setDrawing(true);
     draft.current = [];
