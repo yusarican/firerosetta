@@ -397,10 +397,18 @@ def _load_static():
         return None
     # cursor(), not con: by this point in module setup the shared connection still holds an
     # unfinished result from the fetchone() calls above.
-    df = con.cursor().sql(f"SELECT * FROM '{sites}' WHERE flag").df()
+    cur = con.cursor()
+    df = cur.sql(f"SELECT * FROM '{sites}' WHERE flag").df()
     for c in ("first_seen", "last_seen"):
         df[c] = df[c].astype(str).str[:10]
-    return {"sites": df, "meta": json.loads(meta.read_text())}
+    m = json.loads(meta.read_text())
+    # A real table rather than register(): each request runs on its own cursor, and a cursor
+    # sees tables in the shared catalog but not a dataframe registered on a different cursor.
+    cur.register("flagged", df[["veg", "sx", "sy"]])
+    cur.execute("CREATE OR REPLACE TABLE static_flag AS SELECT DISTINCT veg, sx, sy FROM flagged")
+    cur.unregister("flagged")
+    # the site grid the bundle was built on, not a constant copied from static.py
+    return {"sites": df, "meta": m, "site_deg": float(m["site_deg"])}
 
 
 STATIC = _load_static()
@@ -455,6 +463,20 @@ def static_metrics():
     return STATIC["meta"]
 
 
+def _static_tag() -> tuple[str, str]:
+    """(join, expression) marking detections that sit on a flagged persistent heat source.
+
+    Keyed exactly as static.py keyed its sites: the ~1.1 km cell *and* the FIRMS type split,
+    so a site the detector found in the untagged stream only flags untagged detections.
+    """
+    if STATIC is None:
+        return "", "FALSE"
+    d = STATIC["site_deg"]
+    return (f" LEFT JOIN static_flag f ON f.veg = (hs.type = 0)"
+            f" AND f.sx = floor(hs.lon/{d})::INT AND f.sy = floor(hs.lat/{d})::INT",
+            "f.sx IS NOT NULL")
+
+
 def _hotspot_sql(q: HotspotQuery) -> tuple[str, list]:
     where, params = ["acq_date BETWEEN ?::DATE AND ?::DATE"], [q.start, q.end]
     where.append("sensor IN (" + ",".join("?" * len(q.sensors)) + ")")
@@ -471,7 +493,9 @@ def _hotspot_sql(q: HotspotQuery) -> tuple[str, list]:
         w, s, e, n = g.bounds
         where.append("lon BETWEEN ? AND ? AND lat BETWEEN ? AND ?")
         params += [w, e, s, n]
-    return f"SELECT {HOTSPOT_COLS} FROM hs WHERE {' AND '.join(where)} ORDER BY acq_date, acq_time", params
+    join, flag = _static_tag()
+    return (f"SELECT {HOTSPOT_COLS}, {flag} AS static_source FROM hs{join} "
+            f"WHERE {' AND '.join(where)} ORDER BY acq_date, acq_time"), params
 
 
 def _hotspots(q: HotspotQuery) -> pd.DataFrame:
@@ -488,13 +512,20 @@ def hotspots(q: HotspotQuery):
     df = _hotspots(q)
     total = len(df)
     by_platform = {k: int(v) for k, v in df.platform.value_counts().items()}
+    stat = df[df.static_source]
     if total > MAX_POINTS:  # the map gets an even sample; the CSV always gets everything
         df = df.iloc[np.linspace(0, total - 1, MAX_POINTS).astype(int)]
     return {
         "total": total, "returned": len(df),
         "by_platform": by_platform,
+        # Detections on sites the detector flagged as permanent non-fire heat sources. They stay
+        # inside `total` - that is what the satellites reported - but each point carries the flag
+        # so the map can show them as something other than a fire.
+        "has_static_sources": STATIC is not None,
+        "static_total": int(len(stat)),
+        "static_by_platform": {k: int(v) for k, v in stat.platform.value_counts().items()},
         "points": [[round(r.longitude, 4), round(r.latitude, 4), str(r.acq_date)[:10], r.platform,
-                    None if pd.isna(r.frp) else round(r.frp, 1), r.daynight]
+                    None if pd.isna(r.frp) else round(r.frp, 1), r.daynight, int(r.static_source)]
                    for r in df.itertuples()],
     }
 
@@ -507,6 +538,10 @@ def hotspots_csv(q: HotspotQuery):
     buf.write("# NASA FIRMS active fire hotspots (MODIS Collection 6.1, VIIRS 375 m Collection 2)\n")
     buf.write(f"# {q.start} .. {q.end}; sensors={'+'.join(q.sensors)}; "
               f"quality screen={'vegetation fires, confidence >= nominal' if q.screened else 'none'}\n")
+    buf.write("# static_source: true where the detection sits on a site the unsupervised detector flagged as a\n"
+              "#   permanent non-fire heat source (chimney, gas flare, steel mill). Nothing is dropped; judge it yourself.\n"
+              if STATIC is not None else
+              "# static_source: always false - the static-source detector has not been run in this deployment.\n")
     df.to_csv(buf, index=False)
     buf.seek(0)
     return StreamingResponse(iter([buf.getvalue()]), media_type="text/csv", headers={
