@@ -1,0 +1,11 @@
+data/raw/
+data/staged/
+data/processed/
+.venv/
+__pycache__/
+node_modules/
+.next/
+.env*
+!.env.example
+.DS_Store
+web/public/maplibre/

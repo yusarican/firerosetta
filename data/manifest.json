@@ -1,0 +1,2957 @@
+{
+ "files": {
+  "archive/modis/2000/modis_2000_Argentina.csv": {
+   "bytes": 583111,
+   "fetched_at": "2026-11-14T08:57:59+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2000/modis_2000_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "46e8a305afc510c74ba061c283db731bbfa0cb2d5cb169035618c290e4cd3718",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2000/modis_2000_Argentina.csv"
+  },
+  "archive/modis/2000/modis_2000_Greece.csv": {
+   "bytes": 7177,
+   "fetched_at": "2026-11-14T08:57:17+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2000/modis_2000_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "c06ee7b738d9beef4308c40275902fcd1c08b54e9444dd3c948dfa194dacc922",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2000/modis_2000_Greece.csv"
+  },
+  "archive/modis/2000/modis_2000_Italy.csv": {
+   "bytes": 1954,
+   "fetched_at": "2026-11-14T08:57:43+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2000/modis_2000_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "9c9d1cce801d1f275e414e43524c9b8c68e4047649d5369359fe7f1d78124575",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2000/modis_2000_Italy.csv"
+  },
+  "archive/modis/2000/modis_2000_Portugal.csv": {
+   "bytes": 353,
+   "fetched_at": "2026-11-14T08:57:27+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2000/modis_2000_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "7bee34981b54a126b550e1d876c94115126f5ac69d0dea9c9f6c8b747f841a9b",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2000/modis_2000_Portugal.csv"
+  },
+  "archive/modis/2000/modis_2000_Spain.csv": {
+   "bytes": 10044,
+   "fetched_at": "2026-11-14T08:57:33+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2000/modis_2000_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "c72998eab738a8fc05ca9c721d496d5cb6c3b8eb1a74cb29634df3ac4d20f985",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2000/modis_2000_Spain.csv"
+  },
+  "archive/modis/2000/modis_2000_Turkey.csv": {
+   "bytes": 38184,
+   "fetched_at": "2026-11-14T08:56:57+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2000/modis_2000_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "20d22237073ff0b2dcb5cec134d9e3081919f2abb797389c1116c4cb7e3f65ba",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2000/modis_2000_Turkey.csv"
+  },
+  "archive/modis/2001/modis_2001_Argentina.csv": {
+   "bytes": 2551003,
+   "fetched_at": "2026-11-14T08:58:06+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2001/modis_2001_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "2047af87f695fed3c318e9155a0755aa2fe443357dca4e47940a779d6912fa77",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2001/modis_2001_Argentina.csv"
+  },
+  "archive/modis/2001/modis_2001_Greece.csv": {
+   "bytes": 142727,
+   "fetched_at": "2026-11-14T08:57:18+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2001/modis_2001_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "bcf15a38866129e6a8cffda75d7fd21a56a000d054b81c5a325ac1a4ccdcc1fc",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2001/modis_2001_Greece.csv"
+  },
+  "archive/modis/2001/modis_2001_Italy.csv": {
+   "bytes": 252413,
+   "fetched_at": "2026-11-14T08:57:43+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2001/modis_2001_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "bd9e4e6bb4397588e33f779a7ec9b7897e5e8c25cf6460471aa1df200310da8e",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2001/modis_2001_Italy.csv"
+  },
+  "archive/modis/2001/modis_2001_Portugal.csv": {
+   "bytes": 125114,
+   "fetched_at": "2026-11-14T08:57:27+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2001/modis_2001_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "8e9fce662ce0439f6d235c54a414a2af7b61e795daabe2e8b8f2a67d0d2f1298",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2001/modis_2001_Portugal.csv"
+  },
+  "archive/modis/2001/modis_2001_Spain.csv": {
+   "bytes": 257381,
+   "fetched_at": "2026-11-14T08:57:34+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2001/modis_2001_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "aba1a6b06f8094fbb4b0ef8892e5be6f3a2ef79c2c4d4bbb1a500a600bb0bddd",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2001/modis_2001_Spain.csv"
+  },
+  "archive/modis/2001/modis_2001_Turkey.csv": {
+   "bytes": 400861,
+   "fetched_at": "2026-11-14T08:56:59+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2001/modis_2001_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "c3cdea83f572d69d2481efa59e7dc28815be92e2e8ad813444a3cff578a1a153",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2001/modis_2001_Turkey.csv"
+  },
+  "archive/modis/2002/modis_2002_Argentina.csv": {
+   "bytes": 4797680,
+   "fetched_at": "2026-11-14T08:58:08+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2002/modis_2002_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "d5369096f3dc0f3114dfa251a0690db3104244b30e5def56db44becda68e4b23",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2002/modis_2002_Argentina.csv"
+  },
+  "archive/modis/2002/modis_2002_Greece.csv": {
+   "bytes": 68051,
+   "fetched_at": "2026-11-14T08:57:18+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2002/modis_2002_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "28d78fed063e5fda1c0b4449badf703682b9a95ca5cf01ce5442c689f6c497fa",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2002/modis_2002_Greece.csv"
+  },
+  "archive/modis/2002/modis_2002_Italy.csv": {
+   "bytes": 194145,
+   "fetched_at": "2026-11-14T08:57:43+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2002/modis_2002_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "02c990e42830909a57ee67a1009b293208c67c650a0fe4bf4494ec0e464eba0c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2002/modis_2002_Italy.csv"
+  },
+  "archive/modis/2002/modis_2002_Portugal.csv": {
+   "bytes": 205531,
+   "fetched_at": "2026-11-14T08:57:27+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2002/modis_2002_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "696faf6b2b3d5a489db9c1dddf96d58543e4e5a42bbc74dc80c90cf221061057",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2002/modis_2002_Portugal.csv"
+  },
+  "archive/modis/2002/modis_2002_Spain.csv": {
+   "bytes": 398357,
+   "fetched_at": "2026-11-14T08:57:34+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2002/modis_2002_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "5b2dd3cc07c603b581a02f19a326cbf9daca15e63855a5cfd621c3f0a7e97ac7",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2002/modis_2002_Spain.csv"
+  },
+  "archive/modis/2002/modis_2002_Turkey.csv": {
+   "bytes": 531680,
+   "fetched_at": "2026-11-14T08:56:58+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2002/modis_2002_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "8416a4af734ed5aed800454c3f3d4314ccd82c6efa340c32203d802a6f4b0085",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2002/modis_2002_Turkey.csv"
+  },
+  "archive/modis/2003/modis_2003_Argentina.csv": {
+   "bytes": 9275846,
+   "fetched_at": "2026-11-14T08:58:31+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2003/modis_2003_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "98ef63553ccbab41cfd093654267dd66a00345c18a497c8c5ec0f8394fa361f1",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2003/modis_2003_Argentina.csv"
+  },
+  "archive/modis/2003/modis_2003_Greece.csv": {
+   "bytes": 124962,
+   "fetched_at": "2026-11-14T08:57:18+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2003/modis_2003_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "442706998bb5bce889204a225ec86fd187a4d9c3b033757d12cb4137001e5030",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2003/modis_2003_Greece.csv"
+  },
+  "archive/modis/2003/modis_2003_Italy.csv": {
+   "bytes": 478362,
+   "fetched_at": "2026-11-14T08:57:44+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2003/modis_2003_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "0ea202ca3ce859c4d4d5d49f2c416f4463c697a1f34b16a8ae42ca2eec66bf54",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2003/modis_2003_Italy.csv"
+  },
+  "archive/modis/2003/modis_2003_Portugal.csv": {
+   "bytes": 488211,
+   "fetched_at": "2026-11-14T08:57:28+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2003/modis_2003_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "1cc329472d8c53d91c10862c90ae7b961c33bd3a2a72041e33e647bb5d771e83",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2003/modis_2003_Portugal.csv"
+  },
+  "archive/modis/2003/modis_2003_Spain.csv": {
+   "bytes": 578352,
+   "fetched_at": "2026-11-14T08:57:35+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2003/modis_2003_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "4055e060b454d2fe05dc0649dc9c00839be54c60228839fa3aabb9f75e554e8f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2003/modis_2003_Spain.csv"
+  },
+  "archive/modis/2003/modis_2003_Turkey.csv": {
+   "bytes": 595760,
+   "fetched_at": "2026-11-14T08:56:58+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2003/modis_2003_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "fa827bd4080b9ae1ebcad67aa210900214d3c9b45a754c7a1937d9608fdc78d9",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2003/modis_2003_Turkey.csv"
+  },
+  "archive/modis/2004/modis_2004_Argentina.csv": {
+   "bytes": 7924650,
+   "fetched_at": "2026-11-14T08:58:11+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2004/modis_2004_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "aca0e9343579ccb152dbb9bd01625ec6414324f8c78bddeec0508067ac565862",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2004/modis_2004_Argentina.csv"
+  },
+  "archive/modis/2004/modis_2004_Greece.csv": {
+   "bytes": 163543,
+   "fetched_at": "2026-11-14T08:57:18+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2004/modis_2004_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "12e13126abaa100923b7ee3bf4047d45d209ac62d9bac5a4fac5a9637c300c15",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2004/modis_2004_Greece.csv"
+  },
+  "archive/modis/2004/modis_2004_Italy.csv": {
+   "bytes": 427870,
+   "fetched_at": "2026-11-14T08:57:44+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2004/modis_2004_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "daf7121fad2425cd38e8dfeda2d583bc710db396e1f9c13c3c0e7d36ced1a51c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2004/modis_2004_Italy.csv"
+  },
+  "archive/modis/2004/modis_2004_Portugal.csv": {
+   "bytes": 236295,
+   "fetched_at": "2026-11-14T08:57:27+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2004/modis_2004_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "6c9895b10da725202cc94ed9df722c8db7132b15f06b2e75bca5549e5998a5f5",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2004/modis_2004_Portugal.csv"
+  },
+  "archive/modis/2004/modis_2004_Spain.csv": {
+   "bytes": 609997,
+   "fetched_at": "2026-11-14T08:57:40+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2004/modis_2004_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "17b2f14f28743a0586801a6f66c733f8753bca59043e8d6343465f4aacbf77c7",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2004/modis_2004_Spain.csv"
+  },
+  "archive/modis/2004/modis_2004_Turkey.csv": {
+   "bytes": 609006,
+   "fetched_at": "2026-11-14T08:57:00+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2004/modis_2004_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "00e05c4d3a5ab40d0b55c99cf20c88ed3ddda6ad3f1710e7dd9894c3bcf566be",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2004/modis_2004_Turkey.csv"
+  },
+  "archive/modis/2005/modis_2005_Argentina.csv": {
+   "bytes": 5649257,
+   "fetched_at": "2026-11-14T08:58:34+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2005/modis_2005_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "2805b62fad32df221877704098633863c6e82a28830adaa279352ed91c4f1bf8",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2005/modis_2005_Argentina.csv"
+  },
+  "archive/modis/2005/modis_2005_Greece.csv": {
+   "bytes": 139517,
+   "fetched_at": "2026-11-14T08:57:19+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2005/modis_2005_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "3fe597df3e23c6f2d4c0d20358762253783fa9f8a0d705447fcfd7ff57eed083",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2005/modis_2005_Greece.csv"
+  },
+  "archive/modis/2005/modis_2005_Italy.csv": {
+   "bytes": 294113,
+   "fetched_at": "2026-11-14T08:57:45+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2005/modis_2005_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "2f42b83d2095692fc51d415caac40a1c471ba37d19a9affd3673057833f896df",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2005/modis_2005_Italy.csv"
+  },
+  "archive/modis/2005/modis_2005_Portugal.csv": {
+   "bytes": 722900,
+   "fetched_at": "2026-11-14T08:57:29+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2005/modis_2005_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "846f52e9711c2e4d31e62616fe96c6fb925f213e1fa33f971ba30eb30d5cba35",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2005/modis_2005_Portugal.csv"
+  },
+  "archive/modis/2005/modis_2005_Spain.csv": {
+   "bytes": 540387,
+   "fetched_at": "2026-11-14T08:57:34+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2005/modis_2005_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "592eec27463966b7001aad57b309ca799c3643719f3225b25673f5bbc23bce21",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2005/modis_2005_Spain.csv"
+  },
+  "archive/modis/2005/modis_2005_Turkey.csv": {
+   "bytes": 639932,
+   "fetched_at": "2026-11-14T08:56:58+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2005/modis_2005_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "70e80c3df89892f8e3dfec7918c559af970422bf549dad11c5d15ab0ceac9296",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2005/modis_2005_Turkey.csv"
+  },
+  "archive/modis/2006/modis_2006_Argentina.csv": {
+   "bytes": 6705606,
+   "fetched_at": "2026-11-14T08:58:31+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2006/modis_2006_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "eca42247cd7ef2d0fde65605693e378722dac8274d46bf70c01e9bffccc13218",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2006/modis_2006_Argentina.csv"
+  },
+  "archive/modis/2006/modis_2006_Greece.csv": {
+   "bytes": 110019,
+   "fetched_at": "2026-11-14T08:57:19+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2006/modis_2006_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "1001c427ae5514dc500758658938748278a689f5c319f55117f952d6fed54d53",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2006/modis_2006_Greece.csv"
+  },
+  "archive/modis/2006/modis_2006_Italy.csv": {
+   "bytes": 302892,
+   "fetched_at": "2026-11-14T08:57:44+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2006/modis_2006_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "396a6dcfe6879fa164f5b76d4f84b167d7d2be7b5b205d77b65248f7bce5da52",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2006/modis_2006_Italy.csv"
+  },
+  "archive/modis/2006/modis_2006_Portugal.csv": {
+   "bytes": 206547,
+   "fetched_at": "2026-11-14T08:57:28+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2006/modis_2006_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "7e1ae79efe56b373ee36a3bb2df7b70ad32b73ebe108026ca947160a7a1836db",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2006/modis_2006_Portugal.csv"
+  },
+  "archive/modis/2006/modis_2006_Spain.csv": {
+   "bytes": 559822,
+   "fetched_at": "2026-11-14T08:57:35+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2006/modis_2006_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "3a7bc523831782155b7eb98562881913348acb8249b74138df8d6c7ea27ff51f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2006/modis_2006_Spain.csv"
+  },
+  "archive/modis/2006/modis_2006_Turkey.csv": {
+   "bytes": 730483,
+   "fetched_at": "2026-11-14T08:56:58+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2006/modis_2006_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "79ea0539129412bba3be9841f65a683f4f8eaf3d9f9908f90e2410db245e1373",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2006/modis_2006_Turkey.csv"
+  },
+  "archive/modis/2007/modis_2007_Argentina.csv": {
+   "bytes": 6192110,
+   "fetched_at": "2026-11-14T08:58:15+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2007/modis_2007_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "abdeb916b85147e82148ea8e3db76546c61e6d28f29079f0725f15bd850f8c88",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2007/modis_2007_Argentina.csv"
+  },
+  "archive/modis/2007/modis_2007_Greece.csv": {
+   "bytes": 482801,
+   "fetched_at": "2026-11-14T08:57:20+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2007/modis_2007_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "d9ff2357e893c8bfafa18d952790882ede3b566ae01b30c9edbddfe57c4453cc",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2007/modis_2007_Greece.csv"
+  },
+  "archive/modis/2007/modis_2007_Italy.csv": {
+   "bytes": 701232,
+   "fetched_at": "2026-11-14T08:57:46+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2007/modis_2007_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "d1a7de4a3cf82603616db4090a2efcb27d7447d810f6f1b7309a26c2e627449c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2007/modis_2007_Italy.csv"
+  },
+  "archive/modis/2007/modis_2007_Portugal.csv": {
+   "bytes": 122625,
+   "fetched_at": "2026-11-14T08:57:28+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2007/modis_2007_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "06d9d762826986889e5548d11cc806925d4c274f30491daf3c2629dfd5fd3b62",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2007/modis_2007_Portugal.csv"
+  },
+  "archive/modis/2007/modis_2007_Spain.csv": {
+   "bytes": 339961,
+   "fetched_at": "2026-11-14T08:57:34+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2007/modis_2007_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "f5d5d51b267732de0278b2b5010909fdebd67b9f5f2e733124673717fb7d3415",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2007/modis_2007_Spain.csv"
+  },
+  "archive/modis/2007/modis_2007_Turkey.csv": {
+   "bytes": 678633,
+   "fetched_at": "2026-11-14T08:56:58+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2007/modis_2007_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "69607e1a46459fb9fa562c639fee9d00ed2d7948213fbd66c6ecd838a903a333",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2007/modis_2007_Turkey.csv"
+  },
+  "archive/modis/2008/modis_2008_Argentina.csv": {
+   "bytes": 8303607,
+   "fetched_at": "2026-11-14T08:58:29+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2008/modis_2008_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "a8ab1f53ddebafe7b792da3411ff0ebf29abbb9bf7946927c5f1dfccab358051",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2008/modis_2008_Argentina.csv"
+  },
+  "archive/modis/2008/modis_2008_Greece.csv": {
+   "bytes": 209910,
+   "fetched_at": "2026-11-14T08:57:20+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2008/modis_2008_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "01bbc152876300d4550d95e58d3f54292d9c4623def277a6107d8b4eb4fa0f1c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2008/modis_2008_Greece.csv"
+  },
+  "archive/modis/2008/modis_2008_Italy.csv": {
+   "bytes": 513224,
+   "fetched_at": "2026-11-14T08:57:45+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2008/modis_2008_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "1673ecea814d646ed54d9192dbddb244700c65b85b1cb6c5f62f6bd75707b1d6",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2008/modis_2008_Italy.csv"
+  },
+  "archive/modis/2008/modis_2008_Portugal.csv": {
+   "bytes": 76965,
+   "fetched_at": "2026-11-14T08:57:28+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2008/modis_2008_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "3e21bbe48399c7e2972a7f652406ebe29b553feb7c468afd168bd38368ee4a3f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2008/modis_2008_Portugal.csv"
+  },
+  "archive/modis/2008/modis_2008_Spain.csv": {
+   "bytes": 230531,
+   "fetched_at": "2026-11-14T08:57:34+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2008/modis_2008_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "3eb2f0df676d6c7b04a2d5c2e181e2e10104ef0ba810514a965e1c35fae9a7a6",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2008/modis_2008_Spain.csv"
+  },
+  "archive/modis/2008/modis_2008_Turkey.csv": {
+   "bytes": 475201,
+   "fetched_at": "2026-11-14T08:56:58+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2008/modis_2008_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "fd2458f1446a0ced6cb69557555a6455335dce85b45cf9d4dfd875c69cc9b79f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2008/modis_2008_Turkey.csv"
+  },
+  "archive/modis/2009/modis_2009_Argentina.csv": {
+   "bytes": 6514805,
+   "fetched_at": "2026-11-14T08:58:51+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2009/modis_2009_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "e1ecc9e75a1b110923eac84a3c7b454a1c4213cf5e840cf0d657b45057190819",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2009/modis_2009_Argentina.csv"
+  },
+  "archive/modis/2009/modis_2009_Greece.csv": {
+   "bytes": 139986,
+   "fetched_at": "2026-11-14T08:57:20+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2009/modis_2009_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "36d535a769c35786ebba7f51b41c3096385d5e9886f35e2f1b83d4aa71a9c3c6",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2009/modis_2009_Greece.csv"
+  },
+  "archive/modis/2009/modis_2009_Italy.csv": {
+   "bytes": 324396,
+   "fetched_at": "2026-11-14T08:57:45+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2009/modis_2009_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "c2f00dc07cc00f85e8e2c4118705cf6193b2613e99cbd67fbec28002c74ee49f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2009/modis_2009_Italy.csv"
+  },
+  "archive/modis/2009/modis_2009_Portugal.csv": {
+   "bytes": 268219,
+   "fetched_at": "2026-11-14T08:57:28+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2009/modis_2009_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "b43f3796a5af68ca50890ed60b0966900fa5aece84fd5680d01fb31942e118a8",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2009/modis_2009_Portugal.csv"
+  },
+  "archive/modis/2009/modis_2009_Spain.csv": {
+   "bytes": 357323,
+   "fetched_at": "2026-11-14T08:57:35+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2009/modis_2009_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "a6cc44ec359f2aa140ff9f0b857e840127882dfb48f0e09393ca64d83c561966",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2009/modis_2009_Spain.csv"
+  },
+  "archive/modis/2009/modis_2009_Turkey.csv": {
+   "bytes": 1545012,
+   "fetched_at": "2026-11-14T08:56:59+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2009/modis_2009_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "87912719f2b7f49ccc6b02c49719451e7c9f730ef867a14e76967e163f447707",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2009/modis_2009_Turkey.csv"
+  },
+  "archive/modis/2010/modis_2010_Argentina.csv": {
+   "bytes": 4970212,
+   "fetched_at": "2026-11-14T08:58:23+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2010/modis_2010_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "57dcc45ca47f899d1773ad1b89a49effddb4da08de0811e043202ac720f3423b",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2010/modis_2010_Argentina.csv"
+  },
+  "archive/modis/2010/modis_2010_Greece.csv": {
+   "bytes": 72034,
+   "fetched_at": "2026-11-14T08:57:21+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2010/modis_2010_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "58a6ef5e3f686c9e17051a894a5cfdd03129835f8f373bcbf7c995fc38a20e1a",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2010/modis_2010_Greece.csv"
+  },
+  "archive/modis/2010/modis_2010_Italy.csv": {
+   "bytes": 372248,
+   "fetched_at": "2026-11-14T08:57:45+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2010/modis_2010_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "db5e6fa87111087f1b38d3ba95636fbd636c516676d6d7e3cb5af446879802b2",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2010/modis_2010_Italy.csv"
+  },
+  "archive/modis/2010/modis_2010_Portugal.csv": {
+   "bytes": 328523,
+   "fetched_at": "2026-11-14T08:57:28+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2010/modis_2010_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "76cc945bfdfa4bea816d64a641933416b7597e059e5808c520f30a0bdda8315e",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2010/modis_2010_Portugal.csv"
+  },
+  "archive/modis/2010/modis_2010_Spain.csv": {
+   "bytes": 208717,
+   "fetched_at": "2026-11-14T08:57:36+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2010/modis_2010_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "cea73f90f71a181165a6ace024c68786541c428bcfff412caa35ab70a8d1e037",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2010/modis_2010_Spain.csv"
+  },
+  "archive/modis/2010/modis_2010_Turkey.csv": {
+   "bytes": 1053221,
+   "fetched_at": "2026-11-14T08:56:59+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2010/modis_2010_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "aa41f25e6396b19a3b4eecef1be8206e4f9ceb2f8bc48f511abc92d056ec561f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2010/modis_2010_Turkey.csv"
+  },
+  "archive/modis/2011/modis_2011_Argentina.csv": {
+   "bytes": 6064259,
+   "fetched_at": "2026-11-14T08:58:16+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2011/modis_2011_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "f900a5efefd2b1ea9680cc2eb4fdcf728ff841ceedae2308a832f0960bbe83d8",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2011/modis_2011_Argentina.csv"
+  },
+  "archive/modis/2011/modis_2011_Greece.csv": {
+   "bytes": 204340,
+   "fetched_at": "2026-11-14T08:57:21+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2011/modis_2011_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "2f096e9ff6ea867177e2407961186a64cc36c110293b15a3a6ca14e28bbce964",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2011/modis_2011_Greece.csv"
+  },
+  "archive/modis/2011/modis_2011_Italy.csv": {
+   "bytes": 512269,
+   "fetched_at": "2026-11-14T08:57:46+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2011/modis_2011_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "e62e4f3be97904e27cdef8f18c91af7bc2b333bac205802646a357e84107590e",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2011/modis_2011_Italy.csv"
+  },
+  "archive/modis/2011/modis_2011_Portugal.csv": {
+   "bytes": 235203,
+   "fetched_at": "2026-11-14T08:57:29+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2011/modis_2011_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "6d5a74f2b405deb221d830945510b938672daeddb91850cfcdce2d01e1ddfb07",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2011/modis_2011_Portugal.csv"
+  },
+  "archive/modis/2011/modis_2011_Spain.csv": {
+   "bytes": 421630,
+   "fetched_at": "2026-11-14T08:57:35+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2011/modis_2011_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "7a8ccba97e10e57d0e0290e7090403cb2ef94c7b1ee1b8293dced978d68b2019",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2011/modis_2011_Spain.csv"
+  },
+  "archive/modis/2011/modis_2011_Turkey.csv": {
+   "bytes": 1425898,
+   "fetched_at": "2026-11-14T08:57:00+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2011/modis_2011_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "172368939d2e1dc864cd923569669884dce2709d1ba041ccc0a06bdf0050108d",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2011/modis_2011_Turkey.csv"
+  },
+  "archive/modis/2012/modis_2012_Argentina.csv": {
+   "bytes": 4903703,
+   "fetched_at": "2026-11-14T08:58:22+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2012/modis_2012_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "d2d0c9a8af8aedebfc6dddbd813072be81e879291ba70990d931e91c1195a5f3",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2012/modis_2012_Argentina.csv"
+  },
+  "archive/modis/2012/modis_2012_Greece.csv": {
+   "bytes": 166399,
+   "fetched_at": "2026-11-14T08:57:21+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2012/modis_2012_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "79666dfa5de1d5dd74d6047c76a7baffe6efe9bc5d84add17b3ce6fcd1ae048d",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2012/modis_2012_Greece.csv"
+  },
+  "archive/modis/2012/modis_2012_Italy.csv": {
+   "bytes": 608715,
+   "fetched_at": "2026-11-14T08:57:47+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2012/modis_2012_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "ea69e722c6d68723ece086f3e5920f10a3b927704ea8ef2335f396264bc06d91",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2012/modis_2012_Italy.csv"
+  },
+  "archive/modis/2012/modis_2012_Portugal.csv": {
+   "bytes": 276315,
+   "fetched_at": "2026-11-14T08:57:28+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2012/modis_2012_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "0683942f248162441e71f4a369f9461fedefb447b96586e3a695b7961abd6dd7",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2012/modis_2012_Portugal.csv"
+  },
+  "archive/modis/2012/modis_2012_Spain.csv": {
+   "bytes": 479582,
+   "fetched_at": "2026-11-14T08:57:36+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2012/modis_2012_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "28d66000b4dc30bfc3f66496cb7eda5d37ec195ffc0a6c16e570b17693b0fe23",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2012/modis_2012_Spain.csv"
+  },
+  "archive/modis/2012/modis_2012_Turkey.csv": {
+   "bytes": 548280,
+   "fetched_at": "2026-11-14T08:56:58+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2012/modis_2012_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "610d626c78c1ad32469526e5728033f1717be673204b4c33a875298a815d34dd",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2012/modis_2012_Turkey.csv"
+  },
+  "archive/modis/2013/modis_2013_Argentina.csv": {
+   "bytes": 5280563,
+   "fetched_at": "2026-11-14T08:58:21+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2013/modis_2013_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "ce5650fc3939a750ea5c4ce1a00a0b8f76878743bc0fe6818154a3805b90df0c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2013/modis_2013_Argentina.csv"
+  },
+  "archive/modis/2013/modis_2013_Greece.csv": {
+   "bytes": 139906,
+   "fetched_at": "2026-11-14T08:57:21+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2013/modis_2013_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "8e3742b79891222753950acdf34fe4785e337b68bd47d5f8b4ee00f56c40f029",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2013/modis_2013_Greece.csv"
+  },
+  "archive/modis/2013/modis_2013_Italy.csv": {
+   "bytes": 314382,
+   "fetched_at": "2026-11-14T08:57:46+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2013/modis_2013_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "496d251e3e8164b29a851f6681311493a38d79b5fe1b79df4701eb7ef7cfe848",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2013/modis_2013_Italy.csv"
+  },
+  "archive/modis/2013/modis_2013_Portugal.csv": {
+   "bytes": 345651,
+   "fetched_at": "2026-11-14T08:57:29+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2013/modis_2013_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "3302c8792616f4b4528738eaaa20240aae2e3c04a99753dbe4d6016bde906e04",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2013/modis_2013_Portugal.csv"
+  },
+  "archive/modis/2013/modis_2013_Spain.csv": {
+   "bytes": 266012,
+   "fetched_at": "2026-11-14T08:57:35+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2013/modis_2013_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "0710fa57b51e225a9bb31c68206cdefaa18d0cfcc13e285e7af3d0c4acc827ac",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2013/modis_2013_Spain.csv"
+  },
+  "archive/modis/2013/modis_2013_Turkey.csv": {
+   "bytes": 888285,
+   "fetched_at": "2026-11-14T08:56:59+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2013/modis_2013_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "095b89392e1229c54d9e51347a6963259e45afbbac8359fe9a5c5a41333ace18",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2013/modis_2013_Turkey.csv"
+  },
+  "archive/modis/2014/modis_2014_Argentina.csv": {
+   "bytes": 2921271,
+   "fetched_at": "2026-11-14T08:58:27+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2014/modis_2014_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "2ae44f8ccee2d7206a32b4088d4fc5b799c7896b30226939d8405e64655d16cf",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2014/modis_2014_Argentina.csv"
+  },
+  "archive/modis/2014/modis_2014_Greece.csv": {
+   "bytes": 104942,
+   "fetched_at": "2026-11-14T08:57:21+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2014/modis_2014_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "aeafedcc665acd1e6dde6a9fb1cd987ee34283a29057e89645db0714d452e8ad",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2014/modis_2014_Greece.csv"
+  },
+  "archive/modis/2014/modis_2014_Italy.csv": {
+   "bytes": 374083,
+   "fetched_at": "2026-11-14T08:57:46+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2014/modis_2014_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "f02e2539c548f96f358fe113f32909f8dd296b2591c24bbea0c7e233a1d82715",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2014/modis_2014_Italy.csv"
+  },
+  "archive/modis/2014/modis_2014_Portugal.csv": {
+   "bytes": 47514,
+   "fetched_at": "2026-11-14T08:57:28+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2014/modis_2014_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "c8a808b7c968896d571a92bc58789d0d40915c18e2dcb59ba2feade366730e73",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2014/modis_2014_Portugal.csv"
+  },
+  "archive/modis/2014/modis_2014_Spain.csv": {
+   "bytes": 200014,
+   "fetched_at": "2026-11-14T08:57:35+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2014/modis_2014_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "1c1a77a2858c2416b92e2dea89fc4badbdd7ecbefe59d44f80810f7f841955ff",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2014/modis_2014_Spain.csv"
+  },
+  "archive/modis/2014/modis_2014_Turkey.csv": {
+   "bytes": 525762,
+   "fetched_at": "2026-11-14T08:56:59+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2014/modis_2014_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "f62255f1212e75d1c8e754c7a4ab5a1cdfe0d59d39e980782057a86ae61b4e65",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2014/modis_2014_Turkey.csv"
+  },
+  "archive/modis/2015/modis_2015_Argentina.csv": {
+   "bytes": 3572980,
+   "fetched_at": "2026-11-14T08:58:28+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2015/modis_2015_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "cc3f70d1834553afa533ada41dbda6b5c94c2827fd00b78b150c52140171f320",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2015/modis_2015_Argentina.csv"
+  },
+  "archive/modis/2015/modis_2015_Greece.csv": {
+   "bytes": 101565,
+   "fetched_at": "2026-11-14T08:57:21+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2015/modis_2015_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "cbc734bc420229b5bc236e603441d2a8695e2c9efe89967c3e116d35c22fbcb7",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2015/modis_2015_Greece.csv"
+  },
+  "archive/modis/2015/modis_2015_Italy.csv": {
+   "bytes": 325539,
+   "fetched_at": "2026-11-14T08:57:47+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2015/modis_2015_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "0e14a87e32e5c8c9f2d8aeee3043cc4675d9ea4468921daaafd3382ed0c77056",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2015/modis_2015_Italy.csv"
+  },
+  "archive/modis/2015/modis_2015_Portugal.csv": {
+   "bytes": 159883,
+   "fetched_at": "2026-11-14T08:57:29+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2015/modis_2015_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "822886a003c01e4f28b01bb4956aa67d75a471eef177f8781e588fb8da37c21e",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2015/modis_2015_Portugal.csv"
+  },
+  "archive/modis/2015/modis_2015_Spain.csv": {
+   "bytes": 245092,
+   "fetched_at": "2026-11-14T08:57:35+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2015/modis_2015_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "788945484004dd72da30e9d24871254695e81529fba1fde95d9cc49e47cfe899",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2015/modis_2015_Spain.csv"
+  },
+  "archive/modis/2015/modis_2015_Turkey.csv": {
+   "bytes": 1397364,
+   "fetched_at": "2026-11-14T08:57:00+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2015/modis_2015_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "d1d41f10deec73ecb00db2dafd7c1efac5aedadbd83edfb005e7800cd975e796",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2015/modis_2015_Turkey.csv"
+  },
+  "archive/modis/2016/modis_2016_Argentina.csv": {
+   "bytes": 4397743,
+   "fetched_at": "2026-11-14T08:58:33+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2016/modis_2016_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "3fffbd2eeb8a1888d8770ea6fac05a608bb3a51cf128126659797d256cf9a580",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2016/modis_2016_Argentina.csv"
+  },
+  "archive/modis/2016/modis_2016_Greece.csv": {
+   "bytes": 129400,
+   "fetched_at": "2026-11-14T08:57:21+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2016/modis_2016_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "a35e486f1440ef6239852e814f864f579da9a2d645067a3d226c955cb7fe1e10",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2016/modis_2016_Greece.csv"
+  },
+  "archive/modis/2016/modis_2016_Italy.csv": {
+   "bytes": 380701,
+   "fetched_at": "2026-11-14T08:57:47+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2016/modis_2016_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "24e11a24c2b7e04ca5452bd27aac4ab64bd2df35696abf2ae4a63f353c6c0b30",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2016/modis_2016_Italy.csv"
+  },
+  "archive/modis/2016/modis_2016_Portugal.csv": {
+   "bytes": 373472,
+   "fetched_at": "2026-11-14T08:57:29+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2016/modis_2016_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "ab0763a311af365e3293127f45c70d226c0c04d3108c13a2c9432039f55fb3c9",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2016/modis_2016_Portugal.csv"
+  },
+  "archive/modis/2016/modis_2016_Spain.csv": {
+   "bytes": 248139,
+   "fetched_at": "2026-11-14T08:57:36+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2016/modis_2016_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "94bb123f52a3e7dc136b0a6283141cccc6ed9d678e8defaef32e945255ed2082",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2016/modis_2016_Spain.csv"
+  },
+  "archive/modis/2016/modis_2016_Turkey.csv": {
+   "bytes": 1048699,
+   "fetched_at": "2026-11-14T08:57:01+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2016/modis_2016_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "b32127bbce7db6b320f6cf8f2ebf4663435f9c2c7673b0e742afdbea27c2ddc6",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2016/modis_2016_Turkey.csv"
+  },
+  "archive/modis/2017/modis_2017_Argentina.csv": {
+   "bytes": 4788746,
+   "fetched_at": "2026-11-14T08:58:35+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2017/modis_2017_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "5240365806bb8161b9afa5421c5020f492c8602973ff1db3d84726f8341375d0",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2017/modis_2017_Argentina.csv"
+  },
+  "archive/modis/2017/modis_2017_Greece.csv": {
+   "bytes": 116669,
+   "fetched_at": "2026-11-14T08:57:21+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2017/modis_2017_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "cfa42e4ff92ac1131cdea80b8831f9c8c5c213a4347c76177804c3c074d3794c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2017/modis_2017_Greece.csv"
+  },
+  "archive/modis/2017/modis_2017_Italy.csv": {
+   "bytes": 656139,
+   "fetched_at": "2026-11-14T08:57:49+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2017/modis_2017_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "db606b2295dbc11e8968bfba5148659974c6fe8186314d62538ee8c715743d11",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2017/modis_2017_Italy.csv"
+  },
+  "archive/modis/2017/modis_2017_Portugal.csv": {
+   "bytes": 517415,
+   "fetched_at": "2026-11-14T08:57:30+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2017/modis_2017_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "ec879bb494c173f252e66269a2613d16106962fe760001e87dcbc8ee2b25d7ef",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2017/modis_2017_Portugal.csv"
+  },
+  "archive/modis/2017/modis_2017_Spain.csv": {
+   "bytes": 400380,
+   "fetched_at": "2026-11-14T08:57:36+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2017/modis_2017_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "3c19bd10ebe0b3a2a281655343b557fffa7a12b126c105080d913100bb9d1f42",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2017/modis_2017_Spain.csv"
+  },
+  "archive/modis/2017/modis_2017_Turkey.csv": {
+   "bytes": 739739,
+   "fetched_at": "2026-11-14T08:57:01+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2017/modis_2017_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "3a6e444ace8971e52b67ae26dd6c60b946057a1b9bd61bdc536aeddfb4a2176a",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2017/modis_2017_Turkey.csv"
+  },
+  "archive/modis/2018/modis_2018_Argentina.csv": {
+   "bytes": 4443653,
+   "fetched_at": "2026-11-14T08:58:35+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2018/modis_2018_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "d0dd7be6b8b323854d7540499c6089937d086e113d98407b4901967a52ab45ff",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2018/modis_2018_Argentina.csv"
+  },
+  "archive/modis/2018/modis_2018_Greece.csv": {
+   "bytes": 65529,
+   "fetched_at": "2026-11-14T08:57:21+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2018/modis_2018_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "e3a91967ed530e14e3d054ba6ebed869edda53efd67d6ac8d8b0ee299a9678f4",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2018/modis_2018_Greece.csv"
+  },
+  "archive/modis/2018/modis_2018_Italy.csv": {
+   "bytes": 276658,
+   "fetched_at": "2026-11-14T08:57:47+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2018/modis_2018_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "f037f6b6af0efa22156dd0983ea611eded8f7a507e3cee9734df4c6b5340e93a",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2018/modis_2018_Italy.csv"
+  },
+  "archive/modis/2018/modis_2018_Portugal.csv": {
+   "bytes": 102991,
+   "fetched_at": "2026-11-14T08:57:29+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2018/modis_2018_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "320e89ce1d21ecd56b4fde4bb32d76953f86ea902876ae1bcee59df4f5671d34",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2018/modis_2018_Portugal.csv"
+  },
+  "archive/modis/2018/modis_2018_Spain.csv": {
+   "bytes": 130927,
+   "fetched_at": "2026-11-14T08:57:36+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2018/modis_2018_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "a9fb1bf3a2376e3f0f7ae9c3dec5e85dc832d49e45b47f88c60435d7bed17de3",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2018/modis_2018_Spain.csv"
+  },
+  "archive/modis/2018/modis_2018_Turkey.csv": {
+   "bytes": 630992,
+   "fetched_at": "2026-11-14T08:57:00+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2018/modis_2018_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "b6741354ba1359bf8d6bb70a54fa17b42adac293acb5336a2e0ab699cd7ce2e8",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2018/modis_2018_Turkey.csv"
+  },
+  "archive/modis/2019/modis_2019_Argentina.csv": {
+   "bytes": 4043829,
+   "fetched_at": "2026-11-14T08:58:36+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2019/modis_2019_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "bcb2bf07943e312f6d61ccd69008a40a09e22216ede34867d59ce88dc56d11d2",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2019/modis_2019_Argentina.csv"
+  },
+  "archive/modis/2019/modis_2019_Greece.csv": {
+   "bytes": 80383,
+   "fetched_at": "2026-11-14T08:57:21+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2019/modis_2019_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "683fa2469284078fe13d084937f2d89192443b40f316e9ea41b1d1ef744a3e21",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2019/modis_2019_Greece.csv"
+  },
+  "archive/modis/2019/modis_2019_Italy.csv": {
+   "bytes": 406384,
+   "fetched_at": "2026-11-14T08:57:47+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2019/modis_2019_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "67ad17dbd764b9395d141b6e7579660deb8c2764e18e86e375e71258a821e7fd",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2019/modis_2019_Italy.csv"
+  },
+  "archive/modis/2019/modis_2019_Portugal.csv": {
+   "bytes": 100031,
+   "fetched_at": "2026-11-14T08:57:29+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2019/modis_2019_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "75c05687f29938bc26c5ffbf6c23d7492798a090ddb239290a62fd9c88212ac4",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2019/modis_2019_Portugal.csv"
+  },
+  "archive/modis/2019/modis_2019_Spain.csv": {
+   "bytes": 258462,
+   "fetched_at": "2026-11-14T08:57:36+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2019/modis_2019_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "450970117c04cef335af06a34d106c7e3c1aed6dd591c7c5e58598b1c5aec96d",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2019/modis_2019_Spain.csv"
+  },
+  "archive/modis/2019/modis_2019_Turkey.csv": {
+   "bytes": 650021,
+   "fetched_at": "2026-11-14T08:57:01+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2019/modis_2019_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "f607c6c09c4353d92a2c391bf415cc1c910c1a760e8e5322e9802ea19235f4c0",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2019/modis_2019_Turkey.csv"
+  },
+  "archive/modis/2020/modis_2020_Argentina.csv": {
+   "bytes": 9972297,
+   "fetched_at": "2026-11-14T08:59:12+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2020/modis_2020_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "59d485a2c6a4acc088d90c481d71d34901d1e2b3a5a16d57689865c76aa3a1cf",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2020/modis_2020_Argentina.csv"
+  },
+  "archive/modis/2020/modis_2020_Greece.csv": {
+   "bytes": 89710,
+   "fetched_at": "2026-11-14T08:57:23+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2020/modis_2020_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "ad3075cbdc748811d0e87b387db2a7c6304e5af7fbf52ef7f461198574e80c32",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2020/modis_2020_Greece.csv"
+  },
+  "archive/modis/2020/modis_2020_Italy.csv": {
+   "bytes": 359717,
+   "fetched_at": "2026-11-14T08:57:47+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2020/modis_2020_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "9d4f1955b5104cf6eeb6dd54a2433946c8ab2450442fe959c470693fca9f5b02",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2020/modis_2020_Italy.csv"
+  },
+  "archive/modis/2020/modis_2020_Portugal.csv": {
+   "bytes": 106460,
+   "fetched_at": "2026-11-14T08:57:29+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2020/modis_2020_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "05733eaeabcd7be8571f9a5e010a1fc6109dc2771538d1f2cf8527e3337c57fd",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2020/modis_2020_Portugal.csv"
+  },
+  "archive/modis/2020/modis_2020_Spain.csv": {
+   "bytes": 202904,
+   "fetched_at": "2026-11-14T08:57:36+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2020/modis_2020_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "54ae96e3f8e6de244517899bc07820f2aa1fcbff0399158109024517f5a31941",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2020/modis_2020_Spain.csv"
+  },
+  "archive/modis/2020/modis_2020_Turkey.csv": {
+   "bytes": 689465,
+   "fetched_at": "2026-11-14T08:57:01+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2020/modis_2020_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "debdb0e7e879ce349a2575dc54b2607c41afc3e35dbaab80257bf8e24564e96e",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2020/modis_2020_Turkey.csv"
+  },
+  "archive/modis/2021/modis_2021_Argentina.csv": {
+   "bytes": 4566299,
+   "fetched_at": "2026-11-14T08:58:43+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2021/modis_2021_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "04cc5b10dfacea4775c1b8bc0a9d1fa7721a21a84c3d396dfca0ac0608d1d857",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2021/modis_2021_Argentina.csv"
+  },
+  "archive/modis/2021/modis_2021_Greece.csv": {
+   "bytes": 196787,
+   "fetched_at": "2026-11-14T08:57:22+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2021/modis_2021_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "5aaedfb1739565c3570a8cd2c0ccc188dd2d871d73cf33f5e5c190684682432e",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2021/modis_2021_Greece.csv"
+  },
+  "archive/modis/2021/modis_2021_Italy.csv": {
+   "bytes": 554511,
+   "fetched_at": "2026-11-14T08:57:48+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2021/modis_2021_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "80bb1169d8d3979c2ab911731451dd19eb1f4de954da369c8a33e072d2941808",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2021/modis_2021_Italy.csv"
+  },
+  "archive/modis/2021/modis_2021_Portugal.csv": {
+   "bytes": 74425,
+   "fetched_at": "2026-11-14T08:57:29+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2021/modis_2021_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "c801bee9cd6fe681734c618caf180d130adcdfa0489aff3f9401465c1b6e4f74",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2021/modis_2021_Portugal.csv"
+  },
+  "archive/modis/2021/modis_2021_Spain.csv": {
+   "bytes": 374191,
+   "fetched_at": "2026-11-14T08:57:36+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2021/modis_2021_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "9ff99937125ae560ebdbc91ad636fd2f45a96600308d1c077af2430e9d9db691",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2021/modis_2021_Spain.csv"
+  },
+  "archive/modis/2021/modis_2021_Turkey.csv": {
+   "bytes": 785321,
+   "fetched_at": "2026-11-14T08:57:01+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2021/modis_2021_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "9a45a6b675f4c40b3050b4635f56c746d4428dc4f9f31ed82379aa21a9af4cba",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2021/modis_2021_Turkey.csv"
+  },
+  "archive/modis/2022/modis_2022_Argentina.csv": {
+   "bytes": 6231134,
+   "fetched_at": "2026-11-14T08:58:58+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2022/modis_2022_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "6c5ad252fda14943060fd37f04358bd482b6f107940981cdb1d6bd9be63c4627",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2022/modis_2022_Argentina.csv"
+  },
+  "archive/modis/2022/modis_2022_Greece.csv": {
+   "bytes": 89652,
+   "fetched_at": "2026-11-14T08:57:22+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2022/modis_2022_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "ee0f93bb988ba88ee41bd8c7a72163b02100986236132678c07d34e6ec9e21dc",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2022/modis_2022_Greece.csv"
+  },
+  "archive/modis/2022/modis_2022_Italy.csv": {
+   "bytes": 385858,
+   "fetched_at": "2026-11-14T08:57:48+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2022/modis_2022_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "c8605dec9349480738cd0f4fcbe472eac5c55f21d5bf84d0213fac8bd5aa7f40",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2022/modis_2022_Italy.csv"
+  },
+  "archive/modis/2022/modis_2022_Portugal.csv": {
+   "bytes": 179244,
+   "fetched_at": "2026-11-14T08:57:29+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2022/modis_2022_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "5660c6bef3bb901c03f0ef1fbf3f6b9c4265b29fe633e584106eeacabda3887e",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2022/modis_2022_Portugal.csv"
+  },
+  "archive/modis/2022/modis_2022_Spain.csv": {
+   "bytes": 466980,
+   "fetched_at": "2026-11-14T08:57:36+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2022/modis_2022_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "480a08173168b7ce4e3e7c571247d8b414cbac30d27c1761d94ce6b11f68262b",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2022/modis_2022_Spain.csv"
+  },
+  "archive/modis/2022/modis_2022_Turkey.csv": {
+   "bytes": 442497,
+   "fetched_at": "2026-11-14T08:57:01+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2022/modis_2022_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "d95e9cf46d4fa405dbf50a3bb6371bd25250bda122a4be5a06d4c3b1cb6cc6fc",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2022/modis_2022_Turkey.csv"
+  },
+  "archive/modis/2023/modis_2023_Argentina.csv": {
+   "bytes": 3898226,
+   "fetched_at": "2026-11-14T08:58:59+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2023/modis_2023_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "45152ac1c0569bfd4e0d77127b4a489ea96c1f49a2137536992118dc4440f47f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2023/modis_2023_Argentina.csv"
+  },
+  "archive/modis/2023/modis_2023_Greece.csv": {
+   "bytes": 260442,
+   "fetched_at": "2026-11-14T08:57:22+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2023/modis_2023_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "3130a6465f3eefcbd206ad39e0b0fba36c6e09714de2e9aac106499fadc57a9d",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2023/modis_2023_Greece.csv"
+  },
+  "archive/modis/2023/modis_2023_Italy.csv": {
+   "bytes": 454208,
+   "fetched_at": "2026-11-14T08:57:49+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2023/modis_2023_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "ca18eb676f3872b2046e4c59b42b8fcd4f143ccf9258ff045a8addaa699a43af",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2023/modis_2023_Italy.csv"
+  },
+  "archive/modis/2023/modis_2023_Portugal.csv": {
+   "bytes": 84920,
+   "fetched_at": "2026-11-14T08:57:29+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2023/modis_2023_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "ec571c1ad891a2394efe2ba68ea5d1cd19b9fecce03655bcf271caaf2f8b4522",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2023/modis_2023_Portugal.csv"
+  },
+  "archive/modis/2023/modis_2023_Spain.csv": {
+   "bytes": 222893,
+   "fetched_at": "2026-11-14T08:57:38+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2023/modis_2023_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "e6f319e3fe5be8f1628665321e57c6d79c5584b7b249e43e1e550d797a0042fb",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2023/modis_2023_Spain.csv"
+  },
+  "archive/modis/2023/modis_2023_Turkey.csv": {
+   "bytes": 714306,
+   "fetched_at": "2026-11-14T08:57:01+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2023/modis_2023_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "4a8ca61bc9c6d01777aa485d011999114c27e00d56fcdd46c1f2a90b0f649e8c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2023/modis_2023_Turkey.csv"
+  },
+  "archive/modis/2024/modis_2024_Argentina.csv": {
+   "bytes": 4043604,
+   "fetched_at": "2026-11-14T08:58:41+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2024/modis_2024_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "3bdedb8b223b7e3cf472108101ab64e4cefd4a2e41d11d9895d237c1c330c360",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2024/modis_2024_Argentina.csv"
+  },
+  "archive/modis/2024/modis_2024_Greece.csv": {
+   "bytes": 102412,
+   "fetched_at": "2026-11-14T08:57:22+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2024/modis_2024_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "909c3c4edfc1d0ffa813377cba5ffccfc465ab91c277f33f1d24779cf5186992",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2024/modis_2024_Greece.csv"
+  },
+  "archive/modis/2024/modis_2024_Italy.csv": {
+   "bytes": 269574,
+   "fetched_at": "2026-11-14T08:57:48+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2024/modis_2024_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "6f2c1464c9f14ed4f6ff599cfb6da9850518fc905bd55c58483465375c02aebb",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2024/modis_2024_Italy.csv"
+  },
+  "archive/modis/2024/modis_2024_Portugal.csv": {
+   "bytes": 252905,
+   "fetched_at": "2026-11-14T08:57:30+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2024/modis_2024_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "95a510eed0b7cec71bf0cda1adafc3c54618fed61f96cd8119d09a39d683c2b7",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2024/modis_2024_Portugal.csv"
+  },
+  "archive/modis/2024/modis_2024_Spain.csv": {
+   "bytes": 167436,
+   "fetched_at": "2026-11-14T08:57:36+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2024/modis_2024_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "baa8e1cd86831df65750fe75c8c57b462d533b49fbcbe9a1405c5b0e8ef9def4",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2024/modis_2024_Spain.csv"
+  },
+  "archive/modis/2024/modis_2024_Turkey.csv": {
+   "bytes": 957029,
+   "fetched_at": "2026-11-14T08:57:02+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2024/modis_2024_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "a57515d1e46e74157a5d9cf0da6e5fe69730277da0abc89c90eb46962e5f1e1d",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2024/modis_2024_Turkey.csv"
+  },
+  "archive/modis/2025/modis_2025_Argentina.csv": {
+   "bytes": 3902198,
+   "fetched_at": "2026-11-14T08:58:40+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2025/modis_2025_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "edece169ce64789efba831e1c8b535536e974f8fd775e309f40b1a53eac25439",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2025/modis_2025_Argentina.csv"
+  },
+  "archive/modis/2025/modis_2025_Greece.csv": {
+   "bytes": 94741,
+   "fetched_at": "2026-11-14T08:57:22+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2025/modis_2025_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "3cc082501bdbcde41422856ef009b96f1ea3e0b0e23baf3c9f381109054e6110",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2025/modis_2025_Greece.csv"
+  },
+  "archive/modis/2025/modis_2025_Italy.csv": {
+   "bytes": 400363,
+   "fetched_at": "2026-11-14T08:57:49+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2025/modis_2025_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "e41c3fe69e1508210c0b630732cce6ee0b42cce5f18ec122ff5976540fd6f2bb",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2025/modis_2025_Italy.csv"
+  },
+  "archive/modis/2025/modis_2025_Portugal.csv": {
+   "bytes": 391329,
+   "fetched_at": "2026-11-14T08:57:30+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2025/modis_2025_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "5fe8915feff1be2784912bc86a836f5ea4f276445afb38138f3c29be0a9db8d1",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2025/modis_2025_Portugal.csv"
+  },
+  "archive/modis/2025/modis_2025_Spain.csv": {
+   "bytes": 757793,
+   "fetched_at": "2026-11-14T08:57:37+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2025/modis_2025_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "28c2e7a7edbbde5e43e16b86444d0793b997a87f6493d447d0b3cad825c8ac1c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2025/modis_2025_Spain.csv"
+  },
+  "archive/modis/2025/modis_2025_Turkey.csv": {
+   "bytes": 754493,
+   "fetched_at": "2026-11-14T08:57:02+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/modis/2025/modis_2025_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "ac7138ba5fd0331285cb53f4a4dab69ed6faa47d56e0a832e5a0f17a7f4472e4",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/modis/2025/modis_2025_Turkey.csv"
+  },
+  "archive/viirs-jpss1/2018/viirs-jpss1_2018_Argentina.csv": {
+   "bytes": 10703977,
+   "fetched_at": "2026-11-14T09:00:18+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2018/viirs-jpss1_2018_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "57a59b01925e7354fa657e752b4cae8102d21e73dedd282b330599d5d1a4ed3f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2018/viirs-jpss1_2018_Argentina.csv"
+  },
+  "archive/viirs-jpss1/2018/viirs-jpss1_2018_Greece.csv": {
+   "bytes": 281707,
+   "fetched_at": "2026-11-14T08:57:26+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2018/viirs-jpss1_2018_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "ae7080cae596b84e9d97625ed2ab08895da530c02e38a0efa5a1bf3016ebe3e9",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2018/viirs-jpss1_2018_Greece.csv"
+  },
+  "archive/viirs-jpss1/2018/viirs-jpss1_2018_Italy.csv": {
+   "bytes": 1235620,
+   "fetched_at": "2026-11-14T08:57:56+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2018/viirs-jpss1_2018_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "dfe38aedc33f6273ab8a6a3bf42c23540f6673c8028c8d6504b17a245b0f5297",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2018/viirs-jpss1_2018_Italy.csv"
+  },
+  "archive/viirs-jpss1/2018/viirs-jpss1_2018_Portugal.csv": {
+   "bytes": 295333,
+   "fetched_at": "2026-11-14T08:57:32+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2018/viirs-jpss1_2018_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "6f38e5bda394d16196bc828bc106248cbc9b60cb9c8acdf7d75830dc613a48dc",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2018/viirs-jpss1_2018_Portugal.csv"
+  },
+  "archive/viirs-jpss1/2018/viirs-jpss1_2018_Spain.csv": {
+   "bytes": 648697,
+   "fetched_at": "2026-11-14T08:57:42+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2018/viirs-jpss1_2018_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "a2abc5266de8fd13348d1b496f7bfc6326c09ea22b553fc6989b765ccc4afd74",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2018/viirs-jpss1_2018_Spain.csv"
+  },
+  "archive/viirs-jpss1/2018/viirs-jpss1_2018_Turkey.csv": {
+   "bytes": 2786234,
+   "fetched_at": "2026-11-14T08:57:17+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2018/viirs-jpss1_2018_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "c3161cca196587f49b0dca253072f76610e6b749db3b35df78d190279db60b5b",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2018/viirs-jpss1_2018_Turkey.csv"
+  },
+  "archive/viirs-jpss1/2019/viirs-jpss1_2019_Argentina.csv": {
+   "bytes": 13216364,
+   "fetched_at": "2026-11-14T09:00:59+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2019/viirs-jpss1_2019_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "9e5781a47a8b532084d57febdf803b33dca0f5db0b0a23a03a644c80910e44fb",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2019/viirs-jpss1_2019_Argentina.csv"
+  },
+  "archive/viirs-jpss1/2019/viirs-jpss1_2019_Greece.csv": {
+   "bytes": 413509,
+   "fetched_at": "2026-11-14T08:57:26+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2019/viirs-jpss1_2019_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "6b5f8bc57abda745c444355bf2d10843c83d22ce040d65baad2a587223a2857f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2019/viirs-jpss1_2019_Greece.csv"
+  },
+  "archive/viirs-jpss1/2019/viirs-jpss1_2019_Italy.csv": {
+   "bytes": 1874831,
+   "fetched_at": "2026-11-14T08:57:59+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2019/viirs-jpss1_2019_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "ddfdbdfaf9cb18ba8f1ec462a2af2f71078fb9632a98cd1edbec8a4aec6bcb66",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2019/viirs-jpss1_2019_Italy.csv"
+  },
+  "archive/viirs-jpss1/2019/viirs-jpss1_2019_Portugal.csv": {
+   "bytes": 289171,
+   "fetched_at": "2026-11-14T08:57:33+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2019/viirs-jpss1_2019_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "0b692c2a7602e0db78cefdf3c30638d32a50487a6cad972c8acf588b003f048d",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2019/viirs-jpss1_2019_Portugal.csv"
+  },
+  "archive/viirs-jpss1/2019/viirs-jpss1_2019_Spain.csv": {
+   "bytes": 1184457,
+   "fetched_at": "2026-11-14T08:57:42+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2019/viirs-jpss1_2019_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "3c030e353bf66152fffb74de5437c8b4440c6384c65a64b5a9edc6b0c6e1f870",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2019/viirs-jpss1_2019_Spain.csv"
+  },
+  "archive/viirs-jpss1/2019/viirs-jpss1_2019_Turkey.csv": {
+   "bytes": 3236314,
+   "fetched_at": "2026-11-14T08:57:15+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2019/viirs-jpss1_2019_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "259435b22c795e1f05402ffd1a49a73ba4f23f9f2cc3003bd56d06705ea3b8dd",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2019/viirs-jpss1_2019_Turkey.csv"
+  },
+  "archive/viirs-jpss1/2020/viirs-jpss1_2020_Argentina.csv": {
+   "bytes": 35781778,
+   "fetched_at": "2026-11-14T09:01:21+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2020/viirs-jpss1_2020_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "e7eed9444abba6dfe8aa9452f3e9a56967215014e3235ba53dce896d3ca663cc",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2020/viirs-jpss1_2020_Argentina.csv"
+  },
+  "archive/viirs-jpss1/2020/viirs-jpss1_2020_Greece.csv": {
+   "bytes": 378662,
+   "fetched_at": "2026-11-14T08:57:26+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2020/viirs-jpss1_2020_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "68345bce4b031feaf7737321251ce73b2bd8e0ec3a119537877a97416faa39a9",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2020/viirs-jpss1_2020_Greece.csv"
+  },
+  "archive/viirs-jpss1/2020/viirs-jpss1_2020_Italy.csv": {
+   "bytes": 1802088,
+   "fetched_at": "2026-11-14T08:58:02+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2020/viirs-jpss1_2020_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "e99c1929c13ccab91727ce4764e22d11f7019829d65f9f3ae2c04f2bcb18f357",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2020/viirs-jpss1_2020_Italy.csv"
+  },
+  "archive/viirs-jpss1/2020/viirs-jpss1_2020_Portugal.csv": {
+   "bytes": 320762,
+   "fetched_at": "2026-11-14T08:57:32+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2020/viirs-jpss1_2020_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "915748d97cd8367cc48cd8ab59fa7892fced5c288e320275a59862e1e65dfc71",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2020/viirs-jpss1_2020_Portugal.csv"
+  },
+  "archive/viirs-jpss1/2020/viirs-jpss1_2020_Spain.csv": {
+   "bytes": 896296,
+   "fetched_at": "2026-11-14T08:57:43+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2020/viirs-jpss1_2020_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "4395a0fdaf6e80ada0e49e7e53635f33db297a92cf2f4a289cd3dd0b84f68926",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2020/viirs-jpss1_2020_Spain.csv"
+  },
+  "archive/viirs-jpss1/2020/viirs-jpss1_2020_Turkey.csv": {
+   "bytes": 3506149,
+   "fetched_at": "2026-11-14T08:57:22+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2020/viirs-jpss1_2020_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "0b1dd53688ab87bb1de8e66e8b34cdaeb79f89abdbb58367ae729f9c74123149",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2020/viirs-jpss1_2020_Turkey.csv"
+  },
+  "archive/viirs-jpss1/2021/viirs-jpss1_2021_Argentina.csv": {
+   "bytes": 16369735,
+   "fetched_at": "2026-11-14T09:00:58+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2021/viirs-jpss1_2021_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "8a2960d54581dce5927709c30db248eb31c30e712ec6e961455859336ada800b",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2021/viirs-jpss1_2021_Argentina.csv"
+  },
+  "archive/viirs-jpss1/2021/viirs-jpss1_2021_Greece.csv": {
+   "bytes": 888944,
+   "fetched_at": "2026-11-14T08:57:27+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2021/viirs-jpss1_2021_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "22d3574be389ab357922bdd1788cb4a01fff40955625f9b9216ef91720acc998",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2021/viirs-jpss1_2021_Greece.csv"
+  },
+  "archive/viirs-jpss1/2021/viirs-jpss1_2021_Italy.csv": {
+   "bytes": 2590066,
+   "fetched_at": "2026-11-14T08:58:07+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2021/viirs-jpss1_2021_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "697f3c509c20623de1aefab62c9f41cf8117c8ec62ee4c40e873c4c97eb78158",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2021/viirs-jpss1_2021_Italy.csv"
+  },
+  "archive/viirs-jpss1/2021/viirs-jpss1_2021_Portugal.csv": {
+   "bytes": 200957,
+   "fetched_at": "2026-11-14T08:57:33+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2021/viirs-jpss1_2021_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "13be9621acd55e33a293ad65e93e10a921de0afbcb89c91fded8c13811969679",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2021/viirs-jpss1_2021_Portugal.csv"
+  },
+  "archive/viirs-jpss1/2021/viirs-jpss1_2021_Spain.csv": {
+   "bytes": 2216604,
+   "fetched_at": "2026-11-14T08:57:47+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2021/viirs-jpss1_2021_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "0abcb9fad99283601d8ef2d860d8e4023c51ec4a77495956832d502f35cf868d",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2021/viirs-jpss1_2021_Spain.csv"
+  },
+  "archive/viirs-jpss1/2021/viirs-jpss1_2021_Turkey.csv": {
+   "bytes": 3611878,
+   "fetched_at": "2026-11-14T08:57:25+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2021/viirs-jpss1_2021_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "b5ecaeeeb40cbe4b2ee2ed3a64c219366e6e2981e184c97ad5edc7cba7ce149d",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2021/viirs-jpss1_2021_Turkey.csv"
+  },
+  "archive/viirs-jpss1/2022/viirs-jpss1_2022_Argentina.csv": {
+   "bytes": 25714477,
+   "fetched_at": "2026-11-14T09:01:05+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2022/viirs-jpss1_2022_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "6bcc3e3be9461ecc92d8a2bb87950d97ef7620e7c2ec68f317692ea1a3d35e98",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2022/viirs-jpss1_2022_Argentina.csv"
+  },
+  "archive/viirs-jpss1/2022/viirs-jpss1_2022_Greece.csv": {
+   "bytes": 404066,
+   "fetched_at": "2026-11-14T08:57:27+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2022/viirs-jpss1_2022_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "7d6fcfb7e3b8a187f20aa4048b73fbb2c9c21c1db6cfab133cdde76c2ff4c6cd",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2022/viirs-jpss1_2022_Greece.csv"
+  },
+  "archive/viirs-jpss1/2022/viirs-jpss1_2022_Italy.csv": {
+   "bytes": 2011044,
+   "fetched_at": "2026-11-14T08:57:58+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2022/viirs-jpss1_2022_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "0e92df25120ae95ed2fca3a1d38fc5428341c23a8814cc8b691811710312c997",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2022/viirs-jpss1_2022_Italy.csv"
+  },
+  "archive/viirs-jpss1/2022/viirs-jpss1_2022_Portugal.csv": {
+   "bytes": 471146,
+   "fetched_at": "2026-11-14T08:57:33+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2022/viirs-jpss1_2022_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "746eacbf638a9ce3194cf828ecaff27e3e019a29569a8f1177ba8587cbb671ae",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2022/viirs-jpss1_2022_Portugal.csv"
+  },
+  "archive/viirs-jpss1/2022/viirs-jpss1_2022_Spain.csv": {
+   "bytes": 1886610,
+   "fetched_at": "2026-11-14T08:57:46+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2022/viirs-jpss1_2022_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "5a1d489bdba96d698e5edaff2b0b7499f802e40523c1bc63033d89100d77917b",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2022/viirs-jpss1_2022_Spain.csv"
+  },
+  "archive/viirs-jpss1/2022/viirs-jpss1_2022_Turkey.csv": {
+   "bytes": 2350261,
+   "fetched_at": "2026-11-14T08:57:18+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2022/viirs-jpss1_2022_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "6955fc53c4ae30aa8fa8863cdcbff8c81be002da05f3be5639fc213a2004cdf1",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2022/viirs-jpss1_2022_Turkey.csv"
+  },
+  "archive/viirs-jpss1/2023/viirs-jpss1_2023_Argentina.csv": {
+   "bytes": 13473948,
+   "fetched_at": "2026-11-14T09:00:55+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2023/viirs-jpss1_2023_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "4dde502dc54871c40d3517ce59da9aa566b85582348c7d13c1dd91e655f1e84f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2023/viirs-jpss1_2023_Argentina.csv"
+  },
+  "archive/viirs-jpss1/2023/viirs-jpss1_2023_Greece.csv": {
+   "bytes": 855918,
+   "fetched_at": "2026-11-14T08:57:28+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2023/viirs-jpss1_2023_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "4e8e1ca9f8ccf7c96108565eae7b1a0804f9ffa15e0de90c73cb04064c1a2cbc",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2023/viirs-jpss1_2023_Greece.csv"
+  },
+  "archive/viirs-jpss1/2023/viirs-jpss1_2023_Italy.csv": {
+   "bytes": 2052166,
+   "fetched_at": "2026-11-14T08:58:01+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2023/viirs-jpss1_2023_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "8054add82464af454b13b92923bf7ca13ec0d69fb435844c3785c309f1c0eceb",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2023/viirs-jpss1_2023_Italy.csv"
+  },
+  "archive/viirs-jpss1/2023/viirs-jpss1_2023_Portugal.csv": {
+   "bytes": 271978,
+   "fetched_at": "2026-11-14T08:57:33+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2023/viirs-jpss1_2023_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "79ae1fa715e5594b4a27c7f35d573ba630dcd87da3c68af84c5d84cbe310e574",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2023/viirs-jpss1_2023_Portugal.csv"
+  },
+  "archive/viirs-jpss1/2023/viirs-jpss1_2023_Spain.csv": {
+   "bytes": 1018479,
+   "fetched_at": "2026-11-14T08:57:43+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2023/viirs-jpss1_2023_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "b480beae5096fac9ba1486a80cf3b2752c5fda90861c51fd815bbca27d31b8f7",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2023/viirs-jpss1_2023_Spain.csv"
+  },
+  "archive/viirs-jpss1/2023/viirs-jpss1_2023_Turkey.csv": {
+   "bytes": 3196719,
+   "fetched_at": "2026-11-14T08:57:24+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2023/viirs-jpss1_2023_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "ea389a3fb95b810952ac06e548f1c3b7d18080991b6f697a43997cecf1f8b017",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2023/viirs-jpss1_2023_Turkey.csv"
+  },
+  "archive/viirs-jpss1/2024/viirs-jpss1_2024_Argentina.csv": {
+   "bytes": 12982697,
+   "fetched_at": "2026-11-14T09:01:07+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2024/viirs-jpss1_2024_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "f5d22dd92fedb44d7077e1296e8f0d29196a7fdd0ca078c9e1ed27f776fc6a26",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2024/viirs-jpss1_2024_Argentina.csv"
+  },
+  "archive/viirs-jpss1/2024/viirs-jpss1_2024_Greece.csv": {
+   "bytes": 423376,
+   "fetched_at": "2026-11-14T08:57:27+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2024/viirs-jpss1_2024_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "a411190901d0cbebb5d11dc135bf36b7617db8bc6e3081fc3b9d52958fe13a3d",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2024/viirs-jpss1_2024_Greece.csv"
+  },
+  "archive/viirs-jpss1/2024/viirs-jpss1_2024_Italy.csv": {
+   "bytes": 1433888,
+   "fetched_at": "2026-11-14T08:58:00+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2024/viirs-jpss1_2024_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "e60065bb6636b89bb1222f400439b4f7181f5fab5e7e688f540af84abdc28d2c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2024/viirs-jpss1_2024_Italy.csv"
+  },
+  "archive/viirs-jpss1/2024/viirs-jpss1_2024_Portugal.csv": {
+   "bytes": 966085,
+   "fetched_at": "2026-11-14T08:57:34+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2024/viirs-jpss1_2024_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "03d4d578a1d955255c13975af563c5d2364c2bf0105d94c320d8d17ae628482f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2024/viirs-jpss1_2024_Portugal.csv"
+  },
+  "archive/viirs-jpss1/2024/viirs-jpss1_2024_Spain.csv": {
+   "bytes": 729168,
+   "fetched_at": "2026-11-14T08:57:44+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2024/viirs-jpss1_2024_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "a7505fbc46d1d10a23d64aad18c678a8139823703596d840e0f1b817829c7216",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2024/viirs-jpss1_2024_Spain.csv"
+  },
+  "archive/viirs-jpss1/2024/viirs-jpss1_2024_Turkey.csv": {
+   "bytes": 4177902,
+   "fetched_at": "2026-11-14T08:57:28+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2024/viirs-jpss1_2024_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "5c107be1ea3114c908e88d024c351b541acbde1ab55d88411c6bd4310493854c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2024/viirs-jpss1_2024_Turkey.csv"
+  },
+  "archive/viirs-jpss1/2025/viirs-jpss1_2025_Argentina.csv": {
+   "bytes": 14016040,
+   "fetched_at": "2026-11-14T09:01:00+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2025/viirs-jpss1_2025_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "900032595f151b69b796535967dc814b84e65179802d0877c84905c3f46725f7",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2025/viirs-jpss1_2025_Argentina.csv"
+  },
+  "archive/viirs-jpss1/2025/viirs-jpss1_2025_Greece.csv": {
+   "bytes": 335553,
+   "fetched_at": "2026-11-14T08:57:27+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2025/viirs-jpss1_2025_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "3fa8b4a0b78b4bd5200e487f7a986915fda4b828a945cac5c4b220ae23b1e82e",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2025/viirs-jpss1_2025_Greece.csv"
+  },
+  "archive/viirs-jpss1/2025/viirs-jpss1_2025_Italy.csv": {
+   "bytes": 1937569,
+   "fetched_at": "2026-11-14T08:58:03+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2025/viirs-jpss1_2025_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "e7c964237bc2ad7ced5dee749549dcc0a9638322950a8c3cd17d988acc89cccd",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2025/viirs-jpss1_2025_Italy.csv"
+  },
+  "archive/viirs-jpss1/2025/viirs-jpss1_2025_Portugal.csv": {
+   "bytes": 1113849,
+   "fetched_at": "2026-11-14T08:57:35+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2025/viirs-jpss1_2025_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "fd8de11d7232e23eeafdf1bd33e8d7ce0f03fc51b40e8c505352a378f8c033b8",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2025/viirs-jpss1_2025_Portugal.csv"
+  },
+  "archive/viirs-jpss1/2025/viirs-jpss1_2025_Spain.csv": {
+   "bytes": 2469474,
+   "fetched_at": "2026-11-14T08:57:48+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2025/viirs-jpss1_2025_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "c5d8e0b239499b9e2acb79577bf3922b0e32492385a9673137eb5449e6a9604d",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2025/viirs-jpss1_2025_Spain.csv"
+  },
+  "archive/viirs-jpss1/2025/viirs-jpss1_2025_Turkey.csv": {
+   "bytes": 3242543,
+   "fetched_at": "2026-11-14T08:57:20+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-jpss1/2025/viirs-jpss1_2025_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "91b06d4f80f78ead1272a3193ecd313fcd087d0eafe80002c41a43aa10a89705",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-jpss1/2025/viirs-jpss1_2025_Turkey.csv"
+  },
+  "archive/viirs-snpp/2012/viirs-snpp_2012_Argentina.csv": {
+   "bytes": 15235582,
+   "fetched_at": "2026-11-14T08:59:22+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2012/viirs-snpp_2012_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "d685afc4b16b4fd654d504c1ce103be4494e64a07e522ca0d0ece68671e0707d",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2012/viirs-snpp_2012_Argentina.csv"
+  },
+  "archive/viirs-snpp/2012/viirs-snpp_2012_Greece.csv": {
+   "bytes": 725267,
+   "fetched_at": "2026-11-14T08:57:24+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2012/viirs-snpp_2012_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "87e0d4564ccf310df77958176e59dd68c3a0d6cb5ed3577d33200fb217eb5954",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2012/viirs-snpp_2012_Greece.csv"
+  },
+  "archive/viirs-snpp/2012/viirs-snpp_2012_Italy.csv": {
+   "bytes": 2799524,
+   "fetched_at": "2026-11-14T08:57:55+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2012/viirs-snpp_2012_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "d3e4606c55798c8f29477c414741da4db8ec480f3167890f25b9046f109408d3",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2012/viirs-snpp_2012_Italy.csv"
+  },
+  "archive/viirs-snpp/2012/viirs-snpp_2012_Portugal.csv": {
+   "bytes": 742901,
+   "fetched_at": "2026-11-14T08:57:30+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2012/viirs-snpp_2012_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "b9572217ccdcbe2abdfb94d22fd2d929d2b12b5b735b17a2e38bd6a61978249f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2012/viirs-snpp_2012_Portugal.csv"
+  },
+  "archive/viirs-snpp/2012/viirs-snpp_2012_Spain.csv": {
+   "bytes": 1683750,
+   "fetched_at": "2026-11-14T08:57:39+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2012/viirs-snpp_2012_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "22a35473ce1caba24ffd7bfd64e77a494bcc400c79de43fdaebcd0145affd972",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2012/viirs-snpp_2012_Spain.csv"
+  },
+  "archive/viirs-snpp/2012/viirs-snpp_2012_Turkey.csv": {
+   "bytes": 2774036,
+   "fetched_at": "2026-11-14T08:57:05+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2012/viirs-snpp_2012_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "620cb83f53fcb9b33f6bc3e29a9b6fe98bf9431820fa0e61070615c5bf89561c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2012/viirs-snpp_2012_Turkey.csv"
+  },
+  "archive/viirs-snpp/2013/viirs-snpp_2013_Argentina.csv": {
+   "bytes": 19061532,
+   "fetched_at": "2026-11-14T08:59:21+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2013/viirs-snpp_2013_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "a45be3200412b4bbd7e6f78db57a1f4c2f81b7c55a2d0db1aeefd797a93dad68",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2013/viirs-snpp_2013_Argentina.csv"
+  },
+  "archive/viirs-snpp/2013/viirs-snpp_2013_Greece.csv": {
+   "bytes": 577002,
+   "fetched_at": "2026-11-14T08:57:24+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2013/viirs-snpp_2013_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "b115d11cebaa67321ee46850c8be03f56498b94f40b6b24258b25d3d4ac685f0",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2013/viirs-snpp_2013_Greece.csv"
+  },
+  "archive/viirs-snpp/2013/viirs-snpp_2013_Italy.csv": {
+   "bytes": 1709344,
+   "fetched_at": "2026-11-14T08:57:52+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2013/viirs-snpp_2013_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "0939b2148fc6ff713f13a4c04bce1a59eef2efa8120112dfce0d8988d4f1e5cf",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2013/viirs-snpp_2013_Italy.csv"
+  },
+  "archive/viirs-snpp/2013/viirs-snpp_2013_Portugal.csv": {
+   "bytes": 948113,
+   "fetched_at": "2026-11-14T08:57:32+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2013/viirs-snpp_2013_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "f1cbd794b2525e49f453029d2d9e2dbea4b2098f39c8d21c7f520857a5499bea",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2013/viirs-snpp_2013_Portugal.csv"
+  },
+  "archive/viirs-snpp/2013/viirs-snpp_2013_Spain.csv": {
+   "bytes": 1089475,
+   "fetched_at": "2026-11-14T08:57:38+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2013/viirs-snpp_2013_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "ceba9d2bafc3df7b60da45e41b82a854150c9a98b767162ca68087fd509cf779",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2013/viirs-snpp_2013_Spain.csv"
+  },
+  "archive/viirs-snpp/2013/viirs-snpp_2013_Turkey.csv": {
+   "bytes": 4074299,
+   "fetched_at": "2026-11-14T08:57:10+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2013/viirs-snpp_2013_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "334281dbe8c3c4ea6a7e1a38f525756e879e94f00dd8a8613bbbfdddfffa330d",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2013/viirs-snpp_2013_Turkey.csv"
+  },
+  "archive/viirs-snpp/2014/viirs-snpp_2014_Argentina.csv": {
+   "bytes": 10138373,
+   "fetched_at": "2026-11-14T08:58:57+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2014/viirs-snpp_2014_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "9caaa6cf0e690cad118511dfef83b50e2c73ddeeb1c3294960968f14488fdba3",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2014/viirs-snpp_2014_Argentina.csv"
+  },
+  "archive/viirs-snpp/2014/viirs-snpp_2014_Greece.csv": {
+   "bytes": 468177,
+   "fetched_at": "2026-11-14T08:57:23+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2014/viirs-snpp_2014_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "a54c02d701a4d4c1444d168e5c9761aef8ad86badd07e3bc3bc7836a5418f0ab",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2014/viirs-snpp_2014_Greece.csv"
+  },
+  "archive/viirs-snpp/2014/viirs-snpp_2014_Italy.csv": {
+   "bytes": 1866599,
+   "fetched_at": "2026-11-14T08:57:54+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2014/viirs-snpp_2014_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "0987039fd3d15c70aaabf48f8410cf0fe3a8d471520a336d2fc2365dc97dc82c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2014/viirs-snpp_2014_Italy.csv"
+  },
+  "archive/viirs-snpp/2014/viirs-snpp_2014_Portugal.csv": {
+   "bytes": 183497,
+   "fetched_at": "2026-11-14T08:57:30+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2014/viirs-snpp_2014_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "f56b3a2a70ab0c2a0fe9490c14f7515b84d973826392457d5d49ecc3108ceb2e",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2014/viirs-snpp_2014_Portugal.csv"
+  },
+  "archive/viirs-snpp/2014/viirs-snpp_2014_Spain.csv": {
+   "bytes": 1000999,
+   "fetched_at": "2026-11-14T08:57:38+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2014/viirs-snpp_2014_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "9629fd454b3bdc9bca085e5885c5944d60ca65c6caa4c38a8cc96cdc27119add",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2014/viirs-snpp_2014_Spain.csv"
+  },
+  "archive/viirs-snpp/2014/viirs-snpp_2014_Turkey.csv": {
+   "bytes": 2603195,
+   "fetched_at": "2026-11-14T08:57:09+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2014/viirs-snpp_2014_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "f0520a807a09ddd5f23f10ad2d685000fa940e6318547ba59b720eea76509c8c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2014/viirs-snpp_2014_Turkey.csv"
+  },
+  "archive/viirs-snpp/2015/viirs-snpp_2015_Argentina.csv": {
+   "bytes": 12124867,
+   "fetched_at": "2026-11-14T08:59:11+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2015/viirs-snpp_2015_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "ba4514b7188785c6fb805a3263115ae6e704a0edaaa2f7960c2427dd94902a68",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2015/viirs-snpp_2015_Argentina.csv"
+  },
+  "archive/viirs-snpp/2015/viirs-snpp_2015_Greece.csv": {
+   "bytes": 473655,
+   "fetched_at": "2026-11-14T08:57:24+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2015/viirs-snpp_2015_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "97b0ed35c6ed556592ed6c67541f32603229650a61325ffc00968c6a36552fb9",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2015/viirs-snpp_2015_Greece.csv"
+  },
+  "archive/viirs-snpp/2015/viirs-snpp_2015_Italy.csv": {
+   "bytes": 1642745,
+   "fetched_at": "2026-11-14T08:57:51+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2015/viirs-snpp_2015_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "31531fa294ab9b17f9aeb141a25ae749039f53dee9049fbc8098e82f1143027f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2015/viirs-snpp_2015_Italy.csv"
+  },
+  "archive/viirs-snpp/2015/viirs-snpp_2015_Portugal.csv": {
+   "bytes": 460144,
+   "fetched_at": "2026-11-14T08:57:30+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2015/viirs-snpp_2015_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "f77b2a72e78a307fcff1e80a2048462ad0b42c69308fd0aa37fb2051ab1806a0",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2015/viirs-snpp_2015_Portugal.csv"
+  },
+  "archive/viirs-snpp/2015/viirs-snpp_2015_Spain.csv": {
+   "bytes": 1170092,
+   "fetched_at": "2026-11-14T08:57:38+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2015/viirs-snpp_2015_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "535150f71587c4687f63ff5264bc53d38a0a9aade2f19d0643c950c0f94a54d3",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2015/viirs-snpp_2015_Spain.csv"
+  },
+  "archive/viirs-snpp/2015/viirs-snpp_2015_Turkey.csv": {
+   "bytes": 5225608,
+   "fetched_at": "2026-11-14T08:57:14+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2015/viirs-snpp_2015_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "eef33f46ef66132a0e1643763483c06c0e1c75a67816409a6684a0ecaf352188",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2015/viirs-snpp_2015_Turkey.csv"
+  },
+  "archive/viirs-snpp/2016/viirs-snpp_2016_Argentina.csv": {
+   "bytes": 14556663,
+   "fetched_at": "2026-11-14T08:59:51+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2016/viirs-snpp_2016_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "85c3d5f233762ba3f6b26d956d3b48590292e619fe0bce57cc514ff62a417515",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2016/viirs-snpp_2016_Argentina.csv"
+  },
+  "archive/viirs-snpp/2016/viirs-snpp_2016_Greece.csv": {
+   "bytes": 598365,
+   "fetched_at": "2026-11-14T08:57:24+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2016/viirs-snpp_2016_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "fd76de9343889af08ffba3c7c23a9259a17ea92a7f0657053cb8db9ee78b03b3",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2016/viirs-snpp_2016_Greece.csv"
+  },
+  "archive/viirs-snpp/2016/viirs-snpp_2016_Italy.csv": {
+   "bytes": 1749107,
+   "fetched_at": "2026-11-14T08:57:52+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2016/viirs-snpp_2016_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "5fea1410d824bc06e3ae92833d28aeac44e59bf3e1bf47fe628ba2cdb51be19a",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2016/viirs-snpp_2016_Italy.csv"
+  },
+  "archive/viirs-snpp/2016/viirs-snpp_2016_Portugal.csv": {
+   "bytes": 1090617,
+   "fetched_at": "2026-11-14T08:57:32+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2016/viirs-snpp_2016_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "51968fba030d9a386a292184c5d74283630a1e4b987bfde67d723517c968e9f9",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2016/viirs-snpp_2016_Portugal.csv"
+  },
+  "archive/viirs-snpp/2016/viirs-snpp_2016_Spain.csv": {
+   "bytes": 1072754,
+   "fetched_at": "2026-11-14T08:57:39+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2016/viirs-snpp_2016_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "b920186988513b5bb021e2c2628efb1a9a2e47fd178e9291075cd5b8025bfed1",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2016/viirs-snpp_2016_Spain.csv"
+  },
+  "archive/viirs-snpp/2016/viirs-snpp_2016_Turkey.csv": {
+   "bytes": 4504956,
+   "fetched_at": "2026-11-14T08:57:10+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2016/viirs-snpp_2016_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "e50df5686e68e2f2a91cd79ff3a6d07033e0e426bf378e52f51391ea0f6aebbe",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2016/viirs-snpp_2016_Turkey.csv"
+  },
+  "archive/viirs-snpp/2017/viirs-snpp_2017_Argentina.csv": {
+   "bytes": 16182697,
+   "fetched_at": "2026-11-14T08:59:16+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2017/viirs-snpp_2017_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "192ce79b159d9c0110ea97916ea339571301b3f12108ec7784ff70a599b03cfc",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2017/viirs-snpp_2017_Argentina.csv"
+  },
+  "archive/viirs-snpp/2017/viirs-snpp_2017_Greece.csv": {
+   "bytes": 481657,
+   "fetched_at": "2026-11-14T08:57:26+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2017/viirs-snpp_2017_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "c7c48192153dbcc03b941fa93db7a926630deae7a342223aee0bb7177e4cb93b",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2017/viirs-snpp_2017_Greece.csv"
+  },
+  "archive/viirs-snpp/2017/viirs-snpp_2017_Italy.csv": {
+   "bytes": 3012036,
+   "fetched_at": "2026-11-14T08:57:55+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2017/viirs-snpp_2017_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "86116574fd358c40e68aaaaf4a2804e0ea2c997a401c57a9679b31b70a27b6b0",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2017/viirs-snpp_2017_Italy.csv"
+  },
+  "archive/viirs-snpp/2017/viirs-snpp_2017_Portugal.csv": {
+   "bytes": 1504115,
+   "fetched_at": "2026-11-14T08:57:32+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2017/viirs-snpp_2017_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "d05e7bf3f202a75e1ea88a77cc8c8f8e81b911d0308c778d0ec479d41293625b",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2017/viirs-snpp_2017_Portugal.csv"
+  },
+  "archive/viirs-snpp/2017/viirs-snpp_2017_Spain.csv": {
+   "bytes": 1558431,
+   "fetched_at": "2026-11-14T08:57:40+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2017/viirs-snpp_2017_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "b301d4878c915ebf74293e5ffa200e0c6b2f5074cdab29cb52cd7f8b79c988d8",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2017/viirs-snpp_2017_Spain.csv"
+  },
+  "archive/viirs-snpp/2017/viirs-snpp_2017_Turkey.csv": {
+   "bytes": 3417295,
+   "fetched_at": "2026-11-14T08:57:08+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2017/viirs-snpp_2017_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "607d592327d45464228a74eee5b643e7d386b9f0c1ff629a3be3624b07d2a3da",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2017/viirs-snpp_2017_Turkey.csv"
+  },
+  "archive/viirs-snpp/2018/viirs-snpp_2018_Argentina.csv": {
+   "bytes": 14836152,
+   "fetched_at": "2026-11-14T08:59:51+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2018/viirs-snpp_2018_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "9c236f96a58d65f11c7364d89e3c705a6812649aaf9f73080078ab0b76294e9e",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2018/viirs-snpp_2018_Argentina.csv"
+  },
+  "archive/viirs-snpp/2018/viirs-snpp_2018_Greece.csv": {
+   "bytes": 314295,
+   "fetched_at": "2026-11-14T08:57:24+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2018/viirs-snpp_2018_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "6c2f483c726a9c129e19eacf5d3821f04e0f08b304c2866a74fffd92db6d9feb",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2018/viirs-snpp_2018_Greece.csv"
+  },
+  "archive/viirs-snpp/2018/viirs-snpp_2018_Italy.csv": {
+   "bytes": 1271885,
+   "fetched_at": "2026-11-14T08:57:51+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2018/viirs-snpp_2018_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "19011b7e7d5e1df9710deebb76be9af6521ce33b65504b1479e9d47391120ef5",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2018/viirs-snpp_2018_Italy.csv"
+  },
+  "archive/viirs-snpp/2018/viirs-snpp_2018_Portugal.csv": {
+   "bytes": 299634,
+   "fetched_at": "2026-11-14T08:57:30+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2018/viirs-snpp_2018_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "8cb80293d22bf0c697e856d8756ca443bdeed0706776d49f39c5928f9a567a3d",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2018/viirs-snpp_2018_Portugal.csv"
+  },
+  "archive/viirs-snpp/2018/viirs-snpp_2018_Spain.csv": {
+   "bytes": 760665,
+   "fetched_at": "2026-11-14T08:57:39+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2018/viirs-snpp_2018_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "ca24502f52e13f2df9d575b56fa52c223dbc496d378e91b54bfce4f2910845d8",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2018/viirs-snpp_2018_Spain.csv"
+  },
+  "archive/viirs-snpp/2018/viirs-snpp_2018_Turkey.csv": {
+   "bytes": 2919578,
+   "fetched_at": "2026-11-14T08:57:08+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2018/viirs-snpp_2018_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "c33139ae394acba41fc161a59cdfb259b16193932947c19e5899ca1cc593cbbf",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2018/viirs-snpp_2018_Turkey.csv"
+  },
+  "archive/viirs-snpp/2019/viirs-snpp_2019_Argentina.csv": {
+   "bytes": 12976401,
+   "fetched_at": "2026-11-14T08:59:56+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2019/viirs-snpp_2019_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "b32417ae0437c0de9d5cca73c1214921fcd03e0575869bea6466d8056de9b26a",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2019/viirs-snpp_2019_Argentina.csv"
+  },
+  "archive/viirs-snpp/2019/viirs-snpp_2019_Greece.csv": {
+   "bytes": 388512,
+   "fetched_at": "2026-11-14T08:57:25+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2019/viirs-snpp_2019_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "6df57bab705b6f80bb88e9b1cc3811f1c431ea060ff9805867f13c6a24eac7a1",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2019/viirs-snpp_2019_Greece.csv"
+  },
+  "archive/viirs-snpp/2019/viirs-snpp_2019_Italy.csv": {
+   "bytes": 1838097,
+   "fetched_at": "2026-11-14T08:57:54+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2019/viirs-snpp_2019_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "b53b526630c73dab55af176540cc0c6510d817bb8218ec0bbd893a17045a7852",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2019/viirs-snpp_2019_Italy.csv"
+  },
+  "archive/viirs-snpp/2019/viirs-snpp_2019_Portugal.csv": {
+   "bytes": 297234,
+   "fetched_at": "2026-11-14T08:57:31+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2019/viirs-snpp_2019_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "79cab83d9a05741935c7f24b680613b7794987e2bc1d0dab7ac02031f8fb909a",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2019/viirs-snpp_2019_Portugal.csv"
+  },
+  "archive/viirs-snpp/2019/viirs-snpp_2019_Spain.csv": {
+   "bytes": 1121105,
+   "fetched_at": "2026-11-14T08:57:40+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2019/viirs-snpp_2019_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "5234284797c2216ea5720fb831206f827102e3dd1fc14e36005e556d2e479a79",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2019/viirs-snpp_2019_Spain.csv"
+  },
+  "archive/viirs-snpp/2019/viirs-snpp_2019_Turkey.csv": {
+   "bytes": 3118614,
+   "fetched_at": "2026-11-14T08:57:08+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2019/viirs-snpp_2019_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "c0e88bc4827d427348830653983e139b0e015466c3d64bc16b85451ffda40858",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2019/viirs-snpp_2019_Turkey.csv"
+  },
+  "archive/viirs-snpp/2020/viirs-snpp_2020_Argentina.csv": {
+   "bytes": 35993088,
+   "fetched_at": "2026-11-14T09:00:42+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2020/viirs-snpp_2020_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "48ca3db0721d41aa6f0457fc649ef5bf69141b13da964dac73ee1b708cf466f4",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2020/viirs-snpp_2020_Argentina.csv"
+  },
+  "archive/viirs-snpp/2020/viirs-snpp_2020_Greece.csv": {
+   "bytes": 352573,
+   "fetched_at": "2026-11-14T08:57:25+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2020/viirs-snpp_2020_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "6b99b736b1954fd76ae6c65083a0f96ed7e294140fda60cc53dc670e795691a5",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2020/viirs-snpp_2020_Greece.csv"
+  },
+  "archive/viirs-snpp/2020/viirs-snpp_2020_Italy.csv": {
+   "bytes": 1715360,
+   "fetched_at": "2026-11-14T08:57:55+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2020/viirs-snpp_2020_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "9c8a76a18fe7ad4e7321b909f892a47a7bd18fd680d72ced65a80d4e1d28a48e",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2020/viirs-snpp_2020_Italy.csv"
+  },
+  "archive/viirs-snpp/2020/viirs-snpp_2020_Portugal.csv": {
+   "bytes": 295151,
+   "fetched_at": "2026-11-14T08:57:31+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2020/viirs-snpp_2020_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "b7161890d33f3aa3ecb0670bb5282fb3d6a25ca1a7f2c693210e2a9dffe04c80",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2020/viirs-snpp_2020_Portugal.csv"
+  },
+  "archive/viirs-snpp/2020/viirs-snpp_2020_Spain.csv": {
+   "bytes": 859193,
+   "fetched_at": "2026-11-14T08:57:40+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2020/viirs-snpp_2020_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "09a12cb62ba7ec398ba30ee0713ab3369f3255e01b86bb616d069ee89e73facf",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2020/viirs-snpp_2020_Spain.csv"
+  },
+  "archive/viirs-snpp/2020/viirs-snpp_2020_Turkey.csv": {
+   "bytes": 3472482,
+   "fetched_at": "2026-11-14T08:57:12+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2020/viirs-snpp_2020_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "24274d87c9bd24d262ba4323034c1f7cc2cd8159c11f4b4297a5d216dc307ae9",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2020/viirs-snpp_2020_Turkey.csv"
+  },
+  "archive/viirs-snpp/2021/viirs-snpp_2021_Argentina.csv": {
+   "bytes": 15895377,
+   "fetched_at": "2026-11-14T09:00:44+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2021/viirs-snpp_2021_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "915bcb6794ab0c11663d9a3c71f4d9ff53bd5700d00ed4deda05ee101938a37c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2021/viirs-snpp_2021_Argentina.csv"
+  },
+  "archive/viirs-snpp/2021/viirs-snpp_2021_Greece.csv": {
+   "bytes": 824271,
+   "fetched_at": "2026-11-14T08:57:25+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2021/viirs-snpp_2021_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "57f48c9349e13cb054c799695f4f9f3711425291340aedbb0c798b2cc4e70b5f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2021/viirs-snpp_2021_Greece.csv"
+  },
+  "archive/viirs-snpp/2021/viirs-snpp_2021_Italy.csv": {
+   "bytes": 2486627,
+   "fetched_at": "2026-11-14T08:57:55+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2021/viirs-snpp_2021_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "549e1fe62ba15b92fc72c4861493a413a5e790cffb8c8f0a89fd63baf4bb9cb5",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2021/viirs-snpp_2021_Italy.csv"
+  },
+  "archive/viirs-snpp/2021/viirs-snpp_2021_Portugal.csv": {
+   "bytes": 203155,
+   "fetched_at": "2026-11-14T08:57:31+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2021/viirs-snpp_2021_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "fca5d2baf848553b38c7d97749c95e2d8ecda567b168cd1bb20157c4d25e86b8",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2021/viirs-snpp_2021_Portugal.csv"
+  },
+  "archive/viirs-snpp/2021/viirs-snpp_2021_Spain.csv": {
+   "bytes": 2058504,
+   "fetched_at": "2026-11-14T08:57:42+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2021/viirs-snpp_2021_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "bbf52fcf4ed00932dbe317496eaa20e5dcb8f9a6fd9f2c546fb2840084e25403",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2021/viirs-snpp_2021_Spain.csv"
+  },
+  "archive/viirs-snpp/2021/viirs-snpp_2021_Turkey.csv": {
+   "bytes": 3362331,
+   "fetched_at": "2026-11-14T08:57:17+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2021/viirs-snpp_2021_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "d1be993e078585345bd44f175b0d6a72df9e4cbb0b0b439673677024136fc182",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2021/viirs-snpp_2021_Turkey.csv"
+  },
+  "archive/viirs-snpp/2022/viirs-snpp_2022_Argentina.csv": {
+   "bytes": 25114506,
+   "fetched_at": "2026-11-14T09:00:01+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2022/viirs-snpp_2022_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "c441a07213b84debd04623dde97cc38ac7ebc7286c864f236a0140a6ede7911c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2022/viirs-snpp_2022_Argentina.csv"
+  },
+  "archive/viirs-snpp/2022/viirs-snpp_2022_Greece.csv": {
+   "bytes": 357373,
+   "fetched_at": "2026-11-14T08:57:25+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2022/viirs-snpp_2022_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "20a4d35e431c908e69c7a7b679758aaffecd7ae8ffa999a30a7fb87eebb81534",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2022/viirs-snpp_2022_Greece.csv"
+  },
+  "archive/viirs-snpp/2022/viirs-snpp_2022_Italy.csv": {
+   "bytes": 1643981,
+   "fetched_at": "2026-11-14T08:57:56+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2022/viirs-snpp_2022_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "77da4dea167ae7cef3ac02c9fccede7bb212a288dd2cabe788a0a97ecaefa4de",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2022/viirs-snpp_2022_Italy.csv"
+  },
+  "archive/viirs-snpp/2022/viirs-snpp_2022_Portugal.csv": {
+   "bytes": 397984,
+   "fetched_at": "2026-11-14T08:57:31+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2022/viirs-snpp_2022_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "0ad346b221ee68d53d817186b7bfafa2ed981635f7cc5c2a0920597a5c32d3e2",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2022/viirs-snpp_2022_Portugal.csv"
+  },
+  "archive/viirs-snpp/2022/viirs-snpp_2022_Spain.csv": {
+   "bytes": 1727127,
+   "fetched_at": "2026-11-14T08:57:42+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2022/viirs-snpp_2022_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "820aacd5316d3f8e67ce53ca450e8de2183a77e9b2b72175a0b180706203c6f5",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2022/viirs-snpp_2022_Spain.csv"
+  },
+  "archive/viirs-snpp/2022/viirs-snpp_2022_Turkey.csv": {
+   "bytes": 2078467,
+   "fetched_at": "2026-11-14T08:57:16+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2022/viirs-snpp_2022_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "172ac0cdf503acf61b9904104a43904c1e7f75db82bcafee71e7a60a797af3c8",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2022/viirs-snpp_2022_Turkey.csv"
+  },
+  "archive/viirs-snpp/2023/viirs-snpp_2023_Argentina.csv": {
+   "bytes": 13782846,
+   "fetched_at": "2026-11-14T08:59:40+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2023/viirs-snpp_2023_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "ca895e71b8e5d878e0c971e643dacb8a018893c237d0ff567c41c921081c1eac",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2023/viirs-snpp_2023_Argentina.csv"
+  },
+  "archive/viirs-snpp/2023/viirs-snpp_2023_Greece.csv": {
+   "bytes": 820492,
+   "fetched_at": "2026-11-14T08:57:27+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2023/viirs-snpp_2023_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "4e2e64268a17f538e1cfffeab4f59aaa0d744db2613593bc0953fe51e56cd855",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2023/viirs-snpp_2023_Greece.csv"
+  },
+  "archive/viirs-snpp/2023/viirs-snpp_2023_Italy.csv": {
+   "bytes": 1978217,
+   "fetched_at": "2026-11-14T08:57:58+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2023/viirs-snpp_2023_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "7a72bf38f4b8fa202ecc829cf955e728cfb1d28ddb22a37a818a19e426cf3651",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2023/viirs-snpp_2023_Italy.csv"
+  },
+  "archive/viirs-snpp/2023/viirs-snpp_2023_Portugal.csv": {
+   "bytes": 231545,
+   "fetched_at": "2026-11-14T08:57:31+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2023/viirs-snpp_2023_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "9814ab8bbd6466a529ade2357fa26eae6c900510c674f1d365ba3777db120500",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2023/viirs-snpp_2023_Portugal.csv"
+  },
+  "archive/viirs-snpp/2023/viirs-snpp_2023_Spain.csv": {
+   "bytes": 974247,
+   "fetched_at": "2026-11-14T08:57:41+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2023/viirs-snpp_2023_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "57072524156cb757e7109d83b165a95d38131fe48d535fde5f73463bcc09e80f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2023/viirs-snpp_2023_Spain.csv"
+  },
+  "archive/viirs-snpp/2023/viirs-snpp_2023_Turkey.csv": {
+   "bytes": 3063361,
+   "fetched_at": "2026-11-14T08:57:11+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2023/viirs-snpp_2023_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "5e12983478d04761d267aa0d1444c1fc67be4c4f5ea3952b1c2635a96330a9fa",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2023/viirs-snpp_2023_Turkey.csv"
+  },
+  "archive/viirs-snpp/2024/viirs-snpp_2024_Argentina.csv": {
+   "bytes": 12276220,
+   "fetched_at": "2026-11-14T08:59:58+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2024/viirs-snpp_2024_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "27d3c8e6d27b448e101b127decd4c721a20f664298a9475d1698104aa3dd8683",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2024/viirs-snpp_2024_Argentina.csv"
+  },
+  "archive/viirs-snpp/2024/viirs-snpp_2024_Greece.csv": {
+   "bytes": 362508,
+   "fetched_at": "2026-11-14T08:57:25+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2024/viirs-snpp_2024_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "1924045681eef9ad3300918bd1dfa8685b6827527e2c8b36639436699606a109",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2024/viirs-snpp_2024_Greece.csv"
+  },
+  "archive/viirs-snpp/2024/viirs-snpp_2024_Italy.csv": {
+   "bytes": 1196655,
+   "fetched_at": "2026-11-14T08:57:56+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2024/viirs-snpp_2024_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "c4bb592e1d462cae5eddd4e3f1b4e46ffd985b292bbedd07e97d925f696e98be",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2024/viirs-snpp_2024_Italy.csv"
+  },
+  "archive/viirs-snpp/2024/viirs-snpp_2024_Portugal.csv": {
+   "bytes": 946487,
+   "fetched_at": "2026-11-14T08:57:32+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2024/viirs-snpp_2024_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "1f1524c8f621c234ab216098988a6f2bbfbef62aa482be27684e74fa0103e0a5",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2024/viirs-snpp_2024_Portugal.csv"
+  },
+  "archive/viirs-snpp/2024/viirs-snpp_2024_Spain.csv": {
+   "bytes": 654773,
+   "fetched_at": "2026-11-14T08:57:41+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2024/viirs-snpp_2024_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "b03d03a4c4d5eb5420b554be2886dd15babb139819d44065b57c8c65ac68570f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2024/viirs-snpp_2024_Spain.csv"
+  },
+  "archive/viirs-snpp/2024/viirs-snpp_2024_Turkey.csv": {
+   "bytes": 3677694,
+   "fetched_at": "2026-11-14T08:57:17+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2024/viirs-snpp_2024_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "f0dac110385f53d0c9e299ff95f9a8291a3167a255858541aa61b9da21ada812",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2024/viirs-snpp_2024_Turkey.csv"
+  },
+  "archive/viirs-snpp/2025/viirs-snpp_2025_Argentina.csv": {
+   "bytes": 13697114,
+   "fetched_at": "2026-11-14T09:00:07+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2025/viirs-snpp_2025_Argentina.csv",
+   "product": "standard/archive",
+   "sha256": "a6709295263f33166546c7029e823e4ad4716571ca1738a0ebc931d34c373f26",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2025/viirs-snpp_2025_Argentina.csv"
+  },
+  "archive/viirs-snpp/2025/viirs-snpp_2025_Greece.csv": {
+   "bytes": 335287,
+   "fetched_at": "2026-11-14T08:57:26+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2025/viirs-snpp_2025_Greece.csv",
+   "product": "standard/archive",
+   "sha256": "e06f76145dc9ecbb0e0ef310e1d37201ebfb037c8531522217d4baab8ff590fc",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2025/viirs-snpp_2025_Greece.csv"
+  },
+  "archive/viirs-snpp/2025/viirs-snpp_2025_Italy.csv": {
+   "bytes": 1824147,
+   "fetched_at": "2026-11-14T08:58:02+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2025/viirs-snpp_2025_Italy.csv",
+   "product": "standard/archive",
+   "sha256": "5654e70608ee0fb5e08f919a61751c0d508cc1bf484554d8d0340771735fba4f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2025/viirs-snpp_2025_Italy.csv"
+  },
+  "archive/viirs-snpp/2025/viirs-snpp_2025_Portugal.csv": {
+   "bytes": 1065513,
+   "fetched_at": "2026-11-14T08:57:33+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2025/viirs-snpp_2025_Portugal.csv",
+   "product": "standard/archive",
+   "sha256": "2a7bc6273ae4cf7c3c3d6d78465a85ce9e5cedc29959b7ea146a8b5f9b69fa6f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2025/viirs-snpp_2025_Portugal.csv"
+  },
+  "archive/viirs-snpp/2025/viirs-snpp_2025_Spain.csv": {
+   "bytes": 2407569,
+   "fetched_at": "2026-11-14T08:57:45+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2025/viirs-snpp_2025_Spain.csv",
+   "product": "standard/archive",
+   "sha256": "5d0fdaf6fb9cfe64240c6bcf9e9ddc005daba0f4ab91f753488ff6e823ed439f",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2025/viirs-snpp_2025_Spain.csv"
+  },
+  "archive/viirs-snpp/2025/viirs-snpp_2025_Turkey.csv": {
+   "bytes": 3083240,
+   "fetched_at": "2026-11-14T08:57:23+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "archive/viirs-snpp/2025/viirs-snpp_2025_Turkey.csv",
+   "product": "standard/archive",
+   "sha256": "3c1dbc2a709e541c119364feef837bde46d0192b75a8557693f23d0beac6f139",
+   "url": "https://firms.modaps.eosdis.nasa.gov/data/country/viirs-snpp/2025/viirs-snpp_2025_Turkey.csv"
+  },
+  "current/modis/2026/modis_2026_Argentina.csv": {
+   "bytes": 2197520,
+   "coverage": "2026-01-01..2026-08-31",
+   "fetched_at": "2026-11-14T09:16:54+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/modis/2026/modis_2026_Argentina.csv",
+   "product": "MODIS_SP via area API (country bbox, not country-clipped)",
+   "sha256": "f5793646c187a1bfab1780efbe293e2815da2528b87ef368a29a378566d5abf3",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/MODIS_SP/-73.6,-55.1,-53.6,-21.7/5/<date>"
+  },
+  "current/modis/2026/modis_2026_Greece.csv": {
+   "bytes": 189200,
+   "coverage": "2026-01-01..2026-08-31",
+   "fetched_at": "2026-11-14T09:16:09+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/modis/2026/modis_2026_Greece.csv",
+   "product": "MODIS_SP via area API (country bbox, not country-clipped)",
+   "sha256": "58a399cf4b9a4ef0d2a0b695d416c7198559afa52787b1622a1540ceb8dfbc14",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/MODIS_SP/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "current/modis/2026/modis_2026_Italy.csv": {
+   "bytes": 536209,
+   "coverage": "2026-01-01..2026-08-31",
+   "fetched_at": "2026-11-14T09:16:09+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/modis/2026/modis_2026_Italy.csv",
+   "product": "MODIS_SP via area API (country bbox, not country-clipped)",
+   "sha256": "e6de69977c2322311576d00b8174d60fea688402a079e79fc53eaa39ffc1b8ce",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/MODIS_SP/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "current/modis/2026/modis_2026_Portugal.csv": {
+   "bytes": 223041,
+   "coverage": "2026-01-01..2026-08-31",
+   "fetched_at": "2026-11-14T09:16:09+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/modis/2026/modis_2026_Portugal.csv",
+   "product": "MODIS_SP via area API (country bbox, not country-clipped)",
+   "sha256": "5c14471b6179d50f1c3691640878da5fed95ca95cb23b7b7c33eebd6a115c5c5",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/MODIS_SP/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "current/modis/2026/modis_2026_Spain.csv": {
+   "bytes": 611903,
+   "coverage": "2026-01-01..2026-08-31",
+   "fetched_at": "2026-11-14T09:16:09+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/modis/2026/modis_2026_Spain.csv",
+   "product": "MODIS_SP via area API (country bbox, not country-clipped)",
+   "sha256": "d7a0c16275ab8895ef91e79e1aaec02af12eee14307aa030e212a1e7faa5dd6a",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/MODIS_SP/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "current/modis/2026/modis_2026_Turkey.csv": {
+   "bytes": 623546,
+   "coverage": "2026-01-01..2026-08-31",
+   "fetched_at": "2026-11-14T09:16:09+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/modis/2026/modis_2026_Turkey.csv",
+   "product": "MODIS_SP via area API (country bbox, not country-clipped)",
+   "sha256": "47cc55958d1a31b2f92f5479595796c1b27c9c454d99c3e06d4b7d808985b7ea",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/MODIS_SP/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "current/viirs-jpss1/2026/viirs-jpss1_2026_Argentina.csv": {
+   "bytes": 8347733,
+   "coverage": "2026-01-01..2026-07-31",
+   "fetched_at": "2026-11-14T09:20:57+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/viirs-jpss1/2026/viirs-jpss1_2026_Argentina.csv",
+   "product": "VIIRS_NOAA20_SP via area API (country bbox, not country-clipped)",
+   "sha256": "89352ce4c0b543dcae57e246d0da3845e25d204d980fe7cfe16a239164ee2c51",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_NOAA20_SP/-73.6,-55.1,-53.6,-21.7/5/<date>"
+  },
+  "current/viirs-jpss1/2026/viirs-jpss1_2026_Greece.csv": {
+   "bytes": 528962,
+   "coverage": "2026-01-01..2026-07-31",
+   "fetched_at": "2026-11-14T09:20:14+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/viirs-jpss1/2026/viirs-jpss1_2026_Greece.csv",
+   "product": "VIIRS_NOAA20_SP via area API (country bbox, not country-clipped)",
+   "sha256": "6629bdc5d087fe5f0d44851724a5059d7469d0bf183041a7064061561755ee52",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_NOAA20_SP/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "current/viirs-jpss1/2026/viirs-jpss1_2026_Italy.csv": {
+   "bytes": 1761996,
+   "coverage": "2026-01-01..2026-07-31",
+   "fetched_at": "2026-11-14T09:20:14+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/viirs-jpss1/2026/viirs-jpss1_2026_Italy.csv",
+   "product": "VIIRS_NOAA20_SP via area API (country bbox, not country-clipped)",
+   "sha256": "07db1a1810bad0fb3a7b801a9f31cfccb64c4123e63acbc60ca069f6f0365057",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_NOAA20_SP/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "current/viirs-jpss1/2026/viirs-jpss1_2026_Portugal.csv": {
+   "bytes": 378327,
+   "coverage": "2026-01-01..2026-07-31",
+   "fetched_at": "2026-11-14T09:20:14+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/viirs-jpss1/2026/viirs-jpss1_2026_Portugal.csv",
+   "product": "VIIRS_NOAA20_SP via area API (country bbox, not country-clipped)",
+   "sha256": "86f5b1e211b004cb4d5a03185552a8138bccdeb82e08ba908b6f13c437bc601c",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_NOAA20_SP/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "current/viirs-jpss1/2026/viirs-jpss1_2026_Spain.csv": {
+   "bytes": 1835376,
+   "coverage": "2026-01-01..2026-07-31",
+   "fetched_at": "2026-11-14T09:20:14+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/viirs-jpss1/2026/viirs-jpss1_2026_Spain.csv",
+   "product": "VIIRS_NOAA20_SP via area API (country bbox, not country-clipped)",
+   "sha256": "813f9264665b3314795dc58708eff44d20d9d0b83bfb7767839de3f44acf6257",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_NOAA20_SP/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "current/viirs-jpss1/2026/viirs-jpss1_2026_Turkey.csv": {
+   "bytes": 1906988,
+   "coverage": "2026-01-01..2026-07-31",
+   "fetched_at": "2026-11-14T09:20:14+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/viirs-jpss1/2026/viirs-jpss1_2026_Turkey.csv",
+   "product": "VIIRS_NOAA20_SP via area API (country bbox, not country-clipped)",
+   "sha256": "bc45240dccdcf8b05342f502bad675e425b77d14f81ad635a613650fe722c6e2",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_NOAA20_SP/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "current/viirs-snpp/2026/viirs-snpp_2026_Argentina.csv": {
+   "bytes": 7581522,
+   "coverage": "2026-01-01..2026-07-31",
+   "fetched_at": "2026-11-14T09:18:43+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/viirs-snpp/2026/viirs-snpp_2026_Argentina.csv",
+   "product": "VIIRS_SNPP_SP via area API (country bbox, not country-clipped)",
+   "sha256": "419ac96dde01285d43b95e86b8c40545e2bbb88fc4271d70d0003c3c570cb00e",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_SNPP_SP/-73.6,-55.1,-53.6,-21.7/5/<date>"
+  },
+  "current/viirs-snpp/2026/viirs-snpp_2026_Greece.csv": {
+   "bytes": 450444,
+   "coverage": "2026-01-01..2026-07-31",
+   "fetched_at": "2026-11-14T09:17:56+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/viirs-snpp/2026/viirs-snpp_2026_Greece.csv",
+   "product": "VIIRS_SNPP_SP via area API (country bbox, not country-clipped)",
+   "sha256": "36e54be7e3420f2b21a2a382350d758903b9ec167e9331ac99c1912a68c8d1f6",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_SNPP_SP/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "current/viirs-snpp/2026/viirs-snpp_2026_Italy.csv": {
+   "bytes": 1542395,
+   "coverage": "2026-01-01..2026-07-31",
+   "fetched_at": "2026-11-14T09:17:56+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/viirs-snpp/2026/viirs-snpp_2026_Italy.csv",
+   "product": "VIIRS_SNPP_SP via area API (country bbox, not country-clipped)",
+   "sha256": "30b710adfc026956af8cf237d62e888a0c01f665d8270449a2c5158f2f012750",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_SNPP_SP/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "current/viirs-snpp/2026/viirs-snpp_2026_Portugal.csv": {
+   "bytes": 373803,
+   "coverage": "2026-01-01..2026-07-31",
+   "fetched_at": "2026-11-14T09:17:56+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/viirs-snpp/2026/viirs-snpp_2026_Portugal.csv",
+   "product": "VIIRS_SNPP_SP via area API (country bbox, not country-clipped)",
+   "sha256": "84942856e943dc4fa2b943c75a985439b90c6142899827c0a9f8575ec7b00c03",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_SNPP_SP/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "current/viirs-snpp/2026/viirs-snpp_2026_Spain.csv": {
+   "bytes": 1714879,
+   "coverage": "2026-01-01..2026-07-31",
+   "fetched_at": "2026-11-14T09:17:56+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/viirs-snpp/2026/viirs-snpp_2026_Spain.csv",
+   "product": "VIIRS_SNPP_SP via area API (country bbox, not country-clipped)",
+   "sha256": "6c098f8cd7b16c6d283c5d184bc5bd1a3a15dcb4814224ce01837e203161f1d4",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_SNPP_SP/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "current/viirs-snpp/2026/viirs-snpp_2026_Turkey.csv": {
+   "bytes": 1667298,
+   "coverage": "2026-01-01..2026-07-31",
+   "fetched_at": "2026-11-14T09:17:56+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "current/viirs-snpp/2026/viirs-snpp_2026_Turkey.csv",
+   "product": "VIIRS_SNPP_SP via area API (country bbox, not country-clipped)",
+   "sha256": "69403ab5a50afdbdeaca115361a1c79debee397aa114efdb81aa56fa14ce5bbb",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_SNPP_SP/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "nrt/modis/2026/modis_2026_Argentina.csv": {
+   "bytes": 1385289,
+   "coverage": "2026-09-01..2026-11-14",
+   "fetched_at": "2026-11-14T09:17:05+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/modis/2026/modis_2026_Argentina.csv",
+   "product": "MODIS_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "ae092627105779949a990b96184b33ae88fb1dc79bf109c2ed519ccf01d1e350",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/MODIS_NRT/-73.6,-55.1,-53.6,-21.7/5/<date>"
+  },
+  "nrt/modis/2026/modis_2026_Greece.csv": {
+   "bytes": 72438,
+   "coverage": "2026-09-01..2026-11-14",
+   "fetched_at": "2026-11-14T09:17:00+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/modis/2026/modis_2026_Greece.csv",
+   "product": "MODIS_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "ea06ec3049ad4a12577cb9e11920aec40de5405c52468909b598a1312cf68def",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/MODIS_NRT/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "nrt/modis/2026/modis_2026_Italy.csv": {
+   "bytes": 184020,
+   "coverage": "2026-09-01..2026-11-14",
+   "fetched_at": "2026-11-14T09:17:00+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/modis/2026/modis_2026_Italy.csv",
+   "product": "MODIS_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "1c58a875f12de17d9f234ed7a13cf8fb63d919afd692c2e3e25b41caf631fdf8",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/MODIS_NRT/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "nrt/modis/2026/modis_2026_Portugal.csv": {
+   "bytes": 40613,
+   "coverage": "2026-09-01..2026-11-14",
+   "fetched_at": "2026-11-14T09:17:00+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/modis/2026/modis_2026_Portugal.csv",
+   "product": "MODIS_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "d52ee279a44bc2b49e5e857a4619ae09d4fefbc28dd4c71d5af8e5ef79d938de",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/MODIS_NRT/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "nrt/modis/2026/modis_2026_Spain.csv": {
+   "bytes": 111391,
+   "coverage": "2026-09-01..2026-11-14",
+   "fetched_at": "2026-11-14T09:17:00+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/modis/2026/modis_2026_Spain.csv",
+   "product": "MODIS_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "56341556e0473815853b205ab11e831ae4eb34567c69468f034f9ad35e230b54",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/MODIS_NRT/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "nrt/modis/2026/modis_2026_Turkey.csv": {
+   "bytes": 351460,
+   "coverage": "2026-09-01..2026-11-14",
+   "fetched_at": "2026-11-14T09:17:00+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/modis/2026/modis_2026_Turkey.csv",
+   "product": "MODIS_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "7cf57db3d0eb880b18666486f064ba12478e02572e6a6c57354fb07b3fd853f8",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/MODIS_NRT/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Argentina.csv": {
+   "bytes": 6083439,
+   "coverage": "2026-08-01..2026-11-14",
+   "fetched_at": "2026-11-14T09:21:46+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Argentina.csv",
+   "product": "VIIRS_NOAA20_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "a67dc9e669404ba34c811adbdfe08014b12bf064c311ee36a5e5dc186165128e",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_NOAA20_NRT/-73.6,-55.1,-53.6,-21.7/5/<date>"
+  },
+  "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Greece.csv": {
+   "bytes": 656612,
+   "coverage": "2026-08-01..2026-11-14",
+   "fetched_at": "2026-11-14T09:21:24+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Greece.csv",
+   "product": "VIIRS_NOAA20_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "01b9e85aa7f9610cb31e83d2125261982b10cb0914481b6897527422bedf2c6b",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_NOAA20_NRT/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Italy.csv": {
+   "bytes": 1917208,
+   "coverage": "2026-08-01..2026-11-14",
+   "fetched_at": "2026-11-14T09:21:24+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Italy.csv",
+   "product": "VIIRS_NOAA20_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "2a79d4e1e53863eb760dc69d05d320efe82ee4cac901bff1083101a7adb00190",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_NOAA20_NRT/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Portugal.csv": {
+   "bytes": 410554,
+   "coverage": "2026-08-01..2026-11-14",
+   "fetched_at": "2026-11-14T09:21:24+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Portugal.csv",
+   "product": "VIIRS_NOAA20_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "727fb33970938cc63e932f2d4ad426407c1e495143b19241986d6180e8d22958",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_NOAA20_NRT/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Spain.csv": {
+   "bytes": 903579,
+   "coverage": "2026-08-01..2026-11-14",
+   "fetched_at": "2026-11-14T09:21:24+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Spain.csv",
+   "product": "VIIRS_NOAA20_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "9e98be99d6ed5d1348d985cb652cc117e828c9ea4c37fd199773500e4a81b5b7",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_NOAA20_NRT/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Turkey.csv": {
+   "bytes": 2775681,
+   "coverage": "2026-08-01..2026-11-14",
+   "fetched_at": "2026-11-14T09:21:24+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/viirs-jpss1/2026/viirs-jpss1_2026_Turkey.csv",
+   "product": "VIIRS_NOAA20_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "f9e4fa3b4d3cbf184dd62f14e2d7a919409b37287238c452311178b2ef720a50",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_NOAA20_NRT/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "nrt/viirs-snpp/2026/viirs-snpp_2026_Argentina.csv": {
+   "bytes": 5324859,
+   "coverage": "2026-08-01..2026-11-02",
+   "fetched_at": "2026-11-14T09:19:26+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/viirs-snpp/2026/viirs-snpp_2026_Argentina.csv",
+   "product": "VIIRS_SNPP_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "f310a026051f6e8d837cce6266861934143fc3644f6438215e3ef17a4cf5a0ab",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_SNPP_NRT/-73.6,-55.1,-53.6,-21.7/5/<date>"
+  },
+  "nrt/viirs-snpp/2026/viirs-snpp_2026_Greece.csv": {
+   "bytes": 633212,
+   "coverage": "2026-08-01..2026-11-02",
+   "fetched_at": "2026-11-14T09:19:07+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/viirs-snpp/2026/viirs-snpp_2026_Greece.csv",
+   "product": "VIIRS_SNPP_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "4ae006a2afcd42579b28a8144a2e9e5dff2868ecee59e33e190ddff25607abf0",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_SNPP_NRT/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "nrt/viirs-snpp/2026/viirs-snpp_2026_Italy.csv": {
+   "bytes": 1792148,
+   "coverage": "2026-08-01..2026-11-02",
+   "fetched_at": "2026-11-14T09:19:07+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/viirs-snpp/2026/viirs-snpp_2026_Italy.csv",
+   "product": "VIIRS_SNPP_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "226dff4826143ce2b297e19955ff29b2787c4e52dec752306ea676751e32c163",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_SNPP_NRT/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "nrt/viirs-snpp/2026/viirs-snpp_2026_Portugal.csv": {
+   "bytes": 372124,
+   "coverage": "2026-08-01..2026-11-02",
+   "fetched_at": "2026-11-14T09:19:07+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/viirs-snpp/2026/viirs-snpp_2026_Portugal.csv",
+   "product": "VIIRS_SNPP_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "1e6bab7e8206b7cafc3a6a361b91dcc81cd35a530a2e9f6d80d0969e627a1cb7",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_SNPP_NRT/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "nrt/viirs-snpp/2026/viirs-snpp_2026_Spain.csv": {
+   "bytes": 810810,
+   "coverage": "2026-08-01..2026-11-02",
+   "fetched_at": "2026-11-14T09:19:07+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/viirs-snpp/2026/viirs-snpp_2026_Spain.csv",
+   "product": "VIIRS_SNPP_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "9289803b3a2611ea7d4b70ea84ab24865f35775fb0bb8999afe8e11ad570a7db",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_SNPP_NRT/-9.6,34.7,44.9,47.1/5/<date>"
+  },
+  "nrt/viirs-snpp/2026/viirs-snpp_2026_Turkey.csv": {
+   "bytes": 2503420,
+   "coverage": "2026-08-01..2026-11-02",
+   "fetched_at": "2026-11-14T09:19:07+00:00",
+   "license": "NASA EOSDIS open data (CC0)",
+   "path": "nrt/viirs-snpp/2026/viirs-snpp_2026_Turkey.csv",
+   "product": "VIIRS_SNPP_NRT via area API (country bbox, not country-clipped)",
+   "sha256": "fb1037e3fb142e8c29a9c97582358f446227d3c146202240c137a903a1763a10",
+   "url": "https://firms.modaps.eosdis.nasa.gov/api/area/csv/<MAP_KEY>/VIIRS_SNPP_NRT/-9.6,34.7,44.9,47.1/5/<date>"
+  }
+ },
+ "updated_at": "2026-11-14T09:21:46+00:00"
+}
