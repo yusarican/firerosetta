@@ -123,6 +123,57 @@ async function call<T>(path: string, body?: unknown, signal?: AbortSignal): Prom
 }
 
 export const getMeta = () => call<Meta>("/meta");
+
+export type RiskLevel = "high" | "elevated" | "watch";
+export type RiskGridKm = 5 | 10 | 20;
+export type RiskView = { gridKm: RiskGridKm; bounds: [number, number, number, number] };
+export type RiskCell = {
+  id: string;
+  lon: number;
+  lat: number;
+  bbox: [number, number, number, number];
+  geometry: { type: "Polygon"; coordinates: number[][][] } | { type: "MultiPolygon"; coordinates: number[][][][] };
+  level: RiskLevel;
+  seasonal: boolean;
+  seasonal_mean: number;
+  active_years: number;
+  recent_7d: number;
+  recent_30d: number;
+  active_days_7d: number;
+  last_seen: string | null;
+};
+export type RiskReport = {
+  country: string;
+  selection_geometry?: Polygon;
+  coverage_countries?: string[];
+  coverage_partial?: boolean;
+  bbox: [number, number, number, number];
+  as_of: string;
+  checked_at: string;
+  data_through: string;
+  data_age_days: number;
+  source: "live" | "local";
+  live_error: string | null;
+  current_evidence_enabled: boolean;
+  grid_km: RiskGridKm;
+  lattice: { type: "FeatureCollection"; features: { type: "Feature"; properties: Record<string, never>; geometry: { type: "MultiLineString"; coordinates: number[][][] } }[] };
+  history_first: number;
+  history_last: number;
+  history_years: number;
+  season_month: number;
+  seasonal_threshold: number;
+  recent_sensor: string;
+  refresh_seconds: number;
+  summary: Record<RiskLevel, number> & { recent_7d: number; total_cells: number };
+  cells: RiskCell[];
+};
+export const getRisk = (country: string, signal?: AbortSignal, view?: { gridKm: RiskGridKm; bounds?: RiskView["bounds"] } | null) => {
+  const query = new URLSearchParams({ country, grid_km: String(view?.gridKm ?? 20) });
+  if (view?.bounds) query.set("view", view.bounds.join(","));
+  return call<RiskReport>(`/risk?${query}`, undefined, signal);
+};
+export const getAreaRisk = (geometry: Polygon, gridKm: RiskGridKm, signal?: AbortSignal) =>
+  call<RiskReport>("/risk", { geometry, grid_km: gridKm }, signal);
 export const getValidation = () => call<Validation>("/validation");
 export const getCalendar = (a: Area, s?: AbortSignal) => call<Calendar>("/calendar", areaBody(a), s);
 export const getHotspots = (a: Area, start: string, end: string, s?: AbortSignal) =>

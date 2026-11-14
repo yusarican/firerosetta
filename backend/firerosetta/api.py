@@ -6,24 +6,30 @@ from __future__ import annotations
 
 import io
 import json
+import math
 from typing import Any
 
 import duckdb
 import numpy as np
 import pandas as pd
 import shapely
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
+from starlette.middleware.gzip import GZipMiddleware
 
 from .config import COUNTRIES, GRID_DEG, MANIFEST, PROCESSED, STAGED
+from .risk import GRID_LEVELS_KM, RiskMonitor
 
 app = FastAPI(title="FireRosetta - harmonized MODIS/VIIRS burning calendar")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=3)
 
-con = duckdb.connect()
-con.execute(f"CREATE TABLE h AS SELECT * FROM '{PROCESSED / 'harmonized.parquet'}'")
+# Read only the needed parquet columns/regions instead of retaining the entire model
+# in RAM alongside the calendar and alert queries.
+con = duckdb.connect(config={"memory_limit": "1GB", "threads": 4})
+con.execute(f"CREATE VIEW h AS SELECT * FROM '{PROCESSED / 'harmonized.parquet'}'")
 con.execute(f"CREATE VIEW hs AS SELECT * FROM '{STAGED / 'hotspots.parquet'}'")
 CELLS = con.sql(f"SELECT * FROM '{PROCESSED / 'cells.parquet'}'").df()
 CELLS["lon"] = (CELLS.gx + 0.5) * GRID_DEG
@@ -34,6 +40,7 @@ FIRST, LAST = con.execute("SELECT min(month), max(month) FROM h").fetchone()
 TRAIN_LAST = METRICS["overlap"][1]
 NRT_FROM = METRICS.get("provisional", {}).get("nrt_from", {})
 DATA_THROUGH = METRICS.get("provisional", {}).get("data_through", "9999-12-31")
+RISK_MONITOR = RiskMonitor(con, DATA_THROUGH)
 
 MAX_POINTS = 25_000
 HOTSPOT_COLS = ("lat AS latitude, lon AS longitude, acq_date, acq_time, sensor, platform, daynight, "
@@ -50,6 +57,10 @@ class HotspotQuery(Area):
     end: str
     sensors: list[str] = ["MODIS", "VIIRS"]
     screened: bool = True  # same quality screen as the calendar (vegetation fires, conf >= nominal)
+
+
+class RiskQuery(Area):
+    grid_km: int = 20
 
 
 def _geom(area: Area):
@@ -104,6 +115,42 @@ def meta():
 @app.get("/validation")
 def validation():
     return METRICS
+
+
+@app.get("/risk")
+def risk(response: Response, country: str = "Turkey", grid_km: int = 20,
+         view: str | None = None):
+    if country not in COUNTRIES:
+        raise HTTPException(400, "Desteklenen bir ülke seçin.")
+    if grid_km not in GRID_LEVELS_KM:
+        raise HTTPException(400, "Izgara boyutu 5, 10 veya 20 km olmalı.")
+    response.headers["Cache-Control"] = "no-store"
+    bounds = None
+    if view is not None:
+        try:
+            bounds = tuple(float(part) for part in view.split(","))
+            if len(bounds) != 4 or not all(math.isfinite(v) for v in bounds):
+                raise ValueError
+            w, s, e, n = bounds
+            if not (-180 <= w < e <= 180 and -85 <= s < n <= 85):
+                raise ValueError
+        except ValueError:
+            raise HTTPException(400, "Harita sınırları geçersiz.") from None
+    return RISK_MONITOR.get(country, grid_km=grid_km, bounds=bounds)
+
+
+@app.post("/risk")
+def risk_area(query: RiskQuery, response: Response):
+    if query.grid_km not in GRID_LEVELS_KM:
+        raise HTTPException(400, "Izgara boyutu 5, 10 veya 20 km olmalı.")
+    geometry = _geom(query)
+    if geometry is None:
+        raise HTTPException(400, "Haritada bir alan çizin veya koordinat kutusu seçin.")
+    response.headers["Cache-Control"] = "no-store"
+    try:
+        return RISK_MONITOR.get_area(geometry.__geo_interface__, grid_km=query.grid_km)
+    except ValueError as error:
+        raise HTTPException(400, str(error)) from None
 
 
 @app.post("/calendar")
