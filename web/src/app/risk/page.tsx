@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { RiskDashboard } from "@/components/fire/risk-dashboard";
 
 export const metadata: Metadata = {
-  title: "Risk Uyarıları · FireRosetta",
-  description: "Yakın dönem uydu tespitleri ve mevsimsel yangın geçmişiyle önlem önceliği taşıyan alanlar.",
+  title: "Risk Alerts · FireRosetta",
+  description: "Prioritise preventive checks using recent satellite detections and seasonal fire history.",
 };
 
 export default function RiskPage() {

@@ -60,7 +60,7 @@ class HotspotQuery(Area):
 
 
 class RiskQuery(Area):
-    grid_km: int = 20
+    grid_km: int = 10
 
 
 def _geom(area: Area):
@@ -118,12 +118,12 @@ def validation():
 
 
 @app.get("/risk")
-def risk(response: Response, country: str = "Turkey", grid_km: int = 20,
+def risk(response: Response, country: str = "Turkey", grid_km: int = 10,
          view: str | None = None):
     if country not in COUNTRIES:
-        raise HTTPException(400, "Desteklenen bir ülke seçin.")
+        raise HTTPException(400, "Select a supported country.")
     if grid_km not in GRID_LEVELS_KM:
-        raise HTTPException(400, "Izgara boyutu 5, 10 veya 20 km olmalı.")
+        raise HTTPException(400, "Grid size must be 5 or 10 km.")
     response.headers["Cache-Control"] = "no-store"
     bounds = None
     if view is not None:
@@ -135,17 +135,17 @@ def risk(response: Response, country: str = "Turkey", grid_km: int = 20,
             if not (-180 <= w < e <= 180 and -85 <= s < n <= 85):
                 raise ValueError
         except ValueError:
-            raise HTTPException(400, "Harita sınırları geçersiz.") from None
+            raise HTTPException(400, "Invalid map bounds.") from None
     return RISK_MONITOR.get(country, grid_km=grid_km, bounds=bounds)
 
 
 @app.post("/risk")
 def risk_area(query: RiskQuery, response: Response):
     if query.grid_km not in GRID_LEVELS_KM:
-        raise HTTPException(400, "Izgara boyutu 5, 10 veya 20 km olmalı.")
+        raise HTTPException(400, "Grid size must be 5 or 10 km.")
     geometry = _geom(query)
     if geometry is None:
-        raise HTTPException(400, "Haritada bir alan çizin veya koordinat kutusu seçin.")
+        raise HTTPException(400, "Draw an area on the map or select a bounding box.")
     response.headers["Cache-Control"] = "no-store"
     try:
         return RISK_MONITOR.get_area(geometry.__geo_interface__, grid_km=query.grid_km)

@@ -108,14 +108,14 @@ class RiskTests(unittest.TestCase):
         self.assertGreater(cells[0]["bbox"][2], -6.5)
 
     def test_finest_cells_are_5000_metres_and_nested_in_parent(self):
-        parent, child = metric_grid("Turkey", 20), metric_grid("Turkey", 5)
+        parent, child = metric_grid("Turkey", 10), metric_grid("Turkey", 5)
         px, py = parent.key(28.05, 38.05)
-        a = parent.inverse.transform(px * 20000 + 1000, py * 20000 + 1000)
-        b = parent.inverse.transform(px * 20000 + 9000, py * 20000 + 1000)
+        a = parent.inverse.transform(px * 10000 + 1000, py * 10000 + 1000)
+        b = parent.inverse.transform(px * 10000 + 9000, py * 10000 + 1000)
         ka, kb = child.key(*a), child.key(*b)
         self.assertNotEqual(ka, kb)
-        self.assertEqual((ka[0] // 4, ka[1] // 4), (px, py))
-        self.assertEqual((kb[0] // 4, kb[1] // 4), (px, py))
+        self.assertEqual((ka[0] // 2, ka[1] // 2), (px, py))
+        self.assertEqual((kb[0] // 2, kb[1] // 2), (px, py))
         geometry, _, _, _ = child.shape(*ka)
         ring = geometry["coordinates"][0]
         x0, y0 = child.forward.transform(*ring[0])
@@ -124,18 +124,25 @@ class RiskTests(unittest.TestCase):
         self.assertAlmostEqual(x1 - x0, 5000, delta=0.03)
         self.assertAlmostEqual(y2 - y1, 5000, delta=0.03)
 
-    def test_grid_never_exceeds_twenty_kilometres(self):
-        for size in (40, 80):
+    def test_grid_never_exceeds_ten_kilometres(self):
+        for size in (20, 40, 80):
             with self.assertRaises(ValueError):
                 metric_grid("Turkey", size)
+        self.assertEqual(metric_grid("Turkey").km, 10)
+        monitor = RiskMonitor(self.con, "2026-11-14", loader=lambda *_: None, area_loader=lambda *_: None)
+        self.assertEqual(monitor.get("Turkey", TODAY)["grid_km"], 10)
+        polygon = {"type": "Polygon", "coordinates": [[[28,38],[28.2,38],[28.2,38.2],[28,38.2],[28,38]]]}
+        self.assertEqual(monitor.get_area(polygon, TODAY)["grid_km"], 10)
+        with self.assertRaises(ValueError):
+            monitor.get_area(polygon, TODAY, grid_km=20)
 
     def test_refinement_uses_point_coordinates_and_reuses_live_snapshot(self):
-        parent, child = metric_grid("Turkey", 20), metric_grid("Turkey", 5)
+        parent, child = metric_grid("Turkey", 10), metric_grid("Turkey", 5)
         x, y = parent.key(28.05, 38.05)
-        points = [parent.inverse.transform(x * 20000 + offset, y * 20000 + 1000) for offset in (1000, 9000)]
+        points = [parent.inverse.transform(x * 10000 + offset, y * 10000 + 1000) for offset in (1000, 9000)]
         loader = Mock(return_value=Snapshot([Observation(lon, lat, TODAY, '1200') for lon, lat in points], TODAY))
         monitor = RiskMonitor(self.con, "2026-11-14", loader=loader)
-        coarse = monitor.get("Turkey", TODAY, grid_km=20)
+        coarse = monitor.get("Turkey", TODAY, grid_km=10)
         fine = monitor.get("Turkey", TODAY, grid_km=5)
         self.assertEqual(coarse["summary"]["high"], 1)
         self.assertEqual(fine["summary"]["high"], 2)
@@ -161,7 +168,7 @@ class RiskTests(unittest.TestCase):
         loader = Mock(return_value=Snapshot([
             Observation(28.05, 38.05, TODAY, '1200'), Observation(28.18, 38.18, TODAY, '1200')], TODAY))
         monitor = RiskMonitor(self.con, "2026-11-14", area_loader=loader)
-        coarse = monitor.get_area(polygon, TODAY, grid_km=20)
+        coarse = monitor.get_area(polygon, TODAY, grid_km=10)
         fine = monitor.get_area(polygon, TODAY, grid_km=5)
         self.assertEqual(fine["summary"]["recent_7d"], 1)
         self.assertEqual(coarse["summary"]["recent_7d"], 1)

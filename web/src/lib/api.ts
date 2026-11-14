@@ -125,7 +125,7 @@ async function call<T>(path: string, body?: unknown, signal?: AbortSignal): Prom
 export const getMeta = () => call<Meta>("/meta");
 
 export type RiskLevel = "high" | "elevated" | "watch";
-export type RiskGridKm = 5 | 10 | 20;
+export type RiskGridKm = 5 | 10;
 export type RiskView = { gridKm: RiskGridKm; bounds: [number, number, number, number] };
 export type RiskCell = {
   id: string;
@@ -168,7 +168,7 @@ export type RiskReport = {
   cells: RiskCell[];
 };
 export const getRisk = (country: string, signal?: AbortSignal, view?: { gridKm: RiskGridKm; bounds?: RiskView["bounds"] } | null) => {
-  const query = new URLSearchParams({ country, grid_km: String(view?.gridKm ?? 20) });
+  const query = new URLSearchParams({ country, grid_km: String(view?.gridKm ?? 10) });
   if (view?.bounds) query.set("view", view.bounds.join(","));
   return call<RiskReport>(`/risk?${query}`, undefined, signal);
 };

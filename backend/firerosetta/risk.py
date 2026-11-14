@@ -26,7 +26,7 @@ from .config import COUNTRIES, FIRMS, SNPP_END
 from .fetch import UA, _availability, _load_key
 from .ingest import MASK_DEG, MASK_MIN
 
-GRID_LEVELS_KM = (5, 10, 20)
+GRID_LEVELS_KM = (5, 10)
 CACHE_SECONDS = 300
 MAX_DATA_AGE_DAYS = 1
 HISTORY_FIRST = 2013  # first complete S-NPP calendar year
@@ -34,7 +34,7 @@ HISTORY_LAST = int(SNPP_END[:4]) - 1
 
 
 class MetricGrid:
-    """One fixed UTM lattice per selection: 20 -> 10 -> 5 km nests exactly.
+    """One fixed UTM lattice per selection: 10 -> 5 km nests exactly.
 
     Distances are nominal projected metres; small ground-scale distortion is expected
     away from the central meridian. Never substitute degrees for kilometres.
@@ -88,7 +88,7 @@ class MetricGrid:
 
 
 @lru_cache(maxsize=30)
-def metric_grid(country, km=20):
+def metric_grid(country, km=10):
     return MetricGrid(country, km)
 
 
@@ -212,20 +212,20 @@ class RiskMonitor:
         self.lock = threading.Lock()
         self.static_mask = None
 
-    def get_area(self, geometry, today=None, grid_km=20):
+    def get_area(self, geometry, today=None, grid_km=10):
         today = today or dt.date.today()
         region = shape(geometry)
         if region.geom_type not in ("Polygon", "MultiPolygon") or region.is_empty or not region.is_valid:
-            raise ValueError("Geçerli bir alan çizin.")
+            raise ValueError("Draw a valid area.")
         bounds = region.bounds
         w, s, e, n = bounds
         if not all(math.isfinite(value) for value in bounds) or not (-180 <= w < e <= 180 and -85 <= s < n <= 85):
-            raise ValueError("Alan koordinatları geçersiz.")
+            raise ValueError("Invalid area coordinates.")
         if e - w > 25 or n - s > 40:
-            raise ValueError("5 km ayrıntı için daha yerel bir alan seçin (en çok 25° boylam ve 40° enlem).")
+            raise ValueError("For 5 km detail, select a smaller area (at most 25 degrees longitude and 40 degrees latitude).")
         countries = [name for name, extent in COUNTRIES.items() if region.intersects(box(*extent))]
         if not countries:
-            raise ValueError("Seçim yüklenmiş geçmiş veri kapsamı dışında. Türkiye, Yunanistan, İspanya, Portekiz, İtalya veya Arjantin çevresinde bir alan seçin.")
+            raise ValueError("The selection is outside the loaded historical coverage. Choose an area in or near Türkiye, Greece, Spain, Portugal, Italy or Argentina.")
         area_id = "area-" + hashlib.sha256(region.wkb).hexdigest()[:16]
         key = (area_id, today, grid_km)
         with self.lock:
@@ -276,7 +276,7 @@ class RiskMonitor:
             try:
                 snapshot = self.area_loader(bounds, today)
             except (httpx.HTTPError, ValueError, KeyError, TypeError, csv.Error):
-                live_error = "Canlı NASA verisi alınamadı. Son hazırlanmış yerel veri kullanılıyor."
+                live_error = "Live NASA data could not be retrieved. Using the latest prepared local data."
             self.snapshots = {k: v for k, v in self.snapshots.items() if k[1] == today}
             while len(self.snapshots) >= 16:
                 self.snapshots.pop(next(iter(self.snapshots)))
@@ -339,7 +339,7 @@ class RiskMonitor:
                                 for dx in (-1, 0, 1) for dy in (-1, 0, 1)}
         return self.static_mask
 
-    def get(self, country: str, today: dt.date | None = None, grid_km: int = 20, bounds=None):
+    def get(self, country: str, today: dt.date | None = None, grid_km: int = 10, bounds=None):
         today = today or dt.date.today()
         grid = metric_grid(country, grid_km)
         bounds = tuple(bounds or COUNTRIES[country])
@@ -408,7 +408,7 @@ class RiskMonitor:
                 snapshot = self.loader(country, today)
             except (httpx.HTTPError, ValueError, KeyError, TypeError, csv.Error):
                 # FIRMS URLs contain the private MAP_KEY; never disclose exception text.
-                live_error = "Canlı NASA verisi alınamadı. Son hazırlanmış yerel veri kullanılıyor."
+                live_error = "Live NASA data could not be retrieved. Using the latest prepared local data."
             self.snapshots = {k: v for k, v in self.snapshots.items() if k[1] == today}
             self.snapshots[source_key] = (time.monotonic(), snapshot, live_error)
         if snapshot is not None:

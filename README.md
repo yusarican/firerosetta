@@ -19,7 +19,7 @@ Verileri yeniden indirmek ve işlemek için `powershell -ExecutionPolicy Bypass 
 ### Risk Uyarıları
 
 Üst menüdeki **Risk Uyarıları** (`/risk`) sekmesi, önleyici inceleme ve gözetim için alanları
-işaretler. Harita yakınlaştıkça **20 → 10 → 5 km** karelere ayrılır; her düzeyde
+işaretler. Harita yakınlaştıkça **10 → 5 km** karelere ayrılır; her düzeyde
 güncel ve geçmiş tespitler gerçek koordinatlarından yeniden gruplanır. Sayılar görünen karelere aittir.
 Ülke listesi yerine haritada çokgen çizilir, hazır bir bölge seçilir veya koordinat kutusu girilir.
 Takvimde çizilen son alan uyarı sekmesine taşınır. Tespitler seçimin gerçek çokgeniyle süzülür;
@@ -78,7 +78,7 @@ backend/firerosetta/
   grid.py        Kalite filtresi + 0.1° × ay yoğun tablo (sıfırlar dahil)
   harmonize.py   MODIS→VIIRS modeli, yıl-bloklu 5 katlı CV, metrics.json
   api.py         FastAPI + DuckDB: /meta /calendar /hotspots /hotspots.csv /validation
-  risk.py        /risk: canlı tespitler + mevsimsel geçmiş, 20–5 km uyarlanabilir öncelik ızgarası
+  risk.py        /risk: canlı tespitler + mevsimsel geçmiş, 10–5 km uyarlanabilir öncelik ızgarası
 web/             Next.js 16 + shadcn/ui + MapLibre
 data/            (git'e girmez) raw / staged / processed / manifest.json
 ```

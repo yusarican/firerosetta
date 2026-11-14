@@ -4,7 +4,7 @@ import { BellRing } from "lucide-react";
 export function AppHeader({ active }: { active: "calendar" | "risk" | "method" }) {
   const links = [
     { id: "calendar", href: "/", label: "Calendar" },
-    { id: "risk", href: "/risk", label: "Risk Uyarıları" },
+    { id: "risk", href: "/risk", label: "Risk Alerts" },
     { id: "method", href: "/method", label: "How it works" },
   ];
   return (
@@ -13,7 +13,7 @@ export function AppHeader({ active }: { active: "calendar" | "risk" | "method" }
         <Link href="/" className="display text-xl">FireRosetta</Link>
         <p className="mt-0.5 text-xs text-muted-foreground">MODIS + VIIRS · one fire record</p>
       </div>
-      <nav aria-label="Ana menü" className="flex flex-wrap items-center gap-1 text-sm">
+      <nav aria-label="Main navigation" className="flex flex-wrap items-center gap-1 text-sm">
         {links.map((link) => (
           <Link key={link.id} href={link.href} aria-current={active === link.id ? "page" : undefined}
             className={`inline-flex min-h-10 items-center gap-2 rounded-md px-3 py-2 transition-colors ${active === link.id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-secondary hover:text-foreground"}`}>
