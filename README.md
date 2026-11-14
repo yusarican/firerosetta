@@ -9,11 +9,29 @@ VIIRS'in sayacağı değere çevrilmiş durumda; her tahminin belirsizlik aralı
 
 ## Çalıştırma
 
-En hızlı yol: `./start.sh`. Veri yoksa önce hazır veri + eğitilmiş modeli bir GitHub Release'den
-indirmeyi dener (`data/staged` + `data/processed`, ~birkaç yüz MB) — böylece her klon FIRMS'ten
-aynı 727 MB'ı indirip aynı ~10 dakikalık eğitimi tekrarlamak zorunda kalmaz. Release indirilemezse
-(ağ yok, henüz yayınlanmamış vb.) otomatik olarak aşağıdaki tam hattı çalıştırır. Veriyi/modeli
-gerçekten FIRMS'ten taze üretmek için `./start.sh --rebuild` kullan.
+En hızlı yol: `./start.sh`. Eksik olan ne varsa önce GitHub Release'den indirir — böylece her
+klon FIRMS'ten aynı 727 MB'ı çekip aynı eğitimleri tekrarlamak zorunda kalmaz. İndirilemezse
+(ağ yok, henüz yayınlanmamış vb.) tam hattı kendisi çalıştırır. Gerçekten taze üretmek için
+`./start.sh --rebuild`.
+
+Üç ayrı paket var, her eğitilmiş model için bir tane; sadece ihtiyacın olanı indirirsin:
+
+| Paket | İçerik | Boyut |
+|---|---|---|
+| `data-v1` | Harmonizasyon modelinin çıktısı + üretildiği hotspot tablosu | ~215 MB |
+| `earlywarn-v1` | Gözetimli 1–3 ay erken uyarı modeli + çıkarım tabloları | ~33 MB |
+| `static-v1` | Gözetimsiz sabit ısı kaynağı dedektörü + puanlanmış nokta tablosu | ~14 MB |
+
+```bash
+./scripts/release.sh fetch            # üçünü de indir, sha256 doğrula, data/ içine aç
+./scripts/release.sh fetch static     # yalnız biri
+./scripts/release.sh list             # şu an yayında ne var
+```
+
+Her paket dosyalarını ait olduğu `data/` alt klasörüyle saklıyor (`models/…`, `processed/…`),
+bu yüzden üçü de aynı şekilde açılıyor ve indirme tarafında dosya yönlendirmesi gerekmiyor.
+`fetch` açmadan önce sha256'yı doğruluyor; eşleşmezse açmayı reddediyor. `gh` kuruluysa onu
+tercih ediyor (depo özelken de çalışır), yoksa düz `curl`'e düşüyor.
 
 Adım adım (ya da `start.sh` içinde ne olduğunu görmek için):
 
@@ -56,21 +74,20 @@ CUDA yolu **yok**; bu adımlar tasarım gereği CPU'da kalıyor ve bunu ekrana y
 (~2×10⁵ satır) zaten PCIe transferini amorti edecek boyutta değil. Sabit kaynak dedektörü de
 ölçüm sonucu CPU'da kaldı (aşağıya bakın). GPU gerçekten `--benchmark-deep` altında çalışıyor.
 
-### Hazır veri yayınlamak (bakımcılar için)
-
-`./start.sh` içindeki `DATA_RELEASE_URL`'in işaret ettiği GitHub Release'i güncellemek için,
-veriyi üstten üretip paketleyip bir release'e asset olarak yükle:
+### Release yayınlamak (bakımcılar için)
 
 ```bash
-./start.sh --rebuild                      # ya da zaten üretilmiş data/ varsa bu adımı atla
-tar -czf firerosetta-data.tar.gz -C data staged/hotspots.parquet processed
-gh release create data-v1 firerosetta-data.tar.gz \
-  --title "FireRosetta data v1" \
-  --notes "Prebuilt hotspots + harmonized model output, so clones skip the ~10 min FIRMS fetch + train."
+./scripts/release.sh build all        # data/ içindekilerden üç tarball + sha256 üretir
+./scripts/release.sh publish all      # release'i oluşturur ya da asset'lerini değiştirir
+./scripts/release.sh publish static   # yalnız biri
 ```
 
-Veri/model önemli ölçüde değiştiğinde (yeni ülke, yeni yıl, model değişikliği) tag'i artır (`data-v2`, ...)
-ve `start.sh`'teki URL'i güncelle.
+`publish`, tag'i **o an bulunduğun dalın** son commit'inden kesiyor (`RELEASE_TARGET` ile
+değiştirilebilir) ve dal uzak depoya gönderilmemişse hata verip duruyor — tag'in işaret
+edeceği commit önce orada olmalı. Depo adresi `FIREROSETTA_REPO` ile değiştirilebilir.
+
+Veri/model önemli ölçüde değiştiğinde (yeni ülke, yeni yıl, model değişikliği) tag'i artır
+(`data-v2`, …): `tag_for()` içindeki eşlemeyi güncellemek yeterli, başka yerde URL gömülü değil.
 
 İçinde bulunulan yıl FIRMS arşivinde yok; o yılı çekmek için ücretsiz bir MAP_KEY gerekir
 (https://firms.modaps.eosdis.nasa.gov/api/map_key/). Anahtarı repo kökündeki `.env` dosyasına yaz
@@ -99,6 +116,8 @@ backend/firerosetta/
   model.py       Eğitim zamanı regresyon başlığı (bilerek paketlenmiyor; forecast.py'ye bak)
   api.py         FastAPI + DuckDB: /meta /calendar /hotspots /hotspots.csv /validation
                  /forecast /static-sources
+scripts/
+  release.sh     Üç model paketini üretir / yayınlar / indirir (sha256 doğrulamalı)
 web/             Next.js 16 + shadcn/ui + MapLibre
 data/            (git'e girmez) raw / staged / processed / models / manifest.json
 ```
@@ -210,17 +229,14 @@ düşük tahmin ediliyor.
 
 ### Modeli taşımak / yayınlamak
 
-Eğitim sonunda `data/models/firerosetta-earlywarn.tar.gz` (~35 MB) kendiliğinden paketleniyor:
+Eğitim sonunda `data/models/firerosetta-earlywarn.tar.gz` (~33 MB) kendiliğinden paketleniyor:
 eğitilmiş model, metrikler, çıkarım için blok öznitelik tablosu ve geriye-dönük test tablosu.
 Yeniden eğitmeden sadece paketlemek için `--package`. `earlywarn.json` içinde scikit-learn/numpy
 sürümleri yazılı; API farklı sürümde uyarı verir (pickle sürüme duyarlıdır).
 
 ```bash
-uv run python -m firerosetta.forecast --package
-gh release create earlywarn-v1 \
-  ../data/models/firerosetta-earlywarn.tar.gz ../data/models/firerosetta-earlywarn.sha256 \
-  --title "FireRosetta early-warning model v1" \
-  --notes "Trained model + inputs; extract into data/."
+./scripts/release.sh build earlywarn      # yeniden eğitmeden tarball + sha256
+./scripts/release.sh publish earlywarn
 ```
 
 ## Sabit ısı kaynağı tespiti (gözetimsiz öğrenme)
@@ -323,11 +339,8 @@ topluluğa eklendiklerinde topluluğu bozdular:
 ### Modeli taşımak / yayınlamak
 
 ```bash
-uv run python -m firerosetta.static --package
-gh release create static-v1 \
-  ../data/models/firerosetta-static.tar.gz ../data/models/firerosetta-static.sha256 \
-  --title "FireRosetta static-source detector v1" \
-  --notes "Unsupervised persistent non-fire heat source detector."
+./scripts/release.sh build static         # yeniden eğitmeden tarball + sha256
+./scripts/release.sh publish static
 ```
 
 Paket (~14 MB) içinde model, metrikler ve puanlanmış nokta tablosu var. Tablo modelin **tüm
