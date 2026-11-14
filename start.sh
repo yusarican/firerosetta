@@ -63,6 +63,15 @@ run_forecast() {
     echo "--> firerosetta.$step"
     uv run python -m "firerosetta.$step"
   done
+  # Yayınlanan model iki üyenin harmanı; ikinci üye (XGBoost) CUDA ister. GPU yoksa
+  # scikit-learn modeli tek başına kalır ve her şey çalışır, sadece biraz daha zayıf.
+  if uv run python -c "import sys; from firerosetta import gpu; sys.exit(0 if gpu.pick_device()[0] == 'cuda' else 1)" 2>/dev/null; then
+    echo "--> firerosetta.forecast_gpu (CUDA bulundu; harman model eğitiliyor, ~12 dk)"
+    uv run python -m firerosetta.forecast_gpu
+  else
+    echo "--> CUDA yok; harman adımı atlanıyor (scikit-learn modeli tek başına kullanılacak)."
+    echo "    GPU'da: uv sync --extra gpu && uv run python -m firerosetta.forecast_gpu"
+  fi
 }
 
 run_static() {

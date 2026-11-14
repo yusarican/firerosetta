@@ -269,13 +269,40 @@ def _warn_level(prob: float) -> str:
 
 
 def _expected_counts(bundle: dict, lead: int, X: pd.DataFrame) -> np.ndarray:
-    """The bundle's two-step regression head: log1p trees, then isotonic back to counts.
+    """Expected counts from the bundle's regression head(s).
 
-    Kept as two plain sklearn estimators so the published model loads without this project;
-    the same recipe is recorded in bundle["predict_recipe"].
+    Each member is the same two-step shape: trees, then isotonic back to counts. A bundle
+    from forecast_gpu.py carries a second, XGBoost member under a _x suffix and a `blend`
+    spec; one from forecast.py carries only the first and is served unchanged.
     """
-    gbm, iso = bundle[f"reg_h{lead}_gbm"], bundle[f"reg_h{lead}_iso"]
-    return iso.predict(gbm.predict(X)).clip(0)
+    c1 = bundle[f"reg_h{lead}_iso"].predict(
+        bundle[f"reg_h{lead}_gbm"].predict(X[bundle["features"]])).clip(0)
+    w = _blend_w(bundle, f"reg_h{lead}_gbm_x")
+    if w is None:
+        return c1
+    c2 = bundle[f"reg_h{lead}_iso_x"].predict(
+        bundle[f"reg_h{lead}_gbm_x"].predict(X[bundle["features_x"]])).clip(0)
+    # geometric mean, in the log1p space the counts are modelled in
+    return np.expm1((1 - w) * np.log1p(c1) + w * np.log1p(c2)).clip(0)
+
+
+def _warn_prob(bundle: dict, lead: int, X: pd.DataFrame) -> np.ndarray:
+    """P(anomalous fire month), blended the same way when the bundle carries two members."""
+    p1 = bundle[f"clf_h{lead}"].predict_proba(X[bundle["features"]])[:, 1]
+    w = _blend_w(bundle, f"clf_h{lead}_x")
+    if w is None:
+        return p1
+    raw = bundle[f"clf_h{lead}_x"].predict_proba(X[bundle["features_x"]])[:, 1]
+    p2 = bundle[f"clf_h{lead}_iso_x"].predict(raw).clip(0, 1)
+    return ((1 - w) * p1 + w * p2).clip(0, 1)
+
+
+def _blend_w(bundle: dict, needs: str) -> float | None:
+    """Blend weight for the second member, or None when this bundle has only one."""
+    blend = bundle.get("blend")
+    if not blend or needs not in bundle:
+        return None
+    return float(blend["weight_xgb"])
 
 
 @app.post("/forecast")
@@ -321,9 +348,8 @@ def forecast(area: Area):
         X["y_clim"] = X[f"y_clim_h{lead}"]
         for col in ("t2m", "precip", "vpd"):
             X[f"{col}_clim_target"] = X[f"{col}_clim_target_h{lead}"]
-        Xf = X[bundle["features"]]
-        block_pred = _expected_counts(bundle, lead, Xf)
-        prob = bundle[f"clf_h{lead}"].predict_proba(Xf)[:, 1]
+        block_pred = _expected_counts(bundle, lead, X)
+        prob = _warn_prob(bundle, lead, X)
 
         expected = float((block_pred * w).sum())
         normal = float((X.y_clim.to_numpy() * w).sum())
