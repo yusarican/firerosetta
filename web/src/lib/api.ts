@@ -95,6 +95,45 @@ export type Validation = {
   scatter_country_month: { country: string; month: string; obs: number; raw: number; full: number; terra: number }[];
 };
 
+export type WarnLevel = "normal" | "watch" | "elevated" | "high";
+
+export type LeadForecast = {
+  lead: number; // months ahead of basis_month
+  target_month: string; // YYYY-MM
+  expected: number;
+  lo: number | null;
+  hi: number | null;
+  normal: number; // what this month usually brings in this area
+  ratio: number | null; // expected / normal
+  warn_prob: number; // P(anomalous fire month)
+  level: WarnLevel;
+};
+
+export type ForecastSkill = {
+  n_months: number;
+  wape: number | null;
+  r2: number | null;
+  clim_r2: number | null; // climatology baseline, same months
+  hist_only_r2: number | null; // model without weather, same months
+};
+
+export type Forecast = {
+  area: { cells: number; blocks: number; countries: string[] };
+  basis_month: string; // last month the model was given data for
+  leads: LeadForecast[];
+  skill: Record<string, ForecastSkill>; // keyed by lead
+  backtest: { month: string; actual: number; pred: number; hist_only: number; normal: number }[];
+  model: {
+    unit: string;
+    cv: string;
+    trained_at: string;
+    warning_definition: string;
+    weather_source: string;
+    base_rate: number | null;
+    levels: Record<string, number>;
+  };
+};
+
 const areaBody = (a: Area) =>
   a.kind === "country" ? { country: a.name } : { geometry: a.geometry };
 
@@ -125,6 +164,7 @@ async function call<T>(path: string, body?: unknown, signal?: AbortSignal): Prom
 export const getMeta = () => call<Meta>("/meta");
 export const getValidation = () => call<Validation>("/validation");
 export const getCalendar = (a: Area, s?: AbortSignal) => call<Calendar>("/calendar", areaBody(a), s);
+export const getForecast = (a: Area, s?: AbortSignal) => call<Forecast>("/forecast", areaBody(a), s);
 export const getHotspots = (a: Area, start: string, end: string, s?: AbortSignal) =>
   call<Hotspots>("/hotspots", { ...areaBody(a), start, end }, s);
 
