@@ -77,3 +77,10 @@ test("neutral grid counts use a local geometry-only request", async (t) => {
   assert.equal(calls[0].signal, controller.signal);
   assert.deepEqual(JSON.parse(calls[0].body), {geometry,grid_km:5,bounds:view.bounds});
 });
+
+test("the view list keeps every level and the caller's order, clipped to the selection", async () => {
+  const { cellsInView } = await import("../src/lib/risk-view.ts");
+  const cells = [cell("watch", "watch", 2,2,3,3), cell("outside", "high", 8,8,9,9), cell("high", "high", 0,0,2,2)];
+  assert.deepEqual(cellsInView(cells, [1,0,3,3]).map(c => c.id), ["watch", "high"]);
+  assert.deepEqual(cellsInView(cells, [1,0,3,3], [0,0,2,2]).map(c => c.id), ["high"]);
+});

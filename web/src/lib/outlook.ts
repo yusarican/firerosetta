@@ -36,6 +36,15 @@ export function outlookFeatures(data: OutlookBlocks | null, leadIndex: number) {
   };
 }
 
+/** Blocks that overlap the bounds, most likely first. */
+export function blocksInView(data: OutlookBlocks | null, leadIndex: number, bounds: [number, number, number, number]) {
+  const [w, s, e, n] = bounds;
+  return (data?.blocks ?? [])
+    .filter(({ bx, by, leads }) => leads[leadIndex] && bx < e && bx + 1 > w && by < n && by + 1 > s)
+    .map(({ bx, by, leads }) => ({ bx, by, lead: leads[leadIndex] }))
+    .sort((a, b) => b.lead.prob - a.lead.prob || a.by - b.by || a.bx - b.bx);
+}
+
 /**
  * Observed activity decides the order; the outlook only breaks ties inside a level, so a
  * cell burning now in a block expected to run hot comes before one burning now in a quiet

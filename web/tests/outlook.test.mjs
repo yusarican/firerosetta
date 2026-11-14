@@ -43,3 +43,13 @@ test("the outlook is expired once every forecast month is over", () => {
   assert.equal(outlookExpired(data, "2026-03-01"), true);
   assert.equal(outlookExpired(null, "2026-03-01"), false);
 });
+
+test("blocks in view skip blocks that only touch the edge, most likely first", async () => {
+  const { blocksInView } = await import("../src/lib/outlook.ts");
+  const blocks = { ...data, blocks: [
+    { bx: 28, by: 38, leads: [lead("watch", 0.2)] }, { bx: 29, by: 38, leads: [lead("high", 0.7)] },
+    { bx: 30, by: 38, leads: [lead("normal", 0.05)] }, { bx: 27, by: 38, leads: [lead("high", 0.8)] },
+  ] };
+  assert.deepEqual(blocksInView(blocks, 0, [28, 38.2, 31, 38.6]).map((b) => b.bx), [29, 28, 30]);
+  assert.deepEqual(blocksInView(null, 0, [0, 0, 1, 1]), []);
+});

@@ -40,9 +40,19 @@ export function cellInView(cell: RiskCell, bounds: Bounds): boolean {
   return polygons.some(([outer, ...holes]) => clippedArea(outer, bounds) - holes.reduce((sum, hole) => sum + clippedArea(hole, bounds), 0) > 1e-12);
 }
 
-export function visiblePriorities(cells: RiskCell[], bounds: Bounds, filter: "all" | RiskLevel, selectionBounds: Bounds = bounds) {
-  const clipped: Bounds = [Math.max(bounds[0], selectionBounds[0]), Math.max(bounds[1], selectionBounds[1]),
+/** The part of the map view that lies inside the selected area. */
+export const clipBounds = (bounds: Bounds, selectionBounds: Bounds): Bounds =>
+  [Math.max(bounds[0], selectionBounds[0]), Math.max(bounds[1], selectionBounds[1]),
     Math.min(bounds[2], selectionBounds[2]), Math.min(bounds[3], selectionBounds[3])];
+
+/** Every cell the map currently shows, in the order given. */
+export function cellsInView<T extends RiskCell>(cells: T[], bounds: Bounds, selectionBounds: Bounds = bounds): T[] {
+  const clipped = clipBounds(bounds, selectionBounds);
+  return cells.filter((cell) => cellInView(cell, clipped));
+}
+
+export function visiblePriorities(cells: RiskCell[], bounds: Bounds, filter: "all" | RiskLevel, selectionBounds: Bounds = bounds) {
+  const clipped = clipBounds(bounds, selectionBounds);
   const visible = cells.filter((cell) => (filter === "all" || cell.level === filter) && cellInView(cell, clipped));
   const priorities = visible.filter((cell) => cell.level === "high" || cell.level === "elevated");
   priorities.sort((a, b) =>
