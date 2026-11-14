@@ -12,12 +12,19 @@ import { RISK_FILL_COLOR } from "@/lib/risk-colors";
 import { addCountryHighlight, showCountryHighlight } from "./country-highlight";
 import { cn } from "@/lib/utils";
 import { riskGridForZoom } from "@/lib/risk-view";
+import { OUTLOOK_STYLE, type outlookFeatures } from "@/lib/outlook";
 
 maplibregl.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
 
-export function RiskMap({ layers, levelFilter, bbox, selected, gridKm, busy, area, country, drawRequest, onDraw, onSelect, onViewChange, className }: {
+type OutlookCollection = ReturnType<typeof outlookFeatures>;
+
+export function RiskMap({ layers, outlook, showNow, showOutlook, levelFilter, bbox, selected, gridKm, busy, area, country, drawRequest, onDraw, onSelect, onViewChange, className }: {
   className?: string;
   layers: RiskReport[];
+  /** 1 degree outlook blocks, drawn underneath the observed-activity cells. */
+  outlook: OutlookCollection | null;
+  showNow: boolean;
+  showOutlook: boolean;
   levelFilter: "all" | RiskLevel;
   bbox: [number, number, number, number];
   selected: RiskCell | null;
@@ -111,6 +118,14 @@ export function RiskMap({ layers, levelFilter, bbox, selected, gridKm, busy, are
       layerStore.clear();
       if (!instance.getSource("selection")) instance.addSource("selection", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
       if (!instance.getSource("draft")) instance.addSource("draft", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+      // Added first so the alert cells, inserted below the selection outline later, sit on top.
+      if (!instance.getSource("outlook")) instance.addSource("outlook", { type: "geojson", data: { type: "FeatureCollection", features: [] } });
+      if (!instance.getLayer("outlook-fill")) instance.addLayer({ id: "outlook-fill", type: "fill", source: "outlook", layout: { visibility: "none" }, paint: {
+        "fill-color": ["match", ["get", "level"], "high", OUTLOOK_STYLE.high.fill, "elevated", OUTLOOK_STYLE.elevated.fill, "watch", OUTLOOK_STYLE.watch.fill, OUTLOOK_STYLE.normal.fill],
+        "fill-opacity": ["match", ["get", "level"], "high", 0.6, "elevated", 0.5, "watch", 0.42, 0.12],
+      } });
+      if (!instance.getLayer("outlook-line")) instance.addLayer({ id: "outlook-line", type: "line", source: "outlook", layout: { visibility: "none" },
+        paint: { "line-color": OUTLOOK_STYLE.high.fill, "line-width": 0.6, "line-opacity": ["match", ["get", "level"], "normal", 0.18, 0.55] } });
       if (!instance.getLayer("selection-line")) instance.addLayer({ id: "selection-line", type: "line", source: "selection", paint: { "line-color": "#164c39", "line-width": 2.5 } });
       addCountryHighlight(instance);
       if (!instance.getLayer("draft-line")) instance.addLayer({ id: "draft-line", type: "line", source: "draft", filter: ["==", "$type", "LineString"], paint: { "line-color": "#164c39", "line-width": 2, "line-dasharray": [2, 2] } });
@@ -213,7 +228,7 @@ export function RiskMap({ layers, levelFilter, bbox, selected, gridKm, busy, are
               paint: { "line-color": "#163f33", "line-width": 3 } }, "selection-line");
           loadedLayers.current.set(km, report);
         }
-        const visibility = km === gridKm ? "visible" : "none";
+        const visibility = showNow && km === gridKm ? "visible" : "none";
         for (const id of [`grid-lines-${km}`, `fill-${km}`, `outline-${km}`, `selected-${km}`]) instance.setLayoutProperty(id, "visibility", visibility);
         const filter: maplibregl.FilterSpecification | null = levelFilter === "all" ? null : ["==", ["get", "level"], levelFilter];
         instance.setFilter(`fill-${km}`, filter);
@@ -222,7 +237,17 @@ export function RiskMap({ layers, levelFilter, bbox, selected, gridKm, busy, are
       }
     });
     return () => sync.cancel("risk-layers");
-  }, [area, layers, gridKm, levelFilter, selected?.id]);
+  }, [area, layers, gridKm, levelFilter, selected?.id, showNow]);
+
+  useEffect(() => {
+    const instance = map.current, sync = styleSync.current;
+    if (!instance || !sync) return;
+    sync.update("outlook", () => {
+      (instance.getSource("outlook") as maplibregl.GeoJSONSource | undefined)?.setData(outlook ?? { type: "FeatureCollection", features: [] });
+      for (const id of ["outlook-fill", "outlook-line"]) instance.setLayoutProperty(id, "visibility", showOutlook && outlook ? "visible" : "none");
+    });
+    return () => sync.cancel("outlook");
+  }, [outlook, showOutlook]);
 
   const [west, south, east, north] = bbox;
   useEffect(() => {
@@ -261,7 +286,8 @@ export function RiskMap({ layers, levelFilter, bbox, selected, gridKm, busy, are
         <p>{failed ? "The map could not load. You can review cells and coordinates in the alert list." : "Preparing alert map…"}</p>
       </div>}
       <div className="pointer-events-none absolute bottom-7 left-3 rounded-md border bg-white/95 px-3 py-2 text-xs text-muted-foreground shadow-sm">
-        <strong className="text-foreground">Approx. {gridKm} × {gridKm} km</strong> · {busy ? "updating…" : gridKm === 5 ? "finest detail" : "zoom in for smaller cells"}
+        {showNow ? <><strong className="text-foreground">Approx. {gridKm} × {gridKm} km</strong> · {busy ? "updating…" : gridKm === 5 ? "finest detail" : "zoom in for smaller cells"}</>
+          : <strong className="text-foreground">Outlook blocks · 1° × 1°</strong>}
       </div>
     </div>
   );

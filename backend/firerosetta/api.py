@@ -4,6 +4,7 @@
 """
 from __future__ import annotations
 
+import functools
 import io
 import json
 import math
@@ -22,7 +23,7 @@ from pydantic import BaseModel
 from starlette.middleware.gzip import GZipMiddleware
 
 from .config import COUNTRIES, GRID_DEG, MANIFEST, MODELS, PROCESSED, STAGED
-from .risk import GRID_LEVELS_KM, RiskMonitor, count_visible_grid
+from .risk import GRID_LEVELS_KM, RiskMonitor, StaticSites, count_visible_grid, site_codes
 
 app = FastAPI(title="FireRosetta - harmonized MODIS/VIIRS burning calendar")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
@@ -344,6 +345,56 @@ def _expected_counts(bundle: dict, lead: int, X: pd.DataFrame) -> np.ndarray:
     return iso.predict(gbm.predict(X)).clip(0)
 
 
+def _lead_frame(rows: pd.DataFrame, lead: int) -> pd.DataFrame:
+    """Swap in the lead-specific target-month normals (climatology, known in advance)."""
+    X = rows.copy()
+    X["y_clim"] = X[f"y_clim_h{lead}"]
+    for col in ("t2m", "precip", "vpd"):
+        X[f"{col}_clim_target"] = X[f"{col}_clim_target_h{lead}"]
+    return X
+
+
+@functools.cache
+def _block_outlook() -> dict:
+    """The model run once for every block it has inputs for - the map's outlook layer.
+
+    /forecast answers "what about my area"; this answers "where", at the model's own
+    resolution, so nothing here is disaggregated below the 1 deg unit it was validated on.
+    """
+    bundle, feats, basis = FORECAST["bundle"], FORECAST["feats"], FORECAST["basis"]
+    rows = feats[feats.month == basis].reset_index(drop=True)
+    blocks = [{"bx": int(r.bx), "by": int(r.by), "leads": []} for r in rows.itertuples()]
+    leads = []
+    for lead in bundle["leads"]:
+        X = _lead_frame(rows, lead)
+        Xf = X[bundle["features"]]
+        expected = _expected_counts(bundle, lead, Xf)
+        prob = bundle[f"clf_h{lead}"].predict_proba(Xf)[:, 1]
+        normal = X.y_clim.fillna(0).to_numpy()
+        for block, e, p, n in zip(blocks, expected, prob, normal):
+            block["leads"].append({
+                "prob": round(float(p), 3), "level": _warn_level(float(p)),
+                "expected": _q(float(e)), "normal": _q(float(n)),
+                "ratio": round(float(e / n), 2) if n > 0.5 else None,
+            })
+        leads.append({"lead": lead, "target_month": (basis + pd.DateOffset(months=lead)).strftime("%Y-%m")})
+    meta = FORECAST["meta"]
+    return {
+        "basis_month": basis.strftime("%Y-%m"), "leads": leads, "unit": meta["unit"],
+        "warning_definition": meta["warning_definition"],
+        "base_rate": meta["leads_detail"]["1"]["with_weather"].get("warning", {}).get("base_rate"),
+        "levels": {name: cut for cut, name in WARN_LEVELS},
+        "blocks": blocks,
+    }
+
+
+@app.get("/forecast/blocks")
+def forecast_blocks():
+    if FORECAST is None:
+        raise HTTPException(503, "The early-warning model is not built.")
+    return _block_outlook()
+
+
 @app.post("/forecast")
 def forecast(area: Area):
     """Run the early-warning model for this area, for each lead time it was trained on."""
@@ -382,11 +433,7 @@ def forecast(area: Area):
 
     leads_out, skill = [], {}
     for lead in bundle["leads"]:
-        X = rows.copy()
-        # the lead-specific target-month normals (climatology, known in advance)
-        X["y_clim"] = X[f"y_clim_h{lead}"]
-        for col in ("t2m", "precip", "vpd"):
-            X[f"{col}_clim_target"] = X[f"{col}_clim_target_h{lead}"]
+        X = _lead_frame(rows, lead)
         Xf = X[bundle["features"]]
         block_pred = _expected_counts(bundle, lead, Xf)
         prob = bundle[f"clf_h{lead}"].predict_proba(Xf)[:, 1]
@@ -478,6 +525,12 @@ def _load_static():
 
 
 STATIC = _load_static()
+if STATIC is not None:
+    # The alert layer screens the same sites the hotspot feed greys out, so a steel mill
+    # cannot raise a "detections in the last 7 days" alert or pass as a seasonal hotspot.
+    _s = STATIC["sites"]
+    RISK_MONITOR.static_sites = StaticSites(
+        STATIC["site_deg"], site_codes(_s.sx[_s.veg], _s.sy[_s.veg]), site_codes(_s.sx, _s.sy))
 
 
 @app.post("/static-sources")

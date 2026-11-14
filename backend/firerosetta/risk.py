@@ -158,6 +158,31 @@ class Snapshot:
     through: dt.date
 
 
+@dataclass(frozen=True)
+class StaticSites:
+    """Persistent non-fire heat sources flagged by static.py, on that detector's own grid.
+
+    `fire` holds the sites it found inside the vegetation-fire stream (FIRMS type 0), which
+    the type filter cannot remove; `every` adds the ones FIRMS already tags. NRT records
+    carry no type at all, so live data is screened against `every`.
+    """
+    deg: float
+    fire: np.ndarray
+    every: np.ndarray
+
+
+def site_codes(sx, sy):
+    """One integer per site cell, so membership is a vectorised np.isin."""
+    return np.asarray(sx, dtype=np.int64) * 40_000 + np.asarray(sy, dtype=np.int64) + 20_000
+
+
+def on_static_site(lon, lat, codes, deg):
+    lon, lat = np.asarray(lon, dtype=float), np.asarray(lat, dtype=float)
+    if not len(codes) or not len(lon):
+        return np.zeros(len(lon), dtype=bool)
+    return np.isin(site_codes(np.floor(lon / deg), np.floor(lat / deg)), codes)
+
+
 def load_live(country: str, today: dt.date) -> Snapshot | None:
     """Fetch the last 30 days without rebuilding the historical model or writing raw files."""
     return load_live_bounds(COUNTRIES[country], today)
@@ -253,7 +278,8 @@ def prioritize(history, recent, *, fresh, grid, bounds):
 
 
 class RiskMonitor:
-    def __init__(self, connection, data_through: str, loader=load_live, area_loader=load_live_bounds):
+    def __init__(self, connection, data_through: str, loader=load_live, area_loader=load_live_bounds,
+                 static_sites: StaticSites | None = None):
         self.connection = connection
         self.data_through = dt.date.fromisoformat(data_through)
         self.loader = loader
@@ -263,6 +289,26 @@ class RiskMonitor:
         self.history_points = {}
         self.lock = threading.Lock()
         self.static_mask = None
+        self.static_sites = static_sites
+
+    def _screen(self, observations, live, today):
+        """Drop detections sitting on a flagged industrial heat source; report how many."""
+        sites = self.static_sites
+        if sites is None or not observations:
+            return observations, 0
+        hit = on_static_site([r.lon for r in observations], [r.lat for r in observations],
+                             sites.every if live else sites.fire, sites.deg)
+        first = today - dt.timedelta(days=29)
+        dropped = len({r for r, bad in zip(observations, hit) if bad and first <= r.date <= today})
+        return [r for r, bad in zip(observations, hit) if not bad], dropped
+
+    def _screen_history(self, points):
+        """A chimney burns every month of every year, which is exactly what 'seasonal' rewards."""
+        sites = self.static_sites
+        if sites is None or not len(points["lon"]):
+            return points
+        keep = ~on_static_site(points["lon"], points["lat"], sites.fire, sites.deg)
+        return {name: np.asarray(values)[keep] for name, values in points.items()}
 
     def get_area(self, geometry, today=None, grid_km=10):
         today = today or dt.date.today()
@@ -303,7 +349,7 @@ class RiskMonitor:
             """, [*countries, dt.date(HISTORY_FIRST, 1, 1), dt.date(last_year, 12, 31),
                     today.month, w, e, s, n]).fetchnumpy()
             inside = shapely.intersects_xy(region, points["lon"], points["lat"])
-            points = {name: np.asarray(values)[inside] for name, values in points.items()}
+            points = self._screen_history({name: np.asarray(values)[inside] for name, values in points.items()})
             self.history_points = {k: v for k, v in self.history_points.items() if k[1:] == point_key[1:]}
             while len(self.history_points) >= 10:
                 self.history_points.pop(next(iter(self.history_points)))
@@ -337,6 +383,7 @@ class RiskMonitor:
         if observations:
             inside = shapely.intersects_xy(region, [r.lon for r in observations], [r.lat for r in observations])
             observations = [r for r, keep in zip(observations, inside) if keep]
+        observations, static_filtered = self._screen(observations, source == "live", today)
         recent = summarize(observations, today, grid, self._mask(cursor) if source == "live" else frozenset())
         age = max(0, (today - through).days)
         cells, threshold = prioritize(history, recent, fresh=age <= MAX_DATA_AGE_DAYS, grid=grid, bounds=bounds)
@@ -368,6 +415,7 @@ class RiskMonitor:
             "history_first": HISTORY_FIRST, "history_last": last_year, "history_years": years,
             "season_month": today.month, "seasonal_threshold": threshold,
             "recent_sensor": "NOAA-20 VIIRS", "refresh_seconds": CACHE_SECONDS,
+            "static_screen": self.static_sites is not None, "static_filtered": static_filtered,
             "summary": report_summary(cells), "cells": cells,
         }
 
@@ -421,7 +469,7 @@ class RiskMonitor:
             """, [country, dt.date(HISTORY_FIRST, 1, 1), dt.date(last_year, 12, 31), today.month]).fetchnumpy()
             self.history_points = {k: v for k, v in self.history_points.items() if k[1:] == key[1:]}
             # Native arrays retain much less memory than per-detection Python objects.
-            self.history_points[key] = points
+            self.history_points[key] = self._screen_history(points)
         points = self.history_points[key]
         if not len(points["lon"]):
             return {}
@@ -454,7 +502,8 @@ class RiskMonitor:
             self.snapshots = {k: v for k, v in self.snapshots.items() if k[1] == today}
             self.snapshots[source_key] = (time.monotonic(), snapshot, live_error)
         if snapshot is not None:
-            recent = summarize(snapshot.observations, today, grid, self._mask(cursor))
+            observations, static_filtered = self._screen(snapshot.observations, True, today)
+            recent = summarize(observations, today, grid, self._mask(cursor))
             through, source = snapshot.through, "live"
         else:
             first = today - dt.timedelta(days=29)
@@ -463,7 +512,8 @@ class RiskMonitor:
                 WHERE country = ? AND platform = 'NOAA20' AND type = 0 AND conf IN ('n', 'h')
                   AND acq_date BETWEEN ? AND ?
             """, [country, first, today]).fetchall()
-            recent = summarize([Observation(*r) for r in local], today, grid)
+            observations, static_filtered = self._screen([Observation(*r) for r in local], False, today)
+            recent = summarize(observations, today, grid)
             through, source = min(today, self.data_through), "local"
         age = max(0, (today - through).days)
         fresh = age <= MAX_DATA_AGE_DAYS
@@ -478,6 +528,7 @@ class RiskMonitor:
             "history_first": HISTORY_FIRST, "history_last": last_year,
             "history_years": years, "season_month": today.month, "seasonal_threshold": threshold,
             "recent_sensor": "NOAA-20 VIIRS", "refresh_seconds": CACHE_SECONDS,
+            "static_screen": self.static_sites is not None, "static_filtered": static_filtered,
             "summary": report_summary(cells),
             "cells": cells,
         }

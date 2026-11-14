@@ -4,7 +4,7 @@ import { BellRing } from "lucide-react";
 export function AppHeader({ active }: { active: "calendar" | "risk" | "method" }) {
   const links = [
     { id: "calendar", href: "/", label: "Calendar" },
-    { id: "risk", href: "/risk", label: "Risk Alerts" },
+    { id: "risk", href: "/risk", label: "Early Warning" },
     { id: "method", href: "/method", label: "How it works" },
   ];
   return (

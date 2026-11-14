@@ -7,7 +7,8 @@ import httpx
 from shapely.geometry import shape, mapping
 import shapely
 
-from firerosetta.risk import MetricGrid, Observation, RiskMonitor, Snapshot, count_visible_grid, load_live, metric_grid, prioritize, summarize
+from firerosetta.risk import (MetricGrid, Observation, RiskMonitor, Snapshot, StaticSites, count_visible_grid, load_live,
+                              metric_grid, prioritize, site_codes, summarize)
 
 
 TODAY = dt.date(2026, 11, 14)
@@ -72,6 +73,24 @@ class RiskTests(unittest.TestCase):
         report = RiskMonitor(self.con, "2026-11-14", loader=lambda *_: Snapshot(records, TODAY)).get("Turkey", TODAY)
         self.assertEqual(report["summary"]["recent_7d"], 1)
         self.assertEqual(report["summary"]["high"], 1)
+
+    def test_detector_flagged_sites_raise_no_alert_and_are_counted(self):
+        # the flagged site is the 0.02 deg cell holding 28.05, 38.05; 29.05 is an ordinary fire
+        sites = StaticSites(0.02, site_codes([1402], [1902]), site_codes([1402], [1902]))
+        records = [Observation(28.0501, 38.0501, TODAY, "1234"), Observation(29.05, 38.05, TODAY, "1234")]
+        report = RiskMonitor(self.con, "2026-11-14", loader=lambda *_: Snapshot(records, TODAY),
+                             static_sites=sites).get("Turkey", TODAY)
+        self.assertEqual(report["static_filtered"], 1)
+        self.assertEqual(report["summary"]["recent_7d"], 1)
+        # its November history is gone too, so it cannot come back as a seasonal priority
+        self.assertEqual([c["recent_7d"] for c in report["cells"]], [1])
+
+    def test_untagged_stream_ignores_sites_firms_already_tags(self):
+        self.insert()
+        sites = StaticSites(0.02, site_codes([], []), site_codes([1402], [1902]))
+        report = RiskMonitor(self.con, "2026-11-14", loader=lambda *_: None, static_sites=sites).get("Turkey", TODAY)
+        self.assertEqual(report["static_filtered"], 0)
+        self.assertEqual(report["summary"]["recent_7d"], 1)
 
     def test_network_failure_falls_back_without_disclosing_key(self):
         loader = Mock(side_effect=httpx.ConnectError("https://example.test/PRIVATE_KEY"))

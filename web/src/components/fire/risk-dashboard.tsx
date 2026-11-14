@@ -1,15 +1,18 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { AlertTriangle, ArrowDownToLine, ArrowUpRight, BellRing, ChevronLeft, ChevronRight, Clock3, Info, MapPin, RefreshCw, ShieldCheck } from "lucide-react";
+import { AlertTriangle, ArrowDownToLine, ArrowUpRight, BellRing, ChevronLeft, ChevronRight, Clock3, Info, MapPin, RefreshCw, ShieldCheck, Telescope } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getAreaRisk, getRisk, getRiskGridCount, type Polygon, type RiskCell, type RiskGridKm, type RiskLevel, type RiskReport, type RiskView } from "@/lib/api";
+import { Switch } from "@/components/ui/switch";
+import { type Forecast, getAreaRisk, getForecast, getOutlookBlocks, getRisk, getRiskGridCount, type OutlookBlocks, type OutlookLead, type Polygon, type RiskCell, type RiskGridKm, type RiskLevel, type RiskReport, type RiskView } from "@/lib/api";
+import { blockKey, byNowThenOutlook, OUTLOOK_STYLE, outlookExpired, outlookFeatures, outlookIndex } from "@/lib/outlook";
 import { areaBox, riskAreaKey, RISK_COUNTRIES, RISK_PLACES, type RiskArea } from "@/lib/fire-areas";
 import { selectionReport } from "@/lib/risk-summary";
 import { visiblePriorities } from "@/lib/risk-view";
 import { HIGH_PRIORITY_SHADES, highPriorityColor } from "@/lib/risk-colors";
 import { AppHeader } from "./app-header";
+import { ForecastView } from "./forecast";
 import { RiskMap } from "./risk-map";
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -19,6 +22,17 @@ const LEVELS: Record<RiskLevel, { label: string; dot: string; badge: string }> =
   watch: { label: "Watch", dot: "bg-[#83948b]", badge: "border-border bg-muted text-muted-foreground" },
 };
 const number = (value: number) => value.toLocaleString("en-GB");
+const monthName = (month: string) => `${MONTHS[+month.slice(5, 7) - 1]} ${month.slice(0, 4)}`;
+type CellOutlook = { lead: OutlookLead; target: string };
+
+/** The outlook of the 1 degree block a cell sits in. Violet, never the alert colours. */
+function OutlookChip({ outlook }: { outlook: CellOutlook }) {
+  const style = OUTLOOK_STYLE[outlook.lead.level];
+  return <span className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] font-medium" style={{ background: style.fill, color: style.ink }}
+    title={`Outlook for ${monthName(outlook.target)}: ${Math.round(outlook.lead.prob * 100)}% chance of an unusually active month in this 1° block`}>
+    <Telescope className="size-3" aria-hidden="true" />{style.label} outlook
+  </span>;
+}
 const date = (value: string) => new Date(`${value}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Istanbul" });
 const coordinates = (cell: RiskCell) => `${Math.abs(cell.lat).toFixed(2)}°${cell.lat >= 0 ? "N" : "S"}, ${Math.abs(cell.lon).toFixed(2)}°${cell.lon >= 0 ? "E" : "W"}`;
 function Badge({ level, detections = 0 }: { level: RiskLevel; detections?: number }) {
@@ -34,12 +48,17 @@ function reason(cell: RiskCell, fresh: boolean) {
   return `Activity recorded in this month across ${cell.active_years} years`;
 }
 
-function downloadReport(report: RiskReport, cells: RiskCell[], label: string) {
+function downloadReport(report: RiskReport, cells: RiskCell[], label: string, outlookOf: (cell: RiskCell) => CellOutlook | null) {
   const rows = [
-    ["analysis_date", "data_through", "selected_area", "cell_width_km", "latitude", "longitude", "priority", "detections_7d", "detections_30d", "historically_active_years", "historical_monthly_mean", "last_seen", "current_evidence_enabled"],
-    ...cells.map((cell) => [report.as_of, report.data_through, label, report.grid_km, cell.lat, cell.lon,
-      LEVELS[cell.level].label, cell.recent_7d, cell.recent_30d, cell.active_years, cell.seasonal_mean,
-      cell.last_seen ?? "", report.current_evidence_enabled ? "yes" : "no"]),
+    ["analysis_date", "data_through", "selected_area", "cell_width_km", "latitude", "longitude", "priority", "detections_7d", "detections_30d", "historically_active_years", "historical_monthly_mean", "last_seen", "current_evidence_enabled",
+      "outlook_target_month", "outlook_level_1deg_block", "outlook_probability_1deg_block"],
+    ...cells.map((cell) => {
+      const outlook = outlookOf(cell);
+      return [report.as_of, report.data_through, label, report.grid_km, cell.lat, cell.lon,
+        LEVELS[cell.level].label, cell.recent_7d, cell.recent_30d, cell.active_years, cell.seasonal_mean,
+        cell.last_seen ?? "", report.current_evidence_enabled ? "yes" : "no",
+        outlook?.target ?? "", outlook?.lead.level ?? "", outlook?.lead.prob ?? ""];
+    }),
   ];
   const csv = "\uFEFF" + rows.map((row) => row.map((value) => `"${String(value).replaceAll('"', '""')}"`).join(",")).join("\r\n");
   const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
@@ -66,6 +85,13 @@ export function RiskDashboard() {
   const [areaError, setAreaError] = useState<string | null>(null);
   const [drawRequest, setDrawRequest] = useState(0);
   const [clientDay, setClientDay] = useState<string | null>(null);
+  // Two layers on one map: what satellites saw (cells) and what the model expects (blocks).
+  const [showNow, setShowNow] = useState(true);
+  const [showOutlook, setShowOutlook] = useState(true);
+  const [leadIndex, setLeadIndex] = useState(0);
+  // null = not loaded or the model is not built in this deployment; the page works without it
+  const [blocks, setBlocks] = useState<OutlookBlocks | null>(null);
+  const [forecast, setForecast] = useState<{ key: string; data: Forecast | null; error: string | null } | null>(null);
   const areaKey = riskAreaKey(area);
   const areaBounds = useMemo<RiskView["bounds"]>(() => {
     const ring = area.geometry.coordinates[0];
@@ -79,6 +105,23 @@ export function RiskDashboard() {
     const interval = window.setInterval(updateDay, 60_000);
     return () => { window.clearTimeout(initial); window.clearInterval(interval); };
   }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    getOutlookBlocks(controller.signal).then(setBlocks).catch(() => {});
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    if (!blocks) return;
+    const controller = new AbortController();
+    const ring = area.geometry.coordinates[0];
+    getForecast(area.country ? { kind: "country", name: area.country, bbox: [ring[0][0], ring[0][1], ring[2][0], ring[2][1]] }
+      : { kind: "polygon", label: area.label, geometry: area.geometry }, controller.signal)
+      .then((data) => setForecast({ key: areaKey, data, error: null }))
+      .catch((error) => { if ((error as Error).name !== "AbortError") setForecast({ key: areaKey, data: null, error: (error as Error).message }); });
+    return () => controller.abort();
+  }, [blocks, area, areaKey]);
 
   useEffect(() => {
     try {
@@ -127,10 +170,23 @@ export function RiskDashboard() {
 
   const today = clientDay ?? state.report?.as_of ?? "1970-01-01";
   const report = useMemo(() => state.report ? selectionReport(state.report, today) : null, [state.report, today]);
-  const cells = useMemo(() => report?.cells.filter((cell) => filter === "all" || cell.level === filter) ?? [], [report, filter]);
+  const index = useMemo(() => outlookIndex(blocks, leadIndex), [blocks, leadIndex]);
+  const target = blocks?.leads[leadIndex]?.target_month ?? "";
+  const outlookOf = useCallback((cell: RiskCell): CellOutlook | null => {
+    const lead = index.get(blockKey(cell.lon, cell.lat));
+    return lead ? { lead, target } : null;
+  }, [index, target]);
+  const outlookLayer = useMemo(() => blocks ? outlookFeatures(blocks, leadIndex) : null, [blocks, leadIndex]);
+  const expired = outlookExpired(blocks, today);
+  const areaForecast = forecast?.key === areaKey ? forecast : null;
+  const cells = useMemo(() => byNowThenOutlook(report?.cells.filter((cell) => filter === "all" || cell.level === filter) ?? [], index), [report, filter, index]);
   const mapLayers = useMemo(() => preloaded.filter((layer) => layer.grid_km <= 20).map((layer) => selectionReport(layer, today)), [preloaded, today]);
   const selected = report?.cells.find((cell) => cell.id === selectedId) ?? null;
   const fresh = report?.current_evidence_enabled ?? false;
+  const outlookChip = (cell: RiskCell) => {
+    const outlook = outlookOf(cell);
+    return outlook && outlook.lead.level !== "normal" ? <OutlookChip outlook={outlook} /> : null;
+  };
   const refresh = () => { setState((previous) => ({ ...previous, busy: true })); setRevision((value) => value + 1); };
   const changeView = useCallback((next: RiskView) => {
     setMapView((previous) => previous?.areaKey === areaKey && previous.view.gridKm === next.gridKm &&
@@ -168,9 +224,9 @@ export function RiskDashboard() {
       <main>
         <div className="flex flex-wrap items-end justify-between gap-5 py-2">
           <div className="max-w-[680px]">
-            <p className="flex items-center gap-2 text-[11px] font-semibold tracking-[0.16em] text-primary"><BellRing className="size-3.5" /> RISK ALERTS</p>
-            <h1 className="display mt-2 text-3xl leading-tight sm:text-[36px]">Areas to prioritise</h1>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Prioritise monitoring and preventive checks using recent satellite detections and fire activity from the same month in past years.</p>
+            <p className="flex items-center gap-2 text-[11px] font-semibold tracking-[0.16em] text-primary"><BellRing className="size-3.5" /> EARLY WARNING</p>
+            <h1 className="display mt-2 text-3xl leading-tight sm:text-[36px]">Where it is burning, and where it may</h1>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">Two layers on one map: <strong className="font-medium text-foreground">Now</strong> ranks 5–20 km cells by what satellites detected in the last days and in this month of past years. <strong className="font-medium text-foreground">Outlook</strong> shows, per 1° block, how likely the coming months are to burn far more than usual.</p>
           </div>
           <div className="flex items-end gap-2">
             <Button variant="outline" size="lg" disabled={state.busy} onClick={refresh} title="Refresh the alert report">
@@ -195,7 +251,7 @@ export function RiskDashboard() {
 
         <div className="mt-5 flex items-start gap-2.5 rounded-lg border bg-card px-4 py-3 text-xs leading-relaxed text-muted-foreground">
           <Info className="mt-0.5 size-4 shrink-0 text-primary" />
-          <p><strong className="font-medium text-foreground">A screening priority indicator.</strong> This does not estimate the probability of a fire or forecast weather. Weather, vegetation and terrain are not assessed in this version. Satellite detections can include agricultural burning.</p>
+          <p><strong className="font-medium text-foreground">Two different kinds of evidence, kept apart.</strong> Now is a screening priority built from observed detections; it is not a probability. Outlook is a model probability at 1° resolution, driven by fire history and the weather of the preceding months; it cannot place a fire inside a block. They are shown side by side and never merged into one score. Satellite detections can include agricultural burning.</p>
         </div>
 
         {state.error && <div role="alert" className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm"><p>{state.error}</p><Button variant="outline" onClick={refresh}>Try again</Button></div>}
@@ -211,6 +267,8 @@ export function RiskDashboard() {
             <p>{!fresh ? `Data are ${report.data_age_days} days old. Recent-detection alerts are disabled; only seasonal priority is shown.` : report.live_error ?? "The live NASA connection is unavailable. Showing the latest prepared local data."} <span className="font-medium">Data through: {date(report.data_through)}.</span></p>
           </div>}
 
+          {!!report.static_filtered && <p className="mt-3 text-xs text-muted-foreground"><span className="num font-medium text-foreground">{number(report.static_filtered)}</span> detections from the last 30 days sit on sites flagged as permanent heat sources (chimneys, gas flares, steel mills) and raise no alert here. They stay visible, greyed, on the Calendar map.</p>}
+
           <p className="mt-5 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground"><span>Entire selected area · approx. <strong className="text-foreground">{report.grid_km} × {report.grid_km} km</strong></span><span>{state.busy ? "Updating grid detail…" : "Zoom for detail down to 5 km"}</span></p>
           <p className="mt-1 text-[11px] text-muted-foreground">Totals, the list and CSV include off-screen cells throughout {area.label}. Panning does not change them.</p>
           <div className="mt-2 grid gap-3 sm:grid-cols-3" aria-busy={state.busy}>
@@ -225,10 +283,23 @@ export function RiskDashboard() {
           </div>
         </>}
 
+          <section className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-lg border bg-card px-4 py-3 text-sm" aria-label="Map layers">
+            <h2 className="text-xs font-semibold text-muted-foreground">Map layers</h2>
+            <label className="flex cursor-pointer items-center gap-2"><Switch checked={showNow} onCheckedChange={setShowNow} /><span className="size-2.5 rounded-sm bg-[#ce4638]" />Now · observed activity</label>
+            <label className={`flex items-center gap-2 ${blocks ? "cursor-pointer" : "text-muted-foreground"}`}><Switch checked={showOutlook && !!blocks} disabled={!blocks} onCheckedChange={setShowOutlook} /><span className="size-2.5 rounded-sm" style={{ background: OUTLOOK_STYLE.high.fill }} />Outlook · model forecast</label>
+            {blocks ? <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Outlook month">
+              {blocks.leads.map((lead, position) => <Button key={lead.lead} size="sm" aria-pressed={leadIndex === position} variant={leadIndex === position ? "default" : "secondary"} disabled={!showOutlook} onClick={() => setLeadIndex(position)}>{monthName(lead.target_month)}</Button>)}
+            </div> : <span className="text-xs text-muted-foreground">The forecast model is not available in this deployment.</span>}
+          </section>
+          {blocks && expired && <div role="status" className="mt-3 flex items-start gap-2.5 rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">
+            <AlertTriangle className="mt-0.5 size-4 shrink-0" />
+            <p>The outlook model was last given weather through {monthName(blocks.basis_month)}, so its forecasts cover {monthName(blocks.leads[0].target_month)}–{monthName(blocks.leads.at(-1)!.target_month)}, which have already passed. They show how the layer works; they are not a forecast for the coming months until the weather inputs are refreshed.</p>
+          </div>}
+
           <div className="mt-3 grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
             <div>
               <div className="flex h-[calc(100dvh-1.5rem)] min-h-[440px] flex-col" aria-label="Map and visible-area summary">
-                <RiskMap className="min-h-[220px] flex-1 rounded-b-none" layers={mapLayers} levelFilter={filter} bbox={report?.bbox ?? areaBounds} selected={selected} onSelect={setSelectedId}
+                <RiskMap className="min-h-[220px] flex-1 rounded-b-none" layers={mapLayers} outlook={outlookLayer} showNow={showNow} showOutlook={showOutlook} levelFilter={filter} bbox={report?.bbox ?? areaBounds} selected={selected} onSelect={setSelectedId}
                   area={area.geometry} country={area.country} drawRequest={drawRequest} onDraw={(geometry) => chooseArea({ label: "Drawn area", geometry })}
                   gridKm={report?.grid_km ?? gridKm} busy={state.busy} onViewChange={changeView} />
                 <ViewportSummary areaKey={areaKey} geometry={area.geometry} selectionBounds={areaBounds} report={report} filter={filter}
@@ -241,8 +312,13 @@ export function RiskDashboard() {
               <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] text-muted-foreground" aria-label="Red intensity by detections in the last 7 days">
                 <span>Darker red = more detections in 7 days:</span>{HIGH_PRIORITY_SHADES.map((shade) => <span key={shade.min} className="inline-flex items-center gap-1"><span className="size-3 rounded-sm" style={{ backgroundColor: shade.color }} />{shade.label}</span>)}
               </div>
+              {blocks && showOutlook && <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] text-muted-foreground" aria-label="Outlook colours">
+                <span>Outlook for {monthName(target)} · chance of an unusually active month per 1° block:</span>
+                {(["watch", "elevated", "high"] as const).map((level) => <span key={level} className="inline-flex items-center gap-1"><span className="size-3 rounded-sm" style={{ backgroundColor: OUTLOOK_STYLE[level].fill }} />{OUTLOOK_STYLE[level].label} ≥ {Math.round((blocks.levels[level] ?? 0) * 100)}%</span>)}
+                {blocks.base_rate !== null && <span>· typical: {(blocks.base_rate * 100).toFixed(1)}%</span>}
+              </div>}
               <p className="mt-2 text-[11px] text-muted-foreground">20 → 10 → 5 km · 20 km cells appear only in wider, zoomed-out views. All layers are preloaded. Uncoloured cells are not necessarily risk-free; cells are not fire boundaries.</p>
-              {selected && report && <CellDetails cell={selected} report={report} />}
+              {selected && report && <CellDetails cell={selected} report={report} outlook={outlookOf(selected)} />}
             </div>
 
             {report ? <section className="overflow-hidden rounded-lg border bg-card" aria-label="Alert list">
@@ -255,22 +331,31 @@ export function RiskDashboard() {
               </div>
               <div className="max-h-[440px] overflow-y-auto lg:max-h-[420px]">
                 {cells.length === 0 && <div className="p-6 text-center text-sm text-muted-foreground"><MapPin className="mx-auto mb-2 size-5" /><p>No cells match this filter.</p><p className="mt-2 text-xs">No detections does not mean there is no fire risk.</p></div>}
-                {cells.slice(0, visible).map((cell, index) => <button key={cell.id} type="button" aria-pressed={selectedId === cell.id} onClick={() => setSelectedId(cell.id)}
+                {cells.slice(0, visible).map((cell, position) => <button key={cell.id} type="button" aria-pressed={selectedId === cell.id} onClick={() => setSelectedId(cell.id)}
                   className={`block w-full border-b px-4 py-3 text-left transition-colors last:border-0 hover:bg-secondary/70 focus-visible:outline-2 focus-visible:outline-primary focus-visible:-outline-offset-2 ${selectedId === cell.id ? "bg-secondary ring-1 ring-inset ring-primary/30" : ""}`}>
-                  <div className="flex items-center justify-between gap-2"><Badge level={cell.level} detections={cell.recent_7d} /><span className="num text-[10px] text-muted-foreground">{index + 1}</span></div>
+                  <div className="flex items-center justify-between gap-2"><span className="flex flex-wrap items-center gap-1.5"><Badge level={cell.level} detections={cell.recent_7d} />{outlookChip(cell)}</span><span className="num text-[10px] text-muted-foreground">{position + 1}</span></div>
                   <p className="num mt-2 flex items-center justify-between gap-2 text-sm font-medium">{coordinates(cell)}<ArrowUpRight className="size-3.5 text-muted-foreground" /></p>
                   <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{reason(cell, fresh)}</p>
                 </button>)}
                 {cells.length > visible && <div className="p-3"><Button variant="outline" className="w-full" onClick={() => setVisible((count) => count + 20)}>Show 20 more cells</Button></div>}
               </div>
-              <div className="border-t bg-background/50 p-3"><Button variant="ghost" className="w-full" disabled={!cells.length} onClick={() => downloadReport(report, cells, area.label)}><ArrowDownToLine />Download alert list (CSV)</Button></div>
+              <div className="border-t bg-background/50 p-3"><Button variant="ghost" className="w-full" disabled={!cells.length} onClick={() => downloadReport(report, cells, area.label, outlookOf)}><ArrowDownToLine />Download alert list (CSV)</Button></div>
             </section> : <section className="rounded-lg border bg-card p-4 text-sm text-muted-foreground"><h2 className="font-semibold text-foreground">{area.label}</h2><p className="mt-2">{state.busy ? "Preparing alerts for the selected area. You can draw another area while this loads." : "Change the area using the map or the options above."}</p></section>}
           </div>
+
+          {blocks && <section className="mt-8" aria-label="Outlook for the selected area">
+            <p className="flex items-center gap-2 text-[11px] font-semibold tracking-[0.16em]" style={{ color: OUTLOOK_STYLE.high.fill }}><Telescope className="size-3.5" /> OUTLOOK · {area.label.toUpperCase()}</p>
+            <div className="mt-3">
+              {areaForecast?.data ? <ForecastView data={areaForecast.data} label={area.label} />
+                : areaForecast?.error ? <p role="status" className="rounded-lg border bg-card p-4 text-sm text-muted-foreground">{areaForecast.error}</p>
+                : <Skeleton className="h-[320px] rounded-lg" />}
+            </div>
+          </section>}
 
           {report && <details className="mt-6 rounded-lg border bg-card p-4 text-sm">
             <summary className="cursor-pointer font-medium">How are these priorities determined?</summary>
             <div className="mt-4 max-w-[100ch] space-y-3 text-sm leading-relaxed text-muted-foreground">
-              <p><strong className="text-foreground">High priority:</strong> At least one nominal- or high-confidence NOAA-20 VIIRS detection in the last 7 days. Known static heat sources are screened using a mask from standard historical records. Darker red means more screened detections in this window. Detections need field verification and are not a count of separate fires.</p>
+              <p><strong className="text-foreground">High priority:</strong> At least one nominal- or high-confidence NOAA-20 VIIRS detection in the last 7 days. Known static heat sources are screened twice: with a mask from standard historical records, and with the sites the unsupervised detector flagged as permanent industrial heat. Darker red means more screened detections in this window. Detections need field verification and are not a count of separate fires.</p>
               <p><strong className="text-foreground">Elevated priority:</strong> Activity in the last 30 days, or observations in {MONTHS[report.season_month - 1]} across at least 3 years during {report.history_first}–{report.history_last}, with a monthly mean in the top quarter of positive means for this selection (at least {number(report.seasonal_threshold)} detections/month). Means use all {report.history_years} complete years, including zero years. Historical context uses S-NPP only.</p>
               <p><strong className="text-foreground">When data become stale:</strong> If coverage is more than 1 day old, recent detections no longer raise priority. If the live connection fails, the dated local copy is used. Refreshing does not retrain the historical calendar.</p>
               <p><strong className="text-foreground">Zoom and totals:</strong> Broad, zoomed-out views use 20 × 20 km cells. Closer views use 10 × 10 km and then 5 × 5 km. Each square splits into four smaller cells. Detections are regrouped at their actual coordinates; parent-cell alerts are not copied into child cells. Totals, the list and CSV cover the entire selected area at the displayed grid size. Panning does not change them. Cell counts can change with grid size. Dimensions are measured in the map projection, with small differences on the ground.</p>
@@ -403,7 +488,7 @@ function ViewCount({ title, value, color, hint }: { title: string; value: number
   return <div className="min-w-0 px-2" title={hint}><h3 className="text-[10px] leading-tight text-muted-foreground">{title}</h3><p className={`num mt-0.5 text-xl font-semibold leading-none ${color}`}>{value === null ? "—" : number(value)}</p></div>;
 }
 
-function CellDetails({ cell, report }: { cell: RiskCell; report: RiskReport }) {
+function CellDetails({ cell, report, outlook }: { cell: RiskCell; report: RiskReport; outlook: CellOutlook | null }) {
   const high = cell.level === "high";
   return <section className="mt-4 rounded-lg border bg-card p-4" aria-label="Selected cell alert details" aria-live="polite">
     <div className="flex flex-wrap items-center justify-between gap-2"><h2 className="num text-sm font-semibold">Selected cell · {coordinates(cell)} · {report.grid_km} km cell</h2><Badge level={cell.level} detections={cell.recent_7d} /></div>
@@ -413,6 +498,12 @@ function CellDetails({ cell, report }: { cell: RiskCell; report: RiskReport }) {
       <div className="text-muted-foreground">{MONTHS[report.season_month - 1]} history<p className="mt-1 font-medium text-foreground">Activity in {cell.active_years} / {report.history_years} years</p></div>
       <div className="text-muted-foreground">Historical monthly mean<p className="mt-1 font-medium text-foreground">{cell.seasonal_mean.toLocaleString("en-GB", { maximumFractionDigits: 1 })} satellite detections</p></div>
     </div>
+    {outlook && <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-muted-foreground">
+      <OutlookChip outlook={outlook} />
+      <span>{monthName(outlook.target)} · <span className="num font-medium text-foreground">{Math.round(outlook.lead.prob * 100)}%</span> chance of an unusually active month
+        {outlook.lead.ratio !== null && <> · expected <span className="num font-medium text-foreground">{outlook.lead.ratio.toFixed(1)}×</span> normal</>}
+        {" "}· for the whole 1° block around this cell, not the cell itself</span>
+    </div>}
     <p className="mt-3 text-xs leading-relaxed text-muted-foreground"><strong className="font-medium text-foreground">Suggested check: </strong>{high ? "Verify recent detections with local teams or field observations and prioritise monitoring in the area." : cell.level === "elevated" ? "Review seasonal activity alongside local official warnings and plan preventive checks and monitoring." : "Monitor seasonal activity and new detections. This category does not imply a safe or risk-free area."}</p>
   </section>;
 }

@@ -40,33 +40,6 @@ sonraki açılışlar hazır veriyi kullanır. Kapatmak için başlatıcı pence
 Verileri yeniden indirmek ve işlemek için `powershell -ExecutionPolicy Bypass -File .\start.ps1 -Rebuild`
 çalıştır. Windows başlatıcısı proje içindeki `.runtime` araçlarını veya kurulu `uv`, Node.js ve npm'i kullanır.
 
-### Risk Alerts
-
-Üst menüdeki **Risk Alerts** (`/risk`) sekmesi, önleyici inceleme ve gözetim için alanları
-işaretler. Harita yakınlaştıkça **20 → 10 → 5 km** karelere ayrılır; 20 km yalnızca daha geniş,
-uzaklaştırılmış görünümlerde (zoom < 4,5) kullanılır. Her düzeyde güncel ve geçmiş tespitler gerçek
-koordinatlarından yeniden gruplanır. Üstteki özet ve CSV seçimin tamamını, harita altındaki sayaçlar
-ve öncelik listesi yalnızca görüntülenen alanı kapsar. Kare seçimi haritayı otomatik ortalamaz.
-Hazır ülke veya bölge seçilir, haritada çokgen çizilir ya da koordinat kutusu girilir.
-Takvimde çizilen son alan uyarı sekmesine taşınır. Tespitler seçimin gerçek çokgeniyle süzülür;
-yalnız çevreleyen kutunun içindekiler sayılmaz. Geçmiş veri kapsamı ilk yüklenen altı ülkeyle sınırlıdır.
-Kareler seçimin merkezine göre seçilen sabit UTM koordinat sisteminde ölçülür; arazi üzerindeki
-genişlik projeksiyon nedeniyle küçük farklar gösterebilir. Nötr çizgili karelerde gözlem olmaması
-risksiz oldukları anlamına gelmez.
-
-Son 30 günlük NOAA-20 verileri MAP_KEY ile NASA'dan kontrol edilir ve 5 dakika önbelleğe alınır;
-yakınlaştırmak yeniden veri indirmez. Son 7 günde tespit olan kareler yüksek önceliklidir.
-Seçilen alanın tüm ölçekleri arka planda önceden yüklenir ve haritada hazır kaynaklar olarak tutulur.
-Kaydırma ve yakınlaştırma yeni API isteği başlatmaz; ekran dışındaki seçili alan da bellekte kalır.
-Mevsimsel bağlam, 2013–2025 S-NPP kayıtlarının içinde bulunulan aya ait tam yıl ortalamalarıdır
-(sıfır yıllar dahil). Aynı ayda en az 3 yılda tespit ve pozitif ortalamaların üst çeyreğinde yer alma
-ya da son 30 günde tespit, artmış öncelik üretir. Düşük güven ve bilinen sabit ısı kaynakları ayıklanır.
-Canlı erişim yoksa yerel veriye geçilir; veri 1 günden eskiyse güncel tespitler alarmı yükseltmez.
-
-Bu bir **önlem önceliği** katmanıdır; meteorolojik yangın tahmini veya yangın olasılığı değildir.
-Hava, yakıt/bitki örtüsü ve saha doğrulaması eklenmeden resmî erken uyarı olarak kullanılmamalıdır.
-Kontroller: `cd backend` ardından `.venv\Scripts\python -m unittest discover -s tests -v`.
-
 Adım adım (ya da `start.sh` içinde ne olduğunu görmek için):
 
 ```bash
@@ -149,10 +122,10 @@ backend/firerosetta/
   gpu.py         Tüm eğitim adımları için tek cihaz seçimi (CUDA varsa kullanır, yoksa CPU)
   model.py       Eğitim zamanı regresyon başlığı (bilerek paketlenmiyor; forecast.py'ye bak)
   api.py         FastAPI + DuckDB: /meta /calendar /hotspots /hotspots.csv /validation
-                 /forecast /static-sources
+                 /forecast /forecast/blocks /static-sources /risk
+  risk.py        /risk: canlı tespitler + mevsimsel geçmiş, 20–5 km uyarlanabilir öncelik ızgarası
 scripts/
   release.sh     Üç model paketini üretir / yayınlar / indirir (sha256 doğrulamalı)
-  risk.py        /risk: canlı tespitler + mevsimsel geçmiş, 20–5 km uyarlanabilir öncelik ızgarası
 web/             Next.js 16 + shadcn/ui + MapLibre
 data/            (git'e girmez) raw / staged / processed / models / manifest.json
 ```
@@ -194,9 +167,57 @@ Referans cetvel: **S-NPP VIIRS 375 m** hotspot sayısı (bitki örtüsü yangın
 | Ülke × ay | %70 | %15 | %16 | **%9** |
 | Ülke × yıl | %70 | %8 | %10 | **%5** |
 
+## Early Warning sayfası: tek haritada iki katman
+
+Üst menüdeki **Early Warning** (`/risk`) sayfası iki erken uyarı sistemini tek arayüzde birleştirir.
+İkisi farklı sorulara cevap verir ve bilerek tek bir skora karıştırılmaz:
+
+| | Katman 1 — **Şimdi** | Katman 2 — **Öngörü** |
+|---|---|---|
+| Soru | Son günlerde nerede yanıyor? | Önümüzdeki 1–3 ayda nerede olağandışı çok yanabilir? |
+| Kanıt | Gözlem: canlı NOAA-20 tespitleri + aynı ayın geçmişi | Model: yangın geçmişi + önceki ayların havası |
+| Birim | 5 / 10 / 20 km hücre | 1° blok × ay |
+| Çıktı | Öncelik (high / elevated / watch) — olasılık değil | Anormal ay olasılığı (normal / watch / elevated / high) |
+| Renk | Kırmızı / turuncu | Mor |
+
+Haritada bloklar altta, hücreler üstte çizilir; iki katman ayrı ayrı açılıp kapatılır ve öngörü ayı
+seçilir. Her hücre, merkezinin düştüğü bloğun öngörüsünü rozet olarak taşır; liste önce gözlenen
+önceliğe, eşitlikte öngörü seviyesine göre sıralanır ve CSV'ye öngörü sütunları eklenir. Seçilen
+alanın 1–3 aylık tahmini ve geçmiş sınaması haritanın altındadır (eskiden Calendar'daki
+"Early warning" sekmesiydi). Model dosyaları yoksa öngörü katmanı kapanır, sayfanın geri kalanı çalışır.
+Modelin girdileri güncel aydan eskiyse (tahmin edilen aylar geçmişse) sayfa bunu açıkça uyarır.
+
+### Katman 1 — Şimdi (gözlenen aktivite)
+
+Bu katman önleyici inceleme ve gözetim için alanları işaretler. Harita yakınlaştıkça **20 → 10 → 5 km** karelere ayrılır; 20 km yalnızca daha geniş,
+uzaklaştırılmış görünümlerde (zoom < 4,5) kullanılır. Her düzeyde güncel ve geçmiş tespitler gerçek
+koordinatlarından yeniden gruplanır. Üstteki özet ve CSV seçimin tamamını, harita altındaki sayaçlar
+ve öncelik listesi yalnızca görüntülenen alanı kapsar. Kare seçimi haritayı otomatik ortalamaz.
+Hazır ülke veya bölge seçilir, haritada çokgen çizilir ya da koordinat kutusu girilir.
+Takvimde çizilen son alan uyarı sekmesine taşınır. Tespitler seçimin gerçek çokgeniyle süzülür;
+yalnız çevreleyen kutunun içindekiler sayılmaz. Geçmiş veri kapsamı ilk yüklenen altı ülkeyle sınırlıdır.
+Kareler seçimin merkezine göre seçilen sabit UTM koordinat sisteminde ölçülür; arazi üzerindeki
+genişlik projeksiyon nedeniyle küçük farklar gösterebilir. Nötr çizgili karelerde gözlem olmaması
+risksiz oldukları anlamına gelmez.
+
+Son 30 günlük NOAA-20 verileri MAP_KEY ile NASA'dan kontrol edilir ve 5 dakika önbelleğe alınır;
+yakınlaştırmak yeniden veri indirmez. Son 7 günde tespit olan kareler yüksek önceliklidir.
+Seçilen alanın tüm ölçekleri arka planda önceden yüklenir ve haritada hazır kaynaklar olarak tutulur.
+Kaydırma ve yakınlaştırma yeni API isteği başlatmaz; ekran dışındaki seçili alan da bellekte kalır.
+Mevsimsel bağlam, 2013–2025 S-NPP kayıtlarının içinde bulunulan aya ait tam yıl ortalamalarıdır
+(sıfır yıllar dahil). Aynı ayda en az 3 yılda tespit ve pozitif ortalamaların üst çeyreğinde yer alma
+ya da son 30 günde tespit, artmış öncelik üretir. Düşük güven ve bilinen sabit ısı kaynakları ayıklanır: hem standart arşivden türetilen maske, hem de
+gözetimsiz dedektörün işaretlediği kalıcı endüstriyel kaynaklar (aşağıda) kullanılır; bu noktalardaki
+tespitler ne güncel alarm ne de mevsimsel öncelik üretir, kaç tespitin elendiği sayfada yazılır.
+Canlı erişim yoksa yerel veriye geçilir; veri 1 günden eskiyse güncel tespitler alarmı yükseltmez.
+
+Bu bir **önlem önceliği** katmanıdır; yangın olasılığı değildir. Saha doğrulaması olmadan resmî
+erken uyarı olarak kullanılmamalıdır.
+Kontroller: `cd backend` ardından `.venv\Scripts\python -m unittest discover -s tests -v`.
+
 ## Erken uyarı (gözetimli öğrenme)
 
-Arayüzdeki **Early warning** sekmesi, seçilen alan için 1–3 ay ileriye tahmin üretir: beklenen
+**Early Warning** sayfasının Öngörü katmanı, seçilen alan için 1–3 ay ileriye tahmin üretir: beklenen
 hotspot sayısı, %80 aralığı, "normale göre kaç kat" ve o ayın anormal bir yangın ayı olma olasılığı.
 
 ### Eldeki veri yetiyor mu?

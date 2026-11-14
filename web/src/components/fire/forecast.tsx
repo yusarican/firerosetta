@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 
-import type { Forecast, LeadForecast, WarnLevel } from "@/lib/api";
+import type { Forecast, LeadForecast } from "@/lib/api";
+import { OUTLOOK_STYLE } from "@/lib/outlook";
 import { fmt, full, MONTHS_LONG, niceMax } from "@/lib/scale";
 
 import { useWidth } from "./use-size";
@@ -10,12 +11,7 @@ import { useWidth } from "./use-size";
 const M = { top: 12, right: 16, bottom: 26, left: 44 };
 const H = 230;
 
-const LEVEL: Record<WarnLevel, { label: string; fill: string; ink: string }> = {
-  normal: { label: "Normal", fill: "var(--muted)", ink: "var(--muted-foreground)" },
-  watch: { label: "Watch", fill: "#f9d79f", ink: "#5a3b0b" },
-  elevated: { label: "Elevated", fill: "#ee933c", ink: "#3d1b06" },
-  high: { label: "High", fill: "#bd4416", ink: "#ffffff" },
-};
+const LEVEL = OUTLOOK_STYLE;
 
 const monthLabel = (m: string) => {
   const [y, mo] = m.split("-").map(Number);
@@ -172,11 +168,11 @@ export function ForecastView({ data, label }: { data: Forecast; label: string })
           {label} · {data.area.blocks} forecast {data.area.blocks === 1 ? "block" : "blocks"} ·
           model given data through {monthLabel(data.basis_month)}
         </p>
-        <h1 className="display mt-1 max-w-[34ch] text-[26px] leading-[1.15] sm:text-[30px]">
+        <h2 className="display mt-1 max-w-[34ch] text-[26px] leading-[1.15] sm:text-[30px]">
           {top.level === "normal"
             ? `No unusual fire month expected through ${monthLabel(data.leads.at(-1)!.target_month)}.`
             : `${LEVEL[top.level].label} fire risk for ${monthLabel(top.target_month)}.`}
-        </h1>
+        </h2>
         <p className="mt-2 max-w-[70ch] text-sm leading-relaxed">
           Each month is forecast from fire history and antecedent weather (how hot, dry and windy it has
           been) up to {monthLabel(data.basis_month)} — never from weather in the month being predicted.

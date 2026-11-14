@@ -10,7 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  type Area, type Calendar, downloadCsv, type Forecast, getCalendar, getForecast, getHotspots, getMeta,
+  type Area, type Calendar, downloadCsv, getCalendar, getHotspots, getMeta,
   type Hotspots, isStatic, type Meta, type Polygon,
 } from "@/lib/api";
 import { calendarPng, monthlyCsv, seasonCsv, slug, svgPng, yearlyCsv } from "@/lib/export";
@@ -20,9 +20,6 @@ import { AreaMap } from "./area-map";
 import { AppHeader } from "./app-header";
 import { BurnCalendar, type CalendarMode } from "./burn-calendar";
 import { SeasonChart, SkillChart, YearChart } from "./charts";
-import { ForecastView } from "./forecast";
-
-type View = "calendar" | "forecast";
 
 const box = (w: number, s: number, e: number, n: number): Polygon => ({
   type: "Polygon",
@@ -103,13 +100,6 @@ export function Workbench() {
   // flagged persistent heat sources are drawn, greyed, by default: hiding them by default would
   // delete data from the map on a model's say-so. The toggle lets the user take them out.
   const [hideStatic, setHideStatic] = useState(false);
-  const [view, setView] = useState<View>("calendar");
-  // tagged with the area they belong to, so a stale result reads as "still loading"
-  // instead of needing a synchronous reset inside the effect
-  const [fc, setFc] = useState<{ key: string; data: Forecast } | null>(null);
-  const [fcError, setFcError] = useState<{ key: string; message: string } | null>(null);
-  const areaKey = useMemo(() => JSON.stringify(area), [area]);
-
   useEffect(() => {
     if (area.kind === "polygon") {
       try { sessionStorage.setItem("firerosetta-selected-area", JSON.stringify(area)); } catch {}
@@ -119,16 +109,6 @@ export function Workbench() {
   useEffect(() => {
     getMeta().then(setMeta).catch((e) => setError(e.message));
   }, []);
-
-  // only asked for once the tab is open: running the model is work the calendar does not need
-  useEffect(() => {
-    if (view !== "forecast") return;
-    const ctl = new AbortController();
-    getForecast(area, ctl.signal)
-      .then((data) => setFc({ key: areaKey, data }))
-      .catch((e) => e.name !== "AbortError" && setFcError({ key: areaKey, message: e.message }));
-    return () => ctl.abort();
-  }, [area, areaKey, view]);
 
   useEffect(() => {
     const ctl = new AbortController();
@@ -325,24 +305,7 @@ export function Workbench() {
         </div>
 
         <div className="flex min-w-0 flex-col gap-4">
-          <Tabs value={view} onValueChange={(v) => setView(v as View)}>
-            <TabsList>
-              <TabsTrigger value="calendar">Burning calendar</TabsTrigger>
-              <TabsTrigger value="forecast">Early warning</TabsTrigger>
-            </TabsList>
-          </Tabs>
-
-          {view === "forecast" ? (
-            fcError?.key === areaKey ? (
-              <p role="alert" className="rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2 text-sm">
-                {fcError.message}
-              </p>
-            ) : fc?.key !== areaKey ? (
-              <Skeleton className="h-[720px] rounded-lg" />
-            ) : (
-              <ForecastView data={fc.data} label={label} />
-            )
-          ) : !cal || !story ? (
+          {!cal || !story ? (
             <Skeleton className="h-[720px] rounded-lg" />
           ) : (
             <>

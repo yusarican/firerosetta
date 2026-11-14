@@ -212,6 +212,8 @@ export type RiskReport = {
   seasonal_threshold: number;
   recent_sensor: string;
   refresh_seconds: number;
+  static_screen?: boolean; // the static-source detector's flagged sites were available
+  static_filtered?: number; // 30-day detections dropped because they sit on such a site
   summary: Record<RiskLevel, number> & { recent_7d: number; total_cells: number };
   cells: RiskCell[];
 };
@@ -227,6 +229,19 @@ export const getRiskGridCount = (geometry: Polygon, view: RiskView, signal?: Abo
 export const getValidation = () => call<Validation>("/validation");
 export const getCalendar = (a: Area, s?: AbortSignal) => call<Calendar>("/calendar", areaBody(a), s);
 export const getForecast = (a: Area, s?: AbortSignal) => call<Forecast>("/forecast", areaBody(a), s);
+
+export type OutlookLead = { prob: number; level: WarnLevel; expected: number; normal: number; ratio: number | null };
+/** The early-warning model run for every 1 degree block: the map's outlook layer. */
+export type OutlookBlocks = {
+  basis_month: string;
+  leads: { lead: number; target_month: string }[];
+  unit: string;
+  warning_definition: string;
+  base_rate: number | null;
+  levels: Record<string, number>;
+  blocks: { bx: number; by: number; leads: OutlookLead[] }[];
+};
+export const getOutlookBlocks = (s?: AbortSignal) => call<OutlookBlocks>("/forecast/blocks", undefined, s);
 export const getHotspots = (a: Area, start: string, end: string, s?: AbortSignal) =>
   call<Hotspots>("/hotspots", { ...areaBody(a), start, end }, s);
 
