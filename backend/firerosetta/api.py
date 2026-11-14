@@ -9,15 +9,17 @@ import json
 from typing import Any
 
 import duckdb
+import joblib
 import numpy as np
 import pandas as pd
 import shapely
+import sklearn
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 
-from .config import COUNTRIES, GRID_DEG, MANIFEST, PROCESSED, STAGED
+from .config import COUNTRIES, GRID_DEG, MANIFEST, MODELS, PROCESSED, STAGED
 
 app = FastAPI(title="FireRosetta - harmonized MODIS/VIIRS burning calendar")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
@@ -29,6 +31,46 @@ CELLS = con.sql(f"SELECT * FROM '{PROCESSED / 'cells.parquet'}'").df()
 CELLS["lon"] = (CELLS.gx + 0.5) * GRID_DEG
 CELLS["lat"] = (CELLS.gy + 0.5) * GRID_DEG
 METRICS = json.loads((PROCESSED / "metrics.json").read_text())
+
+# --- early-warning model: optional, the rest of the API works without it ---
+# Each cell's all-time harmonized total, used to split a 1 deg block forecast over the
+# part of the block the user actually selected.
+CELLS = CELLS.merge(con.sql("SELECT country, gx, gy, sum(harmonized) tot FROM h GROUP BY 1,2,3").df(),
+                    on=["country", "gx", "gy"], how="left")
+CELLS["tot"] = CELLS.tot.fillna(0.0)
+CELLS["bx"] = np.floor(CELLS.lon).astype(int)
+CELLS["by"] = np.floor(CELLS.lat).astype(int)
+BLOCK_TOT = CELLS.groupby(["bx", "by"]).tot.sum()
+
+
+def _load_forecast():
+    bundle_path = MODELS / "earlywarn.joblib"
+    feats_path = PROCESSED / "forecast_features.parquet"
+    back_path = PROCESSED / "forecast_backtest.parquet"
+    if not (bundle_path.exists() and feats_path.exists() and back_path.exists()):
+        return None
+    meta = json.loads((MODELS / "earlywarn.json").read_text())
+    built_with = meta.get("env", {}).get("sklearn")
+    if built_with and built_with != sklearn.__version__:
+        # pickled estimators are not guaranteed across versions; say so rather than
+        # let it fail somewhere deep in the unpickler
+        print(f"warning: early-warning model was trained with scikit-learn {built_with}, "
+              f"this environment has {sklearn.__version__}. Retrain if loading fails.")
+    try:
+        bundle = joblib.load(bundle_path)
+    except Exception as e:  # noqa: BLE001 - a bad pickle must not take the whole API down
+        print(f"warning: could not load the early-warning model ({e}); /forecast disabled.")
+        return None
+    feats = con.sql(f"SELECT * FROM '{feats_path}'").df()
+    feats["month"] = pd.to_datetime(feats.month)
+    back = con.sql(f"SELECT * FROM '{back_path}'").df()
+    back["target_month"] = pd.to_datetime(back.target_month)
+    return {"bundle": bundle, "feats": feats, "back": back, "meta": meta,
+            "basis": feats.month.max()}
+
+
+FORECAST = _load_forecast()
+WARN_LEVELS = [(0.50, "high"), (0.25, "elevated"), (0.10, "watch")]
 N_HOTSPOTS = con.execute("SELECT count(*) FROM hs").fetchone()[0]
 FIRST, LAST = con.execute("SELECT min(month), max(month) FROM h").fetchone()
 TRAIN_LAST = METRICS["overlap"][1]
@@ -98,6 +140,8 @@ def meta():
         "reference": METRICS["reference"],
         "data_through": DATA_THROUGH,
         "nrt_from": NRT_FROM,
+        "has_forecast": FORECAST is not None,
+        "has_static_sources": STATIC is not None,
     }
 
 
@@ -207,6 +251,208 @@ def calendar(area: Area):
         "year_median": _q(yr_med),
         "skill": skill,
     }
+
+
+def _block_share(cells: pd.DataFrame) -> pd.Series:
+    """How much of each 1 deg block's historical burning falls inside the selected area.
+
+    The model predicts whole blocks; this is what turns a block forecast into a forecast
+    for an arbitrary drawn area, and it is the area's own history that does the splitting.
+    """
+    mine = cells.groupby(["bx", "by"]).tot.sum()
+    share = (mine / BLOCK_TOT.reindex(mine.index)).fillna(0.0)
+    return share[share > 0]
+
+
+def _warn_level(prob: float) -> str:
+    return next((name for cut, name in WARN_LEVELS if prob >= cut), "normal")
+
+
+def _expected_counts(bundle: dict, lead: int, X: pd.DataFrame) -> np.ndarray:
+    """The bundle's two-step regression head: log1p trees, then isotonic back to counts.
+
+    Kept as two plain sklearn estimators so the published model loads without this project;
+    the same recipe is recorded in bundle["predict_recipe"].
+    """
+    gbm, iso = bundle[f"reg_h{lead}_gbm"], bundle[f"reg_h{lead}_iso"]
+    return iso.predict(gbm.predict(X)).clip(0)
+
+
+@app.post("/forecast")
+def forecast(area: Area):
+    """Run the early-warning model for this area, for each lead time it was trained on."""
+    if FORECAST is None:
+        raise HTTPException(503, "The early-warning model is not built. Run "
+                                 "`uv run python -m firerosetta.weather` then "
+                                 "`uv run python -m firerosetta.forecast` in backend/.")
+    bundle, feats, back = FORECAST["bundle"], FORECAST["feats"], FORECAST["back"]
+    cells = _cells(area)
+    if cells.empty:
+        raise HTTPException(404, "No fire detections were ever recorded in this area "
+                                 "(or it lies outside the loaded countries).")
+    share = _block_share(cells)
+    if share.empty:
+        raise HTTPException(404, "This area has no burning on record, so there is nothing to forecast.")
+
+    basis = FORECAST["basis"]
+    # Keep the blocks present in both, without dropping NaN features: a standardised
+    # anomaly is undefined wherever the normal has zero spread (no August heat in
+    # January), and the trees were trained with exactly those gaps.
+    at_basis = feats[feats.month == basis].set_index(["bx", "by"])
+    idx = share.index.intersection(at_basis.index)
+    if idx.empty:
+        raise HTTPException(503, "The model has no inputs for this area at the latest month.")
+    rows = at_basis.loc[idx]
+    w = share.loc[idx].to_numpy()
+
+    # --- the area's own backtest: hindcasts the model made for years it never trained on ---
+    mine = back[back.set_index(["bx", "by"]).index.isin(share.index)].copy()
+    mine["w"] = share.reindex(pd.MultiIndex.from_frame(mine[["bx", "by"]])).to_numpy()
+    for col in ("target", "pred", "pred_hist_only", "y_clim"):
+        mine[col] = mine[col] * mine.w
+    agg = mine.groupby(["lead", "target_month"], as_index=False).agg(
+        actual=("target", "sum"), pred=("pred", "sum"),
+        hist_only=("pred_hist_only", "sum"), normal=("y_clim", "sum"))
+
+    leads_out, skill = [], {}
+    for lead in bundle["leads"]:
+        X = rows.copy()
+        # the lead-specific target-month normals (climatology, known in advance)
+        X["y_clim"] = X[f"y_clim_h{lead}"]
+        for col in ("t2m", "precip", "vpd"):
+            X[f"{col}_clim_target"] = X[f"{col}_clim_target_h{lead}"]
+        Xf = X[bundle["features"]]
+        block_pred = _expected_counts(bundle, lead, Xf)
+        prob = bundle[f"clf_h{lead}"].predict_proba(Xf)[:, 1]
+
+        expected = float((block_pred * w).sum())
+        normal = float((X.y_clim.to_numpy() * w).sum())
+        warn_prob = float((prob * w).sum() / max(w.sum(), 1e-9))
+
+        # 80 % band from this area's own hindcast residuals in log space
+        h = agg[(agg.lead == lead) & (agg.actual.notna())]
+        lo = hi = None
+        if len(h) >= 12:
+            res = np.log1p(h.actual.to_numpy()) - np.log1p(h.pred.to_numpy())
+            q10, q90 = np.quantile(res, [0.1, 0.9])
+            lo = max(float(np.expm1(np.log1p(expected) + q10)), 0.0)
+            hi = float(np.expm1(np.log1p(expected) + q90))
+            obs, pred = h.actual.to_numpy(), h.pred.to_numpy()
+            var = float(((obs - obs.mean()) ** 2).sum())
+            skill[str(lead)] = {
+                "n_months": int(len(h)),
+                "wape": _q(100 * np.abs(pred - obs).sum() / obs.sum()) if obs.sum() else None,
+                "r2": round(float(1 - ((pred - obs) ** 2).sum() / var), 3) if var else None,
+                "clim_r2": (round(float(1 - ((h.normal.to_numpy() - obs) ** 2).sum() / var), 3)
+                            if var else None),
+                "hist_only_r2": (round(float(1 - ((h.hist_only.to_numpy() - obs) ** 2).sum() / var), 3)
+                                 if var else None),
+            }
+        target = (basis + pd.DateOffset(months=lead)).strftime("%Y-%m")
+        leads_out.append({
+            "lead": lead, "target_month": target,
+            "expected": _q(expected), "lo": None if lo is None else _q(lo),
+            "hi": None if hi is None else _q(hi),
+            "normal": _q(normal),
+            "ratio": round(expected / normal, 2) if normal > 0.5 else None,
+            "warn_prob": round(warn_prob, 3), "level": _warn_level(warn_prob),
+        })
+
+    hist = agg[agg.lead == bundle["leads"][0]].sort_values("target_month")
+    return {
+        "area": {"cells": int(len(cells)), "blocks": int(len(rows)),
+                 "countries": sorted(cells.country.unique())},
+        "basis_month": basis.strftime("%Y-%m"),
+        "leads": leads_out,
+        "skill": skill,
+        "backtest": [
+            {"month": r.target_month.strftime("%Y-%m"), "actual": _q(r.actual), "pred": _q(r.pred),
+             "hist_only": _q(r.hist_only), "normal": _q(r.normal)}
+            for r in hist.itertuples()
+        ],
+        "model": {
+            "unit": FORECAST["meta"]["unit"],
+            "cv": FORECAST["meta"]["cv"],
+            "trained_at": FORECAST["meta"]["trained_at"],
+            "warning_definition": FORECAST["meta"]["warning_definition"],
+            "weather_source": FORECAST["meta"]["weather_source"],
+            "base_rate": FORECAST["meta"]["leads_detail"]["1"]["with_weather"]
+                         .get("warning", {}).get("base_rate"),
+            "levels": {name: cut for cut, name in WARN_LEVELS},
+        },
+    }
+
+
+@app.get("/forecast/metrics")
+def forecast_metrics():
+    if FORECAST is None:
+        raise HTTPException(503, "The early-warning model is not built.")
+    return FORECAST["meta"]
+
+
+def _load_static():
+    """Flagged persistent non-fire sources. Optional, like the early-warning model."""
+    sites, meta = PROCESSED / "static_sites.parquet", MODELS / "static.json"
+    if not (sites.exists() and meta.exists()):
+        return None
+    # cursor(), not con: by this point in module setup the shared connection still holds an
+    # unfinished result from the fetchone() calls above.
+    df = con.cursor().sql(f"SELECT * FROM '{sites}' WHERE flag").df()
+    for c in ("first_seen", "last_seen"):
+        df[c] = df[c].astype(str).str[:10]
+    return {"sites": df, "meta": json.loads(meta.read_text())}
+
+
+STATIC = _load_static()
+
+
+@app.post("/static-sources")
+def static_sources(area: Area):
+    """Persistent non-fire heat sources inside the area - chimneys, flares, steel mills.
+
+    These sit in the *fire* stream: FIRMS did not tag them, so the calendar still counts them
+    as burning. Returned so the map can show what the detector would remove and the user can
+    judge it, rather than the pipeline silently deleting data on a model's say-so.
+    """
+    if STATIC is None:
+        raise HTTPException(503, "The static-source detector has not been run. "
+                                 "Train it with: uv run python -m firerosetta.static")
+    df = STATIC["sites"]
+    g = _geom(area)
+    if g is None:
+        if area.country not in COUNTRIES:
+            raise HTTPException(400, f"Pick one of {list(COUNTRIES)} or send a geometry.")
+        df = df[df.country == area.country]
+    else:
+        df = df[shapely.contains_xy(g, df.lon.values, df.lat.values)]
+
+    untagged = df[df.veg]  # the ones still counted as fire; df also holds already-tagged sites
+    return {
+        "n_sites": int(len(df)),
+        "n_untagged_by_firms": int(len(untagged)),
+        "detections_still_counted_as_fire": int(untagged.n_det.sum()),
+        "modis_detections": int(untagged.n_modis.sum()),
+        "viirs_detections": int(untagged.n_viirs.sum()),
+        "skill": {"auc_stratified": STATIC["meta"]["eval"]["auc_stratified"],
+                  "auc": STATIC["meta"]["eval"]["auc"],
+                  "recall_known_static": STATIC["meta"]["flag"]["recall_known_static"]},
+        "sites": [{"lon": round(r.lon, 4), "lat": round(r.lat, 4),
+                   "score": round(r.static_score, 3),
+                   "detections": int(r.n_det), "months_active": int(r.n_months),
+                   "years_active": int(r.n_years), "months_of_year": int(r.n_moy),
+                   "night_frac": round(r.night_frac, 2),
+                   "frp_med": None if pd.isna(r.frp_med) else round(r.frp_med, 1),
+                   "first_seen": r.first_seen, "last_seen": r.last_seen,
+                   "tagged_by_firms": not bool(r.veg)}
+                  for r in df.nlargest(500, "n_det").itertuples()],
+    }
+
+
+@app.get("/static-sources/metrics")
+def static_metrics():
+    if STATIC is None:
+        raise HTTPException(503, "The static-source detector has not been run.")
+    return STATIC["meta"]
 
 
 def _hotspot_sql(q: HotspotQuery) -> tuple[str, list]:

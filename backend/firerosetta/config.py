@@ -9,6 +9,7 @@ DATA = Path(os.environ.get("FIREROSETTA_DATA", ROOT / "data"))
 RAW = DATA / "raw"            # bytes exactly as FIRMS served them
 STAGED = DATA / "staged"      # unified hotspot parquet
 PROCESSED = DATA / "processed"  # grid aggregates, model output, metrics
+MODELS = DATA / "models"      # portable trained models + their metrics sidecars
 MANIFEST = DATA / "manifest.json"
 
 FIRMS = "https://firms.modaps.eosdis.nasa.gov"
