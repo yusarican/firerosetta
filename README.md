@@ -19,7 +19,7 @@ klon FIRMS'ten aynı 727 MB'ı çekip aynı eğitimleri tekrarlamak zorunda kalm
 | Paket | İçerik | Boyut |
 |---|---|---|
 | `data-v1` | Harmonizasyon modelinin çıktısı + üretildiği hotspot tablosu | ~215 MB |
-| `earlywarn-v1` | Gözetimli 1–3 ay erken uyarı modeli + çıkarım tabloları | ~33 MB |
+| `earlywarn-v1` | Gözetimli 1–3 ay erken uyarı modeli (iki üyeli harman) + çıkarım tabloları | ~41 MB |
 | `static-v1` | Gözetimsiz sabit ısı kaynağı dedektörü + puanlanmış nokta tablosu | ~14 MB |
 
 ```bash
@@ -54,6 +54,8 @@ uv run python -m firerosetta.harmonize   # hiperparametre arama + çapraz doğru
 # 1b) Erken uyarı modeli (gözetimli öğrenme) - isteğe bağlı, ~6 dk
 uv run python -m firerosetta.weather     # NASA POWER günlük veri -> aylık yangın-hava indeksleri
 uv run python -m firerosetta.forecast    # 1-3 ay ileriye tahmin + ileri-doğrulama + taşınabilir model
+# ve CUDA varsa ikinci üyeyi ekleyip harmanı kuran adım (~12 dk, GPU; kazanmazsa kurmaz)
+uv run --extra gpu python -m firerosetta.forecast_gpu
 
 # 1c) Sabit ısı kaynağı dedektörü (gözetimsiz) - isteğe bağlı, ~1 dk
 uv run python -m firerosetta.static      # kalıcı baca/flare/tesis noktalarını işaretler
@@ -76,10 +78,13 @@ uv run --extra gpu python -m firerosetta.gpu   # ne bulduğunu ve kaç TFLOP/s v
 FIREROSETTA_DEVICE=cpu uv run ...         # GPU varken bile CPU'ya zorla (tekrarlanabilirlik testi)
 ```
 
-Dürüst kapsam: `harmonize` ve `forecast` scikit-learn `HistGradientBoosting` kullanıyor ve bunun
-CUDA yolu **yok**; bu adımlar tasarım gereği CPU'da kalıyor ve bunu ekrana yazıyor. Girdileri
-(~2×10⁵ satır) zaten PCIe transferini amorti edecek boyutta değil. Sabit kaynak dedektörü de
-ölçüm sonucu CPU'da kaldı (aşağıya bakın). GPU gerçekten `--benchmark-deep` altında çalışıyor.
+Dürüst kapsam: `harmonize` ve `forecast` scikit-learn `HistGradientBoosting` kullanıyor, bunun
+CUDA yolu **yok** ve bu iki adım tasarım gereği CPU'da kalıyor. Sabit kaynak dedektörü de ölçüm
+sonucu CPU'da kaldı (aşağıya bakın). GPU iki yerde gerçekten çalışıyor: `static.py
+--benchmark-deep` ve `forecast_gpu.py`. İkincisinde ölçülen kazanç şu: aynı panelde (80 bin × 58,
+400 ağaç) XGBoost CPU'da 41,5 s, bu GPU'da 2,2 s — **~19×**. GPU'nun aldığı şey doğruluk değil
+*arama*: bu hız olmasa 96 konfigürasyonluk rastgele arama + üç içsel kat + kalibrasyon adımı
+pratikte çalıştırılamazdı.
 
 ### Release yayınlamak (bakımcılar için)
 
@@ -118,6 +123,7 @@ backend/firerosetta/
   harmonize.py   MODIS→VIIRS modeli, yıl-bloklu 5 katlı CV, metrics.json
   weather.py     NASA POWER günlük (MERRA-2) → 1° blok × ay yangın-hava indeksleri
   forecast.py    Erken uyarı modeli: 1-3 ay ileriye tahmin, ileri-doğrulama, taşınabilir model
+  forecast_gpu.py XGBoost/CUDA ikinci üye + harman; kazanmazsa kurulumu reddeder
   static.py      Gözetimsiz sabit ısı kaynağı (baca/flare/tesis) dedektörü → static_sites.parquet
   gpu.py         Tüm eğitim adımları için tek cihaz seçimi (CUDA varsa kullanır, yoksa CPU)
   model.py       Eğitim zamanı regresyon başlığı (bilerek paketlenmiyor; forecast.py'ye bak)
@@ -250,30 +256,52 @@ kök bölgesi toprak nemi ve gün gün entegre edilen **Keetch-Byram kuraklık i
 3. **İki çıktı.** log1p(sayı) üzerinde gradient boosting + **izotonik kalibrasyon** (ham log modeli
    büyük ayları %34 düşük tahmin ediyordu; harmonize.py'deki aynı düzeltme) → beklenen sayı;
    ayrıca bir sınıflandırıcı → anormal ay olasılığı.
+3b. **İki üyeli harman.** Her başlığın iki üyesi var: scikit-learn `HistGradientBoosting`
+   (`forecast.py`) ve XGBoost/CUDA (`forecast_gpu.py`, 8 komşu-blok özniteliği, rastgele arama,
+   zamansal erken durdurma, çapraz-uydurmalı kalibrasyon). Sayılar log1p uzayında geometrik,
+   olasılıklar aritmetik ortalamayla **eşit ağırlıkla** birleşiyor.
 4. **İleriye doğrulama.** Genişleyen pencere: her kat yalnızca tahmin ettiği yıllardan *önceki*
    yıllarla eğitiliyor ve **klimatoloji öznitelikleri de her katın kendi eğitim yıllarından**
    yeniden hesaplanıyor, böylece hiçbir kat kendi geleceğini göremiyor.
 
 ### Sonuçlar (2016–2025, görülmemiş yıllar, 1 ay ileriye)
 
-| Ölçek | Kalıcılık (t-1) | Mevsimsel (t-12) | Klimatoloji | Yalnız yangın geçmişi | **Tam model** |
+| Ölçek | Kalıcılık (t-1) | Mevsimsel (t-12) | Klimatoloji | Yalnız yangın geçmişi | **Harman** |
 |---|---|---|---|---|---|
-| 1° blok × ay (R²) | −0,50 | −0,48 | 0,20 | 0,28 | **0,30** |
-| 5° bölge × ay (R²) | — | — | 0,44 | 0,52 | **0,55** |
+| 1° blok × ay (R²) | −0,50 | −0,48 | 0,20 | 0,28 | **0,302** |
+| 5° bölge × ay (R²) | — | — | 0,44 | 0,52 | **0,558** |
 
-Anormal ay sınıflandırıcısı: **ROC-AUC 0,77** (taban oran %6,6, ortalama kesinlik 0,19).
-2 ay ileride R² 0,51 / AUC 0,76; 3 ay ileride R² 0,50 / AUC 0,75.
+Anormal ay sınıflandırıcısı: **ROC-AUC 0,780**, ortalama kesinlik **0,213** (taban oran %6,6).
+2 ay ileride R² 0,268 / AUC 0,755 / AP 0,175; 3 ay ileride R² 0,256 / AUC 0,751 / AP 0,172.
+
+Harmanın tek tek üyelere göre durumu — hepsi aynı katlarda, aynı satırlarda ölçüldü:
+
+| 1 ay ileriye | blok R² | uyarı AUC | uyarı AP |
+|---|---|---|---|
+| yalnız scikit-learn (`forecast.py`) | 0,296 | 0,770 | 0,194 |
+| yalnız XGBoost/CUDA (`forecast_gpu.py`) | 0,287 | 0,779 | 0,209 |
+| **harman (0,5 / 0,5)** | **0,302** | **0,780** | **0,213** |
+
+XGBoost üyesi 2 ve 3 ay ileride **tek başına daha kötü** (AP 0,156 ve 0,155), ama harman yine de
+her iki ufukta da kazanıyor (AP 0,175 ve 0,172): klasik topluluk etkisi — zayıf üye de diğerinin
+bilmediği bir şeyi biliyor. Ağırlık bilerek 0,5'te sabit: hindcast üzerinde süpürme 0,4'ü biraz
+daha iyi gösteriyordu (blok R² 0,3026 vs 0,3017), ama onu seçmek binde birlik bir kazanç için
+*değerlendirme kümesinde parametre ayarlamak* olurdu.
 
 Aynı alan için API, o alanın kendi geriye-dönük testini de hesaplıyor (ülke × ay, 119 ay):
 
-| Alan | Tam model | Klimatoloji | Yalnız geçmiş |
-|---|---|---|---|
-| İtalya | **0,75** | 0,66 | 0,66 |
-| Türkiye | **0,62** | 0,26 | 0,55 |
-| Arjantin | **0,58** | 0,40 | 0,54 |
-| Yunanistan | **0,14** | 0,12 | 0,11 |
-| Portekiz | 0,14 | **0,18** | 0,06 |
-| İspanya | 0,02 | **0,11** | −0,00 |
+| Alan | Harman | Klimatoloji | Yalnız geçmiş | (eski model) |
+|---|---|---|---|---|
+| İtalya | **0,71** | 0,66 | 0,64 | 0,75 |
+| Türkiye | **0,64** | 0,26 | 0,58 | 0,62 |
+| Arjantin | **0,56** | 0,40 | 0,51 | 0,58 |
+| Yunanistan | **0,15** | 0,12 | 0,12 | 0,14 |
+| Portekiz | 0,14 | **0,18** | 0,06 | 0,14 |
+| İspanya | 0,04 | **0,11** | 0,01 | 0,02 |
+
+Havuzda kazanç olsa da **alan ölçeğinde her yerde kazanç yok**: İtalya 0,75 → 0,71 ve Arjantin
+0,58 → 0,56 geriledi, Türkiye 0,62 → 0,64 ve İspanya 0,02 → 0,04 iyileşti. Klimatolojiyi geçtiği
+ülke sayısı değişmedi (6'da 4).
 
 **Dürüst okuma:** model klimatolojiyi 6 ülkenin 4'ünde geçiyor, İspanya ve Portekiz'de geçemiyor;
 arayüz bu durumu ilgili alanda açıkça uyarı olarak gösteriyor. Kazancın büyük kısmı yangın
@@ -285,14 +313,41 @@ klimatolojinin üzerindeki toplam kazancın ~%20'si kadar.
 
 Kalan bilinen sapma: izotonik kalibrasyondan sonra bile toplamda −%12 ve en yoğun %10'luk
 dilimde 0,75× (kalibrasyondan önce −%34 ve 0,56×). En büyük yangın ayları hâlâ olduğundan
-düşük tahmin ediliyor.
+düşük tahmin ediliyor. Harman bunu **düzeltmiyor** (−%11,9 → −%12,0): XGBoost üyesi tek başına
+−%9,5'e iniyordu ama bunu R²'den ödüyordu, harman da ortasını almıyor.
+
+### Uyarı başlığının tavanı nerede
+
+Bu başlık "çok düşük mü?" diye ölçülerek sorgulandı ve cevap **ayar değil öznitelik tavanı**
+çıktı. İki ayrı bulgu:
+
+- **Kalibrasyon kusurlu değildi.** Eski modelin olasılıkları zaten tutarlıydı: p ≥ 0,50 dediğinde
+  %48,9, p ≥ 0,25 dediğinde %32,1, p ≥ 0,10 dediğinde %18,3 isabet. "Yüksek" uyarının gerçek
+  anormal ayların yalnızca %1,7'sini yakalaması bir kalibrasyon hatası değil; model gerçekten de
+  nadiren %50'den emin. İzotonik kalibrasyon **monoton** olduğu için AUC/AP'yi zaten değiştiremez
+  (ölçüldü: AUC 0,7197 → 0,7216, AP 0,1630 → 0,1587, Brier 0,100 → 0,059).
+- **Arama kazandırmadı.** 96 konfigürasyonluk arama (üç hedef ailesi: log1p-kareli hata, Poisson,
+  Tweedie; `scale_pos_weight` taraması; 8 komşu-blok özniteliği) tek başına eski modeli
+  **geçemedi** — ortalama R² −0,016, AP −0,003. Kazanç ancak iki modeli birleştirince geldi.
+
+Yani ufku gerçekten açacak şey daha iyi öğrenici ya da daha fazla GPU değil, **daha iyi
+yordayıcılar**: tutuşma vekilleri (nüfus, yol ağı, yıldırım), yakıt/bitki örtüsü durumu ve aylık
+ortalama yerine ay-altı hava. Bunlar yeni veri toplamak demek ve henüz yapılmadı.
 
 ### Modeli taşımak / yayınlamak
 
-Eğitim sonunda `data/models/firerosetta-earlywarn.tar.gz` (~33 MB) kendiliğinden paketleniyor:
+Eğitim sonunda `data/models/firerosetta-earlywarn.tar.gz` (~41 MB) kendiliğinden paketleniyor:
 eğitilmiş model, metrikler, çıkarım için blok öznitelik tablosu ve geriye-dönük test tablosu.
-Yeniden eğitmeden sadece paketlemek için `--package`. `earlywarn.json` içinde scikit-learn/numpy
-sürümleri yazılı; API farklı sürümde uyarı verir (pickle sürüme duyarlıdır).
+Yeniden eğitmeden sadece paketlemek için `--package`. `earlywarn.json` içinde
+scikit-learn/numpy/xgboost sürümleri yazılı; API farklı sürümde uyarı verir (pickle sürüme
+duyarlıdır).
+
+Paket **iki üyeyi birlikte** taşıyor: scikit-learn başlıkları eski anahtarlarında kalıyor (eski
+bir tüketici hâlâ çalışır), XGBoost başlıkları `_x` sonekiyle yanlarına ekleniyor ve `blend`
+alanı ikisinin nasıl birleştirileceğini söylüyor. Bu yüzden `xgboost` artık isteğe bağlı değil,
+çekirdek bağımlılık: API modeli yüklemek için ona ihtiyaç duyuyor. Paketin kendi
+`predict_recipe` metni projeden hiçbir şey import etmeden izlenebiliyor — test edildi, API'nin
+ürettiği sayıları **birebir** (fark 0,0e+00) veriyor.
 
 ```bash
 ./scripts/release.sh build earlywarn      # yeniden eğitmeden tarball + sha256
@@ -431,6 +486,14 @@ yayınlanan skorlarla birebir aynı çıkıyor).
   `fetch --force` + pipeline'ı yeniden çalıştırmak gerekiyor. NOAA-21 henüz kullanılmıyor.
 - Yıllık aralıklar aylık aralıkların toplamı; bilerek geniş.
 - Arayüz yalnız açık tema; mobilde takvim yatay kayıyor.
+- **Erken uyarı:** harmanın kazancı **mütevazı** — 1 ay ileride AP +0,019, 2-3 ay ileride +0,005.
+  Gerçek bir iyileşme ama dönüşüm değil; "yüksek" uyarı hâlâ nadir ve düşük anımsamalı.
+- **Erken uyarı:** harman havuzda kazandırırken İtalya ve Arjantin'in alan ölçeğinde R²'sini
+  biraz düşürdü (yukarıdaki tablo). Tek bir ağırlık altı ülkeye birden uyuyor değil.
+- **Erken uyarı:** `forecast.py`'nin kendi `tune()` fonksiyonu hiperparametreleri 2016-2017'de
+  puanlayıp o yılları sonra havuzlanmış hindcast'e de koyuyor — küçük (4 konfigürasyon, 10 yılın
+  2'si) ama gerçek bir iyimserlik. `forecast_gpu.py` aramayı tamamen kat 0'ın eğitim penceresi
+  içinde yapıyor, yani bu iyimserliği taşımıyor.
 - **Erken uyarı:** hava verisi toplam beceriye yalnızca mütevazı katkı yapıyor (yukarıda); ana
   sinyal yangın geçmişi. Küçük alanlarda ve yangının seyrek olduğu bölgelerde beceri yok.
 - **Erken uyarı:** tahmin, verinin bittiği aydan (şu an 2025-12) ileriye üretiliyor; canlı
