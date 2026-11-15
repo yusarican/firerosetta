@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Download } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -8,15 +7,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  type Area, type Calendar, downloadCsv, getCalendar, getHotspots, getMeta, type Hotspots, type Meta,
-  type Polygon,
+  type Area, type Calendar, downloadCsv, getCalendar, getHotspots, getMeta,
+  type Hotspots, isStatic, type Meta, type Polygon,
 } from "@/lib/api";
 import { calendarPng, monthlyCsv, seasonCsv, slug, svgPng, yearlyCsv } from "@/lib/export";
 import { fmt, full, monthRange, MONTHS_LONG } from "@/lib/scale";
 
 import { AreaMap } from "./area-map";
+import { AppHeader } from "./app-header";
 import { BurnCalendar, type CalendarMode } from "./burn-calendar";
 import { SeasonChart, SkillChart, YearChart } from "./charts";
 
@@ -96,6 +97,14 @@ export function Workbench() {
   const [spots, setSpots] = useState<Hotspots | null>(null);
   const [busyCsv, setBusyCsv] = useState(false);
   const [bbox, setBbox] = useState({ w: "", s: "", e: "", n: "" });
+  // flagged persistent heat sources are drawn, greyed, by default: hiding them by default would
+  // delete data from the map on a model's say-so. The toggle lets the user take them out.
+  const [hideStatic, setHideStatic] = useState(false);
+  useEffect(() => {
+    if (area.kind === "polygon") {
+      try { sessionStorage.setItem("firerosetta-selected-area", JSON.stringify(area)); } catch {}
+    }
+  }, [area]);
 
   useEffect(() => {
     getMeta().then(setMeta).catch((e) => setError(e.message));
@@ -136,6 +145,11 @@ export function Workbench() {
   }, []);
   const selectYear = useCallback((y: number) => setRange({ start: `${y}-01-01`, end: `${y}-12-31` }), []);
 
+  const shown = useMemo(() => {
+    const pts = spots?.points ?? [];
+    return hideStatic ? pts.filter((p) => !isStatic(p)) : pts;
+  }, [spots, hideStatic]);
+
   const year = range ? +range.start.slice(0, 4) : 0;
   const story = useMemo(() => (cal ? describe(cal) : null), [cal]);
   const label = area.kind === "country" ? area.name : area.label;
@@ -151,20 +165,7 @@ export function Workbench() {
 
   return (
     <div className="mx-auto w-full max-w-[1400px] px-4 pb-16 sm:px-6">
-      <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 py-5">
-        <div className="flex items-baseline gap-3">
-          <span className="display text-xl">FireRosetta</span>
-          <span className="text-sm text-muted-foreground">
-            Burning calendar from MODIS and VIIRS, on one scale
-          </span>
-        </div>
-        <nav className="flex gap-5 text-sm">
-          <span className="font-semibold">Calendar</span>
-          <Link href="/method" className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">
-            How the harmonization works
-          </Link>
-        </nav>
-      </header>
+      <AppHeader active="calendar" />
 
       {error && (
         <p role="alert" className="mb-4 rounded-md border border-destructive/40 bg-destructive/5 px-3 py-2 text-sm">
@@ -177,7 +178,7 @@ export function Workbench() {
           <div className="h-[380px] lg:h-[440px]">
             <AreaMap
               area={area}
-              points={spots?.points ?? []}
+              points={shown}
               onDraw={(geometry) => setArea({ kind: "polygon", label: "Drawn area", geometry })}
             />
           </div>
@@ -277,7 +278,27 @@ export function Workbench() {
                       {{ Terra: "MODIS Terra", Aqua: "MODIS Aqua", SNPP: "VIIRS S-NPP", NOAA20: "VIIRS NOAA-20" }[p]} {full(spots.by_platform[p] ?? 0)}
                     </li>
                   ))}
+                  {spots.static_total > 0 && (
+                    <li className="flex items-center gap-1.5">
+                      <span className="size-2.5 rounded-full border border-[#3d4650] bg-[#8d95a0]" />
+                      Not a fire {full(spots.static_total)}
+                    </li>
+                  )}
                 </ul>
+                {spots.has_static_sources && spots.static_total > 0 && (
+                  <div className="mt-3 rounded-md border border-border bg-muted/40 px-3 py-2">
+                    <p className="text-xs leading-relaxed">
+                      <span className="num font-semibold">{full(spots.static_total)}</span> of these (
+                      <span className="num">{((100 * spots.static_total) / spots.total).toFixed(1)}%</span>) land on sites
+                      flagged as permanent heat sources — factory chimneys, gas flares, steel mills — so they are burning
+                      every month rather than on fire. They are greyed on the map, not deleted.
+                    </p>
+                    <label className="mt-2 flex cursor-pointer items-center gap-2 text-xs">
+                      <Switch size="sm" checked={hideStatic} onCheckedChange={setHideStatic} />
+                      Hide them on the map
+                    </label>
+                  </div>
+                )}
               </div>
             )}
           </section>

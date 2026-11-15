@@ -9,7 +9,10 @@ DATA = Path(os.environ.get("FIREROSETTA_DATA", ROOT / "data"))
 RAW = DATA / "raw"            # bytes exactly as FIRMS served them
 STAGED = DATA / "staged"      # unified hotspot parquet
 PROCESSED = DATA / "processed"  # grid aggregates, model output, metrics
+MODELS = DATA / "models"      # portable trained models + their metrics sidecars
 MANIFEST = DATA / "manifest.json"
+# Natural Earth 1:50m outlines of the six countries; the same file the map highlights.
+BORDERS = ROOT / "web" / "public" / "data" / "country-boundaries.geojson"
 
 FIRMS = "https://firms.modaps.eosdis.nasa.gov"
 

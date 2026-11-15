@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
@@ -9,6 +8,7 @@ import { getValidation, type Validation } from "@/lib/api";
 import { fmt, full } from "@/lib/scale";
 
 import { useWidth } from "./use-size";
+import { AppHeader } from "./app-header";
 
 const SCALES: [string, string][] = [
   ["block1deg_month", "1° × 1° block, one month"],
@@ -32,16 +32,7 @@ export function Method() {
 
   return (
     <div className="mx-auto w-full max-w-[980px] px-4 pb-20 sm:px-6">
-      <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 py-5">
-        <div className="flex items-baseline gap-3">
-          <span className="display text-xl">FireRosetta</span>
-          <span className="text-sm text-muted-foreground">Burning calendar from MODIS and VIIRS, on one scale</span>
-        </div>
-        <nav className="flex gap-5 text-sm">
-          <Link href="/" className="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline">Calendar</Link>
-          <span className="font-semibold">How the harmonization works</span>
-        </nav>
-      </header>
+      <AppHeader active="method" />
 
       <h1 className="display mt-6 max-w-[24ch] text-[34px] leading-[1.1]">
         Two sensors counted the same fires differently. We put both on one ruler.

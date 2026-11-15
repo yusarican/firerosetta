@@ -1,0 +1,5 @@
+# The repo was first committed with CRLF, which broke `bash -n start.sh` and made every
+# file show as fully rewritten in `git diff`. LF is canonical from here on.
+* text=auto eol=lf
+*.png binary
+*.parquet binary

@@ -4,36 +4,91 @@
 """
 from __future__ import annotations
 
+import functools
 import io
 import json
+import math
+import warnings
 from typing import Any
 
 import duckdb
+import joblib
 import numpy as np
 import pandas as pd
 import shapely
-from fastapi import FastAPI, HTTPException
+import sklearn
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
+from starlette.middleware.gzip import GZipMiddleware
 
-from .config import COUNTRIES, GRID_DEG, MANIFEST, PROCESSED, STAGED
+from .config import BORDERS, COUNTRIES, GRID_DEG, MANIFEST, MODELS, PROCESSED, STAGED
+from .risk import GRID_LEVELS_KM, RiskMonitor, StaticSites, count_visible_grid, load_borders, site_codes
 
 app = FastAPI(title="FireRosetta - harmonized MODIS/VIIRS burning calendar")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=3)
 
-con = duckdb.connect()
-con.execute(f"CREATE TABLE h AS SELECT * FROM '{PROCESSED / 'harmonized.parquet'}'")
+# Read only the needed parquet columns/regions instead of retaining the entire model
+# in RAM alongside the calendar and alert queries.
+con = duckdb.connect(config={"memory_limit": "1GB", "threads": 4})
+con.execute(f"CREATE VIEW h AS SELECT * FROM '{PROCESSED / 'harmonized.parquet'}'")
 con.execute(f"CREATE VIEW hs AS SELECT * FROM '{STAGED / 'hotspots.parquet'}'")
 CELLS = con.sql(f"SELECT * FROM '{PROCESSED / 'cells.parquet'}'").df()
 CELLS["lon"] = (CELLS.gx + 0.5) * GRID_DEG
 CELLS["lat"] = (CELLS.gy + 0.5) * GRID_DEG
 METRICS = json.loads((PROCESSED / "metrics.json").read_text())
+
+# --- early-warning model: optional, the rest of the API works without it ---
+# Each cell's all-time harmonized total, used to split a 1 deg block forecast over the
+# part of the block the user actually selected.
+CELLS = CELLS.merge(con.sql("SELECT country, gx, gy, sum(harmonized) tot FROM h GROUP BY 1,2,3").df(),
+                    on=["country", "gx", "gy"], how="left")
+CELLS["tot"] = CELLS.tot.fillna(0.0)
+CELLS["bx"] = np.floor(CELLS.lon).astype(int)
+CELLS["by"] = np.floor(CELLS.lat).astype(int)
+BLOCK_TOT = CELLS.groupby(["bx", "by"]).tot.sum()
+
+
+def _load_forecast():
+    bundle_path = MODELS / "earlywarn.joblib"
+    feats_path = PROCESSED / "forecast_features.parquet"
+    back_path = PROCESSED / "forecast_backtest.parquet"
+    if not (bundle_path.exists() and feats_path.exists() and back_path.exists()):
+        return None
+    meta = json.loads((MODELS / "earlywarn.json").read_text())
+    built_with = meta.get("env", {}).get("sklearn")
+    if built_with and built_with != sklearn.__version__:
+        # pickled estimators are not guaranteed across versions; say so rather than
+        # let it fail somewhere deep in the unpickler
+        print(f"warning: early-warning model was trained with scikit-learn {built_with}, "
+              f"this environment has {sklearn.__version__}. Retrain if loading fails.")
+    try:
+        with warnings.catch_warnings():
+            # the XGBoost member was trained on CUDA; on a CPU-only box it announces the
+            # GPU->CPU switch on unpickle. That is expected, not a problem.
+            warnings.filterwarnings("ignore", message=r".*(grow_gpu_hist|Device is changed)")
+            bundle = joblib.load(bundle_path)
+    except Exception as e:  # noqa: BLE001 - a bad pickle must not take the whole API down
+        print(f"warning: could not load the early-warning model ({e}); /forecast disabled.")
+        return None
+    feats = con.sql(f"SELECT * FROM '{feats_path}'").df()
+    feats["month"] = pd.to_datetime(feats.month)
+    back = con.sql(f"SELECT * FROM '{back_path}'").df()
+    back["target_month"] = pd.to_datetime(back.target_month)
+    return {"bundle": bundle, "feats": feats, "back": back, "meta": meta,
+            "basis": feats.month.max()}
+
+
+FORECAST = _load_forecast()
+WARN_LEVELS = [(0.50, "high"), (0.25, "elevated"), (0.10, "watch")]
 N_HOTSPOTS = con.execute("SELECT count(*) FROM hs").fetchone()[0]
 FIRST, LAST = con.execute("SELECT min(month), max(month) FROM h").fetchone()
 TRAIN_LAST = METRICS["overlap"][1]
 NRT_FROM = METRICS.get("provisional", {}).get("nrt_from", {})
 DATA_THROUGH = METRICS.get("provisional", {}).get("data_through", "9999-12-31")
+RISK_MONITOR = RiskMonitor(con, DATA_THROUGH, borders=load_borders(BORDERS))
 
 MAX_POINTS = 25_000
 HOTSPOT_COLS = ("lat AS latitude, lon AS longitude, acq_date, acq_time, sensor, platform, daynight, "
@@ -50,6 +105,14 @@ class HotspotQuery(Area):
     end: str
     sensors: list[str] = ["MODIS", "VIIRS"]
     screened: bool = True  # same quality screen as the calendar (vegetation fires, conf >= nominal)
+
+
+class RiskQuery(Area):
+    grid_km: int = 10
+
+
+class RiskViewQuery(RiskQuery):
+    bounds: list[float]
 
 
 def _geom(area: Area):
@@ -98,12 +161,65 @@ def meta():
         "reference": METRICS["reference"],
         "data_through": DATA_THROUGH,
         "nrt_from": NRT_FROM,
+        "has_forecast": FORECAST is not None,
+        "has_static_sources": STATIC is not None,
     }
 
 
 @app.get("/validation")
 def validation():
     return METRICS
+
+
+@app.get("/risk")
+def risk(response: Response, country: str = "Turkey", grid_km: int = 10,
+         view: str | None = None):
+    if country not in COUNTRIES:
+        raise HTTPException(400, "Select a supported country.")
+    if grid_km not in GRID_LEVELS_KM:
+        raise HTTPException(400, "Grid size must be 5, 10 or 20 km.")
+    response.headers["Cache-Control"] = "no-store"
+    bounds = None
+    if view is not None:
+        try:
+            bounds = tuple(float(part) for part in view.split(","))
+            if len(bounds) != 4 or not all(math.isfinite(v) for v in bounds):
+                raise ValueError
+            w, s, e, n = bounds
+            if not (-180 <= w < e <= 180 and -85 <= s < n <= 85):
+                raise ValueError
+        except ValueError:
+            raise HTTPException(400, "Invalid map bounds.") from None
+    return RISK_MONITOR.get(country, grid_km=grid_km, bounds=bounds)
+
+
+@app.post("/risk")
+def risk_area(query: RiskQuery, response: Response):
+    if query.grid_km not in GRID_LEVELS_KM:
+        raise HTTPException(400, "Grid size must be 5, 10 or 20 km.")
+    geometry = _geom(query)
+    if geometry is None:
+        raise HTTPException(400, "Draw an area on the map or select a bounding box.")
+    response.headers["Cache-Control"] = "no-store"
+    try:
+        return RISK_MONITOR.get_area(geometry.__geo_interface__, grid_km=query.grid_km)
+    except ValueError as error:
+        raise HTTPException(400, str(error)) from None
+
+
+@app.post("/risk/grid-count")
+def risk_grid_count(query: RiskViewQuery):
+    if query.grid_km not in GRID_LEVELS_KM:
+        raise HTTPException(400, "Grid size must be 5, 10 or 20 km.")
+    geometry = _geom(query)
+    if geometry is None:
+        if query.country not in COUNTRIES:
+            raise HTTPException(400, "Select a supported country or draw an area.")
+        geometry = shapely.box(*COUNTRIES[query.country])
+    try:
+        return {"total_cells": count_visible_grid(geometry.__geo_interface__, query.bounds, query.grid_km)}
+    except ValueError as error:
+        raise HTTPException(400, str(error)) from None
 
 
 @app.post("/calendar")
@@ -209,6 +325,307 @@ def calendar(area: Area):
     }
 
 
+def _block_share(cells: pd.DataFrame) -> pd.Series:
+    """How much of each 1 deg block's historical burning falls inside the selected area.
+
+    The model predicts whole blocks; this is what turns a block forecast into a forecast
+    for an arbitrary drawn area, and it is the area's own history that does the splitting.
+    """
+    mine = cells.groupby(["bx", "by"]).tot.sum()
+    share = (mine / BLOCK_TOT.reindex(mine.index)).fillna(0.0)
+    return share[share > 0]
+
+
+def _warn_level(prob: float) -> str:
+    return next((name for cut, name in WARN_LEVELS if prob >= cut), "normal")
+
+
+def _expected_counts(bundle: dict, lead: int, X: pd.DataFrame) -> np.ndarray:
+    """Expected counts from the bundle's regression head(s).
+
+    Each member is the same two-step shape: trees, then isotonic back to counts. A bundle
+    from forecast_gpu.py carries a second, XGBoost member under a _x suffix and a `blend`
+    spec; one from forecast.py carries only the first and is served unchanged.
+    """
+    c1 = bundle[f"reg_h{lead}_iso"].predict(
+        bundle[f"reg_h{lead}_gbm"].predict(X[bundle["features"]])).clip(0)
+    w = _blend_w(bundle, f"reg_h{lead}_gbm_x")
+    if w is None:
+        return c1
+    c2 = bundle[f"reg_h{lead}_iso_x"].predict(
+        bundle[f"reg_h{lead}_gbm_x"].predict(X[bundle["features_x"]])).clip(0)
+    # geometric mean, in the log1p space the counts are modelled in
+    return np.expm1((1 - w) * np.log1p(c1) + w * np.log1p(c2)).clip(0)
+
+
+def _warn_prob(bundle: dict, lead: int, X: pd.DataFrame) -> np.ndarray:
+    """P(anomalous fire month), blended the same way when the bundle carries two members."""
+    p1 = bundle[f"clf_h{lead}"].predict_proba(X[bundle["features"]])[:, 1]
+    w = _blend_w(bundle, f"clf_h{lead}_x")
+    if w is None:
+        return p1
+    raw = bundle[f"clf_h{lead}_x"].predict_proba(X[bundle["features_x"]])[:, 1]
+    p2 = bundle[f"clf_h{lead}_iso_x"].predict(raw).clip(0, 1)
+    return ((1 - w) * p1 + w * p2).clip(0, 1)
+
+
+def _blend_w(bundle: dict, needs: str) -> float | None:
+    """Blend weight for the second member, or None when this bundle has only one."""
+    blend = bundle.get("blend")
+    if not blend or needs not in bundle:
+        return None
+    return float(blend["weight_xgb"])
+
+
+def _lead_frame(rows: pd.DataFrame, lead: int) -> pd.DataFrame:
+    """Swap in the lead-specific target-month normals (climatology, known in advance)."""
+    X = rows.copy()
+    X["y_clim"] = X[f"y_clim_h{lead}"]
+    for col in ("t2m", "precip", "vpd"):
+        X[f"{col}_clim_target"] = X[f"{col}_clim_target_h{lead}"]
+    return X
+
+
+@functools.cache
+def _block_outlook() -> dict:
+    """The model run once for every block it has inputs for - the map's outlook layer.
+
+    /forecast answers "what about my area"; this answers "where", at the model's own
+    resolution, so nothing here is disaggregated below the 1 deg unit it was validated on.
+    """
+    bundle, feats, basis = FORECAST["bundle"], FORECAST["feats"], FORECAST["basis"]
+    rows = feats[feats.month == basis].reset_index(drop=True)
+    blocks = [{"bx": int(r.bx), "by": int(r.by), "leads": []} for r in rows.itertuples()]
+    leads = []
+    for lead in bundle["leads"]:
+        X = _lead_frame(rows, lead)
+        expected = _expected_counts(bundle, lead, X)
+        prob = _warn_prob(bundle, lead, X)
+        normal = X.y_clim.fillna(0).to_numpy()
+        for block, e, p, n in zip(blocks, expected, prob, normal):
+            block["leads"].append({
+                "prob": round(float(p), 3), "level": _warn_level(float(p)),
+                "expected": _q(float(e)), "normal": _q(float(n)),
+                "ratio": round(float(e / n), 2) if n > 0.5 else None,
+            })
+        leads.append({"lead": lead, "target_month": (basis + pd.DateOffset(months=lead)).strftime("%Y-%m")})
+    meta = FORECAST["meta"]
+    return {
+        "basis_month": basis.strftime("%Y-%m"), "leads": leads, "unit": meta["unit"],
+        "warning_definition": meta["warning_definition"],
+        "base_rate": meta["leads_detail"]["1"]["with_weather"].get("warning", {}).get("base_rate"),
+        "levels": {name: cut for cut, name in WARN_LEVELS},
+        "blocks": blocks,
+    }
+
+
+@app.get("/forecast/blocks")
+def forecast_blocks():
+    if FORECAST is None:
+        raise HTTPException(503, "The early-warning model is not built.")
+    return _block_outlook()
+
+
+@app.post("/forecast")
+def forecast(area: Area):
+    """Run the early-warning model for this area, for each lead time it was trained on."""
+    if FORECAST is None:
+        raise HTTPException(503, "The early-warning model is not built. Run "
+                                 "`uv run python -m firerosetta.weather` then "
+                                 "`uv run python -m firerosetta.forecast` in backend/.")
+    bundle, feats, back = FORECAST["bundle"], FORECAST["feats"], FORECAST["back"]
+    cells = _cells(area)
+    if cells.empty:
+        raise HTTPException(404, "No fire detections were ever recorded in this area "
+                                 "(or it lies outside the loaded countries).")
+    share = _block_share(cells)
+    if share.empty:
+        raise HTTPException(404, "This area has no burning on record, so there is nothing to forecast.")
+
+    basis = FORECAST["basis"]
+    # Keep the blocks present in both, without dropping NaN features: a standardised
+    # anomaly is undefined wherever the normal has zero spread (no August heat in
+    # January), and the trees were trained with exactly those gaps.
+    at_basis = feats[feats.month == basis].set_index(["bx", "by"])
+    idx = share.index.intersection(at_basis.index)
+    if idx.empty:
+        raise HTTPException(503, "The model has no inputs for this area at the latest month.")
+    rows = at_basis.loc[idx]
+    w = share.loc[idx].to_numpy()
+
+    # --- the area's own backtest: hindcasts the model made for years it never trained on ---
+    mine = back[back.set_index(["bx", "by"]).index.isin(share.index)].copy()
+    mine["w"] = share.reindex(pd.MultiIndex.from_frame(mine[["bx", "by"]])).to_numpy()
+    for col in ("target", "pred", "pred_hist_only", "y_clim"):
+        mine[col] = mine[col] * mine.w
+    agg = mine.groupby(["lead", "target_month"], as_index=False).agg(
+        actual=("target", "sum"), pred=("pred", "sum"),
+        hist_only=("pred_hist_only", "sum"), normal=("y_clim", "sum"))
+
+    leads_out, skill = [], {}
+    for lead in bundle["leads"]:
+        X = _lead_frame(rows, lead)
+        block_pred = _expected_counts(bundle, lead, X)
+        prob = _warn_prob(bundle, lead, X)
+
+        expected = float((block_pred * w).sum())
+        normal = float((X.y_clim.to_numpy() * w).sum())
+        warn_prob = float((prob * w).sum() / max(w.sum(), 1e-9))
+
+        # 80 % band from this area's own hindcast residuals in log space
+        h = agg[(agg.lead == lead) & (agg.actual.notna())]
+        lo = hi = None
+        if len(h) >= 12:
+            res = np.log1p(h.actual.to_numpy()) - np.log1p(h.pred.to_numpy())
+            q10, q90 = np.quantile(res, [0.1, 0.9])
+            lo = max(float(np.expm1(np.log1p(expected) + q10)), 0.0)
+            hi = float(np.expm1(np.log1p(expected) + q90))
+            obs, pred = h.actual.to_numpy(), h.pred.to_numpy()
+            var = float(((obs - obs.mean()) ** 2).sum())
+            skill[str(lead)] = {
+                "n_months": int(len(h)),
+                "wape": _q(100 * np.abs(pred - obs).sum() / obs.sum()) if obs.sum() else None,
+                "r2": round(float(1 - ((pred - obs) ** 2).sum() / var), 3) if var else None,
+                "clim_r2": (round(float(1 - ((h.normal.to_numpy() - obs) ** 2).sum() / var), 3)
+                            if var else None),
+                "hist_only_r2": (round(float(1 - ((h.hist_only.to_numpy() - obs) ** 2).sum() / var), 3)
+                                 if var else None),
+            }
+        target = (basis + pd.DateOffset(months=lead)).strftime("%Y-%m")
+        leads_out.append({
+            "lead": lead, "target_month": target,
+            "expected": _q(expected), "lo": None if lo is None else _q(lo),
+            "hi": None if hi is None else _q(hi),
+            "normal": _q(normal),
+            "ratio": round(expected / normal, 2) if normal > 0.5 else None,
+            "warn_prob": round(warn_prob, 3), "level": _warn_level(warn_prob),
+        })
+
+    hist = agg[agg.lead == bundle["leads"][0]].sort_values("target_month")
+    return {
+        "area": {"cells": int(len(cells)), "blocks": int(len(rows)),
+                 "countries": sorted(cells.country.unique())},
+        "basis_month": basis.strftime("%Y-%m"),
+        "leads": leads_out,
+        "skill": skill,
+        "backtest": [
+            {"month": r.target_month.strftime("%Y-%m"), "actual": _q(r.actual), "pred": _q(r.pred),
+             "hist_only": _q(r.hist_only), "normal": _q(r.normal)}
+            for r in hist.itertuples()
+        ],
+        "model": {
+            "unit": FORECAST["meta"]["unit"],
+            "cv": FORECAST["meta"]["cv"],
+            "trained_at": FORECAST["meta"]["trained_at"],
+            "warning_definition": FORECAST["meta"]["warning_definition"],
+            "weather_source": FORECAST["meta"]["weather_source"],
+            "base_rate": FORECAST["meta"]["leads_detail"]["1"]["with_weather"]
+                         .get("warning", {}).get("base_rate"),
+            "levels": {name: cut for cut, name in WARN_LEVELS},
+        },
+    }
+
+
+@app.get("/forecast/metrics")
+def forecast_metrics():
+    if FORECAST is None:
+        raise HTTPException(503, "The early-warning model is not built.")
+    return FORECAST["meta"]
+
+
+def _load_static():
+    """Flagged persistent non-fire sources. Optional, like the early-warning model."""
+    sites, meta = PROCESSED / "static_sites.parquet", MODELS / "static.json"
+    if not (sites.exists() and meta.exists()):
+        return None
+    # cursor(), not con: by this point in module setup the shared connection still holds an
+    # unfinished result from the fetchone() calls above.
+    cur = con.cursor()
+    df = cur.sql(f"SELECT * FROM '{sites}' WHERE flag").df()
+    for c in ("first_seen", "last_seen"):
+        df[c] = df[c].astype(str).str[:10]
+    m = json.loads(meta.read_text())
+    # A real table rather than register(): each request runs on its own cursor, and a cursor
+    # sees tables in the shared catalog but not a dataframe registered on a different cursor.
+    cur.register("flagged", df[["veg", "sx", "sy"]])
+    cur.execute("CREATE OR REPLACE TABLE static_flag AS SELECT DISTINCT veg, sx, sy FROM flagged")
+    cur.unregister("flagged")
+    # the site grid the bundle was built on, not a constant copied from static.py
+    return {"sites": df, "meta": m, "site_deg": float(m["site_deg"])}
+
+
+STATIC = _load_static()
+if STATIC is not None:
+    # The alert layer screens the same sites the hotspot feed greys out, so a steel mill
+    # cannot raise a "detections in the last 7 days" alert or pass as a seasonal hotspot.
+    _s = STATIC["sites"]
+    RISK_MONITOR.static_sites = StaticSites(
+        STATIC["site_deg"], site_codes(_s.sx[_s.veg], _s.sy[_s.veg]), site_codes(_s.sx, _s.sy))
+
+
+@app.post("/static-sources")
+def static_sources(area: Area):
+    """Persistent non-fire heat sources inside the area - chimneys, flares, steel mills.
+
+    These sit in the *fire* stream: FIRMS did not tag them, so the calendar still counts them
+    as burning. Returned so the map can show what the detector would remove and the user can
+    judge it, rather than the pipeline silently deleting data on a model's say-so.
+    """
+    if STATIC is None:
+        raise HTTPException(503, "The static-source detector has not been run. "
+                                 "Train it with: uv run python -m firerosetta.static")
+    df = STATIC["sites"]
+    g = _geom(area)
+    if g is None:
+        if area.country not in COUNTRIES:
+            raise HTTPException(400, f"Pick one of {list(COUNTRIES)} or send a geometry.")
+        df = df[df.country == area.country]
+    else:
+        df = df[shapely.contains_xy(g, df.lon.values, df.lat.values)]
+
+    untagged = df[df.veg]  # the ones still counted as fire; df also holds already-tagged sites
+    return {
+        "n_sites": int(len(df)),
+        "n_untagged_by_firms": int(len(untagged)),
+        "detections_still_counted_as_fire": int(untagged.n_det.sum()),
+        "modis_detections": int(untagged.n_modis.sum()),
+        "viirs_detections": int(untagged.n_viirs.sum()),
+        "skill": {"auc_stratified": STATIC["meta"]["eval"]["auc_stratified"],
+                  "auc": STATIC["meta"]["eval"]["auc"],
+                  "recall_known_static": STATIC["meta"]["flag"]["recall_known_static"]},
+        "sites": [{"lon": round(r.lon, 4), "lat": round(r.lat, 4),
+                   "score": round(r.static_score, 3),
+                   "detections": int(r.n_det), "months_active": int(r.n_months),
+                   "years_active": int(r.n_years), "months_of_year": int(r.n_moy),
+                   "night_frac": round(r.night_frac, 2),
+                   "frp_med": None if pd.isna(r.frp_med) else round(r.frp_med, 1),
+                   "first_seen": r.first_seen, "last_seen": r.last_seen,
+                   "tagged_by_firms": not bool(r.veg)}
+                  for r in df.nlargest(500, "n_det").itertuples()],
+    }
+
+
+@app.get("/static-sources/metrics")
+def static_metrics():
+    if STATIC is None:
+        raise HTTPException(503, "The static-source detector has not been run.")
+    return STATIC["meta"]
+
+
+def _static_tag() -> tuple[str, str]:
+    """(join, expression) marking detections that sit on a flagged persistent heat source.
+
+    Keyed exactly as static.py keyed its sites: the ~1.1 km cell *and* the FIRMS type split,
+    so a site the detector found in the untagged stream only flags untagged detections.
+    """
+    if STATIC is None:
+        return "", "FALSE"
+    d = STATIC["site_deg"]
+    return (f" LEFT JOIN static_flag f ON f.veg = (hs.type = 0)"
+            f" AND f.sx = floor(hs.lon/{d})::INT AND f.sy = floor(hs.lat/{d})::INT",
+            "f.sx IS NOT NULL")
+
+
 def _hotspot_sql(q: HotspotQuery) -> tuple[str, list]:
     where, params = ["acq_date BETWEEN ?::DATE AND ?::DATE"], [q.start, q.end]
     where.append("sensor IN (" + ",".join("?" * len(q.sensors)) + ")")
@@ -225,7 +642,9 @@ def _hotspot_sql(q: HotspotQuery) -> tuple[str, list]:
         w, s, e, n = g.bounds
         where.append("lon BETWEEN ? AND ? AND lat BETWEEN ? AND ?")
         params += [w, e, s, n]
-    return f"SELECT {HOTSPOT_COLS} FROM hs WHERE {' AND '.join(where)} ORDER BY acq_date, acq_time", params
+    join, flag = _static_tag()
+    return (f"SELECT {HOTSPOT_COLS}, {flag} AS static_source FROM hs{join} "
+            f"WHERE {' AND '.join(where)} ORDER BY acq_date, acq_time"), params
 
 
 def _hotspots(q: HotspotQuery) -> pd.DataFrame:
@@ -242,13 +661,20 @@ def hotspots(q: HotspotQuery):
     df = _hotspots(q)
     total = len(df)
     by_platform = {k: int(v) for k, v in df.platform.value_counts().items()}
+    stat = df[df.static_source]
     if total > MAX_POINTS:  # the map gets an even sample; the CSV always gets everything
         df = df.iloc[np.linspace(0, total - 1, MAX_POINTS).astype(int)]
     return {
         "total": total, "returned": len(df),
         "by_platform": by_platform,
+        # Detections on sites the detector flagged as permanent non-fire heat sources. They stay
+        # inside `total` - that is what the satellites reported - but each point carries the flag
+        # so the map can show them as something other than a fire.
+        "has_static_sources": STATIC is not None,
+        "static_total": int(len(stat)),
+        "static_by_platform": {k: int(v) for k, v in stat.platform.value_counts().items()},
         "points": [[round(r.longitude, 4), round(r.latitude, 4), str(r.acq_date)[:10], r.platform,
-                    None if pd.isna(r.frp) else round(r.frp, 1), r.daynight]
+                    None if pd.isna(r.frp) else round(r.frp, 1), r.daynight, int(r.static_source)]
                    for r in df.itertuples()],
     }
 
@@ -261,6 +687,10 @@ def hotspots_csv(q: HotspotQuery):
     buf.write("# NASA FIRMS active fire hotspots (MODIS Collection 6.1, VIIRS 375 m Collection 2)\n")
     buf.write(f"# {q.start} .. {q.end}; sensors={'+'.join(q.sensors)}; "
               f"quality screen={'vegetation fires, confidence >= nominal' if q.screened else 'none'}\n")
+    buf.write("# static_source: true where the detection sits on a site the unsupervised detector flagged as a\n"
+              "#   permanent non-fire heat source (chimney, gas flare, steel mill). Nothing is dropped; judge it yourself.\n"
+              if STATIC is not None else
+              "# static_source: always false - the static-source detector has not been run in this deployment.\n")
     df.to_csv(buf, index=False)
     buf.seek(0)
     return StreamingResponse(iter([buf.getvalue()]), media_type="text/csv", headers={

@@ -27,6 +27,7 @@ import pandas as pd
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.isotonic import IsotonicRegression
 
+from . import gpu
 from .config import GRID_DEG, PROCESSED, STAGED
 
 warnings.filterwarnings("ignore")
@@ -41,21 +42,64 @@ FEATURES = {
 }
 N_FOLDS = 5
 
+# small search grid for the GBM's main regularization knobs; kept short because every
+# candidate costs one extra fit per feature set during tuning (see tune_params below).
+PARAM_GRID = [
+    dict(learning_rate=0.05, max_leaf_nodes=31, min_samples_leaf=50, l2_regularization=0.5),
+    dict(learning_rate=0.1, max_leaf_nodes=63, min_samples_leaf=100, l2_regularization=1.0),
+    dict(learning_rate=0.1, max_leaf_nodes=63, min_samples_leaf=50, l2_regularization=2.0),
+    dict(learning_rate=0.15, max_leaf_nodes=127, min_samples_leaf=150, l2_regularization=2.0),
+]
+
+NOISE_RNG = np.random.default_rng(1)
+
+
+def _count_noise(y: np.ndarray) -> np.ndarray:
+    """Perturb training counts with Poisson sampling noise.
+
+    Satellite hotspot counts are themselves noisy draws (detection, cloud cover,
+    overpass timing), so a model fit to the *exact* historical count is fit to noise
+    it can't reproduce out of sample. Resampling y ~ Poisson(y) during training only
+    (never for evaluation) keeps the model from chasing that noise.
+    """
+    return NOISE_RNG.poisson(np.maximum(y, 0)).astype(float)
+
 
 class Link:
     """Gradient-boosted trees on log1p(count), then isotonic recalibration back to counts
     (a log-target model alone under-predicts big fire months; isotonic removes that bias)."""
 
-    def fit(self, X, y, w):
-        self.gbm = HistGradientBoostingRegressor(
+    def __init__(self, **gbm_params):
+        self.gbm_params = dict(
             max_iter=150, learning_rate=0.1, max_leaf_nodes=63, min_samples_leaf=100,
-            l2_regularization=1.0, random_state=0)
-        self.gbm.fit(X, np.log1p(y), sample_weight=w)
-        self.iso = IsotonicRegression(y_min=0, out_of_bounds="clip").fit(self.gbm.predict(X), y, sample_weight=w)
+            l2_regularization=1.0, random_state=0) | gbm_params
+
+    def fit(self, X, y, w, noise: bool = True):
+        y_train = _count_noise(y) if noise else y
+        self.gbm = HistGradientBoostingRegressor(**self.gbm_params)
+        self.gbm.fit(X, np.log1p(y_train), sample_weight=w)
+        self.iso = IsotonicRegression(y_min=0, out_of_bounds="clip").fit(self.gbm.predict(X), y_train, sample_weight=w)
         return self
 
     def predict(self, X):
         return self.iso.predict(self.gbm.predict(X))
+
+
+def tune_params(df: pd.DataFrame, feats: list[str], y: np.ndarray, w: np.ndarray,
+                 pool: np.ndarray, years: np.ndarray) -> dict:
+    """Pick the best PARAM_GRID entry on a single held-out year (cheap stand-in for
+    full CV, used only for model selection; the real 5-fold CV below still scores
+    whatever config wins here)."""
+    holdout = years[-1]
+    te = pool & (df.year == holdout).values
+    tr = pool & ~te
+    best, best_wape = PARAM_GRID[0], np.inf
+    for params in PARAM_GRID:
+        pred = Link(**params).fit(df.loc[tr, feats], y[tr], w[tr], noise=False).predict(df.loc[te, feats])
+        wape = float(100 * np.abs(pred - y[te]).sum() / max(y[te].sum(), 1e-9))
+        if wape < best_wape:
+            best, best_wape = params, wape
+    return best
 
 
 def _score(df: pd.DataFrame, keys: list[str], cols: dict[str, str]) -> dict:
@@ -72,6 +116,9 @@ def _score(df: pd.DataFrame, keys: list[str], cols: dict[str, str]) -> dict:
 
 
 def main() -> None:
+    # Says which hardware this is on. HistGradientBoosting is CPU-only in scikit-learn - there
+    # is no CUDA path to switch on - so this reports rather than chooses.
+    gpu.require("harmonization links (scikit-learn HistGradientBoosting: CPU only)")
     t0 = time.time()
     df = duckdb.sql(f"SELECT * FROM '{PROCESSED / 'cell_month.parquet'}'").df()
     hs = STAGED / "hotspots.parquet"
@@ -100,15 +147,18 @@ def main() -> None:
 
     years = np.sort(df.year[ov].unique())
     folds = [years[i::N_FOLDS] for i in range(N_FOLDS)]
+    best_params = {}
     for name, feats in FEATURES.items():
+        params = tune_params(df, feats, y, w, pool, years)
+        best_params[name] = params
         oof = np.full(len(df), np.nan)
         for held in folds:
             te = ov & df.year.isin(held).values
             tr = pool & ~te
-            oof[te] = Link().fit(df.loc[tr, feats], y[tr], w[tr]).predict(df.loc[te, feats])
+            oof[te] = Link(**params).fit(df.loc[tr, feats], y[tr], w[tr]).predict(df.loc[te, feats])
         df[f"oof_{name}"] = oof
-        df[f"pred_{name}"] = Link().fit(df.loc[pool, feats], y[pool], w[pool]).predict(df[feats])
-        print(f"{name}: CV + final fit done ({time.time() - t0:.0f}s)", flush=True)
+        df[f"pred_{name}"] = Link(**params).fit(df.loc[pool, feats], y[pool], w[pool]).predict(df[feats])
+        print(f"{name}: tuned {params}, CV + final fit done ({time.time() - t0:.0f}s)", flush=True)
 
     # NOAA-20 -> S-NPP: same instrument design, ~50 min apart; a scalar is enough
     n20 = (month >= "2018-05-01").values & ov
@@ -145,6 +195,8 @@ def main() -> None:
         "overlap": [OVERLAP_START, str(month[ov].max().date())],
         "cv": f"{N_FOLDS}-fold, blocked by calendar year",
         "features": FEATURES,
+        "hyperparams": best_params,
+        "training_noise": "Poisson(y) resampling of training targets only, to avoid fitting exact sensor noise",
         "train_rows": int(pool.sum()),
         "provisional": {
             "nrt_from": nrt_from,
