@@ -21,6 +21,17 @@ for cmd in uv npm; do
   command -v "$cmd" >/dev/null || { echo "Hata: '$cmd' bulunamadı." >&2; exit 1; }
 done
 
+# Erken uyarı modelinin XGBoost üyesi macOS'ta OpenMP ister; yoksa model yüklenmez ve
+# /forecast 503 döner. Varsa sessiz geç, yoksa kurmayı dene ya da nasıl kurulacağını söyle.
+if [[ "$(uname)" == "Darwin" && ! -e /opt/homebrew/opt/libomp/lib/libomp.dylib && ! -e /usr/local/opt/libomp/lib/libomp.dylib ]]; then
+  if command -v brew >/dev/null; then
+    echo "==> libomp (OpenMP) eksik; brew ile kuruluyor (XGBoost için gerekli)"
+    brew install libomp || echo "Uyarı: libomp kurulamadı; erken uyarı sekmesi kapalı kalabilir." >&2
+  else
+    echo "Uyarı: libomp eksik ve brew yok. Erken uyarı modeli için: brew install libomp" >&2
+  fi
+fi
+
 port_busy() { lsof -iTCP:"$1" -sTCP:LISTEN >/dev/null 2>&1; }
 for p in "$API_PORT" "$WEB_PORT"; do
   if port_busy "$p"; then

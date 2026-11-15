@@ -8,6 +8,7 @@ import functools
 import io
 import json
 import math
+import warnings
 from typing import Any
 
 import duckdb
@@ -64,7 +65,11 @@ def _load_forecast():
         print(f"warning: early-warning model was trained with scikit-learn {built_with}, "
               f"this environment has {sklearn.__version__}. Retrain if loading fails.")
     try:
-        bundle = joblib.load(bundle_path)
+        with warnings.catch_warnings():
+            # the XGBoost member was trained on CUDA; on a CPU-only box it announces the
+            # GPU->CPU switch on unpickle. That is expected, not a problem.
+            warnings.filterwarnings("ignore", message=r".*(grow_gpu_hist|Device is changed)")
+            bundle = joblib.load(bundle_path)
     except Exception as e:  # noqa: BLE001 - a bad pickle must not take the whole API down
         print(f"warning: could not load the early-warning model ({e}); /forecast disabled.")
         return None
