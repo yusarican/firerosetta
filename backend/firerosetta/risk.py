@@ -1,4 +1,4 @@
-"""Screening priorities from observed fire activity; not an ignition forecast or FWI.
+"""Screening priorities from observed fire activity; not an ignition forecast.
 
 Use one recent sensor (NOAA-20) to avoid adding overlapping satellite counts.
 Seasonal context uses complete S-NPP years, including zero-activity years.
