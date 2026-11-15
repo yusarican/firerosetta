@@ -201,7 +201,11 @@ genişlik projeksiyon nedeniyle küçük farklar gösterebilir. Nötr çizgili k
 risksiz oldukları anlamına gelmez.
 
 Son 30 günlük NOAA-20 verileri MAP_KEY ile NASA'dan kontrol edilir ve 5 dakika önbelleğe alınır;
-yakınlaştırmak yeniden veri indirmez. Son 7 günde tespit olan kareler yüksek önceliklidir.
+yakınlaştırmak yeniden veri indirmez. Son 7 günde en az 3 tespit ya da en az 2 ayrı günde tespit
+olan kareler yüksek önceliklidir; tek bir tespit çoğu zaman kısa süreli yakma ya da yanlış alarm
+olduğundan yalnızca artmış öncelik üretir. Canlı veri ülkenin sınır kutusuyla istenir, ardından
+ülke sınırına göre kırpılır (Natural Earth 1:50m, yaklaşık 5 km tolerans): sınır dışında ne geçmiş
+ne de sabit kaynak taraması olduğundan oradaki tespitler sayılmaz.
 Seçilen alanın tüm ölçekleri arka planda önceden yüklenir ve haritada hazır kaynaklar olarak tutulur.
 Kaydırma ve yakınlaştırma yeni API isteği başlatmaz; ekran dışındaki seçili alan da bellekte kalır.
 Mevsimsel bağlam, 2013–2025 S-NPP kayıtlarının içinde bulunulan aya ait tam yıl ortalamalarıdır

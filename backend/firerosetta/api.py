@@ -22,8 +22,8 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from starlette.middleware.gzip import GZipMiddleware
 
-from .config import COUNTRIES, GRID_DEG, MANIFEST, MODELS, PROCESSED, STAGED
-from .risk import GRID_LEVELS_KM, RiskMonitor, StaticSites, count_visible_grid, site_codes
+from .config import BORDERS, COUNTRIES, GRID_DEG, MANIFEST, MODELS, PROCESSED, STAGED
+from .risk import GRID_LEVELS_KM, RiskMonitor, StaticSites, count_visible_grid, load_borders, site_codes
 
 app = FastAPI(title="FireRosetta - harmonized MODIS/VIIRS burning calendar")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
@@ -83,7 +83,7 @@ FIRST, LAST = con.execute("SELECT min(month), max(month) FROM h").fetchone()
 TRAIN_LAST = METRICS["overlap"][1]
 NRT_FROM = METRICS.get("provisional", {}).get("nrt_from", {})
 DATA_THROUGH = METRICS.get("provisional", {}).get("data_through", "9999-12-31")
-RISK_MONITOR = RiskMonitor(con, DATA_THROUGH)
+RISK_MONITOR = RiskMonitor(con, DATA_THROUGH, borders=load_borders(BORDERS))
 
 MAX_POINTS = 25_000
 HOTSPOT_COLS = ("lat AS latitude, lon AS longitude, acq_date, acq_time, sensor, platform, daynight, "

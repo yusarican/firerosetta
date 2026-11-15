@@ -7,8 +7,9 @@ import httpx
 from shapely.geometry import shape, mapping
 import shapely
 
-from firerosetta.risk import (MetricGrid, Observation, RiskMonitor, Snapshot, StaticSites, count_visible_grid, load_live,
-                              metric_grid, prioritize, site_codes, summarize)
+from firerosetta.config import BORDERS
+from firerosetta.risk import (MetricGrid, Observation, RiskMonitor, Snapshot, StaticSites, count_visible_grid, load_borders,
+                              load_live, metric_grid, prioritize, site_codes, summarize)
 
 
 TODAY = dt.date(2026, 11, 14)
@@ -51,7 +52,46 @@ class RiskTests(unittest.TestCase):
         self.insert(date="2026-11-15")
         report = RiskMonitor(self.con, "2026-11-14", loader=lambda *_: None).get("Turkey", TODAY)
         self.assertEqual(report["summary"]["recent_7d"], 1)
-        self.assertEqual(report["summary"]["high"], 1)
+        self.assertEqual(report["summary"]["high"], 0)
+        self.assertEqual(report["cells"][0]["level"], "elevated")
+
+    def test_high_needs_several_detections_or_a_second_day(self):
+        def level(*records):
+            monitor = RiskMonitor(self.con, "2026-11-14", loader=lambda *_: Snapshot(list(records), TODAY))
+            return monitor.get("Turkey", TODAY)["cells"][0]["level"]
+        at = lambda days_ago, time: Observation(28.05, 38.05, TODAY - dt.timedelta(days=days_ago), time)
+        self.assertEqual(level(at(0, "1200")), "elevated")
+        self.assertEqual(level(at(0, "1200"), at(0, "1201")), "elevated")
+        self.assertEqual(level(at(0, "1200"), at(0, "1201"), at(0, "1202")), "high")
+        self.assertEqual(level(at(0, "1200"), at(3, "1200")), "high")
+        # outside the 7-day window a second day does not count
+        self.assertEqual(level(at(0, "1200"), at(9, "1200")), "elevated")
+
+    def test_detections_outside_the_country_border_are_dropped(self):
+        borders = load_borders(BORDERS)
+        # all inside Turkey's bounding box; only the first is inside Turkey
+        records = [Observation(28.05, 38.05, TODAY, "1200"),   # Aydin
+                   Observation(43.79, 35.97, TODAY, "1200"),   # Iraq
+                   Observation(42.14, 36.92, TODAY, "1200")]   # Syria
+        clipped = RiskMonitor(self.con, "2026-11-14", loader=lambda *_: Snapshot(records, TODAY),
+                              borders=borders).get("Turkey", TODAY)
+        self.assertTrue(clipped["border_clipped"])
+        self.assertEqual(clipped["summary"]["recent_7d"], 1)
+        unclipped = RiskMonitor(self.con, "2026-11-14", loader=lambda *_: Snapshot(records, TODAY)).get("Turkey", TODAY)
+        self.assertFalse(unclipped["border_clipped"])
+        self.assertEqual(unclipped["summary"]["recent_7d"], 3)
+
+    def test_border_clip_applies_to_local_fallback_and_drawn_areas(self):
+        borders = load_borders(BORDERS)
+        self.con.execute("INSERT INTO hs VALUES ('Turkey','NOAA20',0,'n',43.79,35.97,DATE '2026-11-13','1234',true)")
+        local = RiskMonitor(self.con, "2026-11-14", loader=lambda *_: None, borders=borders).get("Turkey", TODAY)
+        self.assertEqual(local["source"], "local")
+        self.assertEqual(local["summary"]["recent_7d"], 0)
+        polygon = {"type": "Polygon", "coordinates": [[[43.5,35.9],[44,35.9],[44,37.6],[43.5,37.6],[43.5,35.9]]]}
+        records = [Observation(43.79, 35.97, TODAY, "1200"), Observation(43.75, 37.5, TODAY, "1200")]  # Iraq, Hakkari
+        area = RiskMonitor(self.con, "2026-11-14", area_loader=lambda *_: Snapshot(records, TODAY),
+                           borders=borders).get_area(polygon, TODAY)
+        self.assertEqual(area["summary"]["recent_7d"], 1)
 
     def test_stale_data_does_not_raise_current_alerts(self):
         self.insert()
@@ -72,7 +112,7 @@ class RiskTests(unittest.TestCase):
         records = [Observation(28.0501, 38.0501, TODAY, "1234"), Observation(29.05, 38.05, TODAY, "1234")]
         report = RiskMonitor(self.con, "2026-11-14", loader=lambda *_: Snapshot(records, TODAY)).get("Turkey", TODAY)
         self.assertEqual(report["summary"]["recent_7d"], 1)
-        self.assertEqual(report["summary"]["high"], 1)
+        self.assertEqual(report["summary"]["high"], 0)
 
     def test_detector_flagged_sites_raise_no_alert_and_are_counted(self):
         # the flagged site is the 0.02 deg cell holding 28.05, 38.05; 29.05 is an ordinary fire
@@ -161,13 +201,15 @@ class RiskTests(unittest.TestCase):
     def test_refinement_uses_point_coordinates_and_reuses_live_snapshot(self):
         parent, child = metric_grid("Turkey", 10), metric_grid("Turkey", 5)
         x, y = parent.key(28.05, 38.05)
-        points = [parent.inverse.transform(x * 10000 + offset, y * 10000 + 1000) for offset in (1000, 9000)]
+        points = [parent.inverse.transform(x * 10000 + offset, y * 10000 + 1000) for offset in (1000, 2000, 3000, 9000)]
         loader = Mock(return_value=Snapshot([Observation(lon, lat, TODAY, '1200') for lon, lat in points], TODAY))
         monitor = RiskMonitor(self.con, "2026-11-14", loader=loader)
         coarse = monitor.get("Turkey", TODAY, grid_km=10)
         fine = monitor.get("Turkey", TODAY, grid_km=5)
         self.assertEqual(coarse["summary"]["high"], 1)
-        self.assertEqual(fine["summary"]["high"], 2)
+        # regrouped at their own coordinates: three pixels in one child, a lone one in the other
+        self.assertEqual(fine["summary"]["high"], 1)
+        self.assertEqual(fine["summary"]["elevated"], 1)
         self.assertEqual(fine["summary"]["recent_7d"], coarse["summary"]["recent_7d"])
         self.assertEqual(loader.call_count, 1)
 

@@ -9,6 +9,7 @@ import csv
 import datetime as dt
 import io
 import hashlib
+import json
 import math
 import threading
 import time
@@ -31,6 +32,26 @@ CACHE_SECONDS = 300
 MAX_DATA_AGE_DAYS = 1
 HISTORY_FIRST = 2013  # first complete S-NPP calendar year
 HISTORY_LAST = int(SNPP_END[:4]) - 1
+# One nominal-confidence pixel is usually a short burn or a false alarm. High needs either a
+# fire wide enough to light several 375 m pixels or one that came back on another day.
+HIGH_MIN_DETECTIONS = 3
+HIGH_MIN_DAYS = 2
+# The live feed is requested by bounding box, which reaches into neighbouring countries
+# where there is neither history nor a static-source screen. The 1:50m outline is
+# generalised, so allow about 5 km: that keeps over 99.7% of every country's archived
+# detections, which FIRMS clipped with its own finer border.
+BORDER_TOLERANCE_DEG = 0.05
+
+
+def load_borders(path):
+    """Country name -> outline widened by the tolerance, or {} when the file is absent."""
+    if not path.exists():
+        return {}
+    borders = {feature["properties"]["country"]: shape(feature["geometry"]).buffer(BORDER_TOLERANCE_DEG)
+               for feature in json.loads(path.read_text())["features"]}
+    for outline in borders.values():
+        shapely.prepare(outline)
+    return borders
 
 
 class MetricGrid:
@@ -258,7 +279,8 @@ def prioritize(history, recent, *, fresh, grid, bounds):
         if mean <= 0 and n30 == 0:
             continue
         seasonal = mean >= threshold and active_years >= 3
-        level = "high" if fresh and n7 else "elevated" if seasonal or (fresh and n30) else "watch"
+        active = n7 >= HIGH_MIN_DETECTIONS or len(evidence.get("days", ())) >= HIGH_MIN_DAYS
+        level = "high" if fresh and active else "elevated" if seasonal or (fresh and n30) else "watch"
         geometry, bbox, lon, lat = grid.shape(x, y)
         if bbox[2] <= bounds[0] or bbox[0] >= bounds[2] or bbox[3] <= bounds[1] or bbox[1] >= bounds[3]:
             continue
@@ -279,7 +301,7 @@ def prioritize(history, recent, *, fresh, grid, bounds):
 
 class RiskMonitor:
     def __init__(self, connection, data_through: str, loader=load_live, area_loader=load_live_bounds,
-                 static_sites: StaticSites | None = None):
+                 static_sites: StaticSites | None = None, borders=None):
         self.connection = connection
         self.data_through = dt.date.fromisoformat(data_through)
         self.loader = loader
@@ -290,6 +312,20 @@ class RiskMonitor:
         self.lock = threading.Lock()
         self.static_mask = None
         self.static_sites = static_sites
+        self.borders = borders or {}
+
+    def _clipped(self, countries):
+        return all(name in self.borders for name in countries)
+
+    def _inside_borders(self, observations, countries):
+        """Keep detections inside the outline of any covered country."""
+        if not observations or not self._clipped(countries):
+            return observations
+        lon, lat = [r.lon for r in observations], [r.lat for r in observations]
+        keep = np.zeros(len(observations), dtype=bool)
+        for name in countries:
+            keep |= shapely.intersects_xy(self.borders[name], lon, lat)
+        return [r for r, inside in zip(observations, keep) if inside]
 
     def _screen(self, observations, live, today):
         """Drop detections sitting on a flagged industrial heat source; report how many."""
@@ -383,6 +419,7 @@ class RiskMonitor:
         if observations:
             inside = shapely.intersects_xy(region, [r.lon for r in observations], [r.lat for r in observations])
             observations = [r for r, keep in zip(observations, inside) if keep]
+        observations = self._inside_borders(observations, countries)
         observations, static_filtered = self._screen(observations, source == "live", today)
         recent = summarize(observations, today, grid, self._mask(cursor) if source == "live" else frozenset())
         age = max(0, (today - through).days)
@@ -416,6 +453,8 @@ class RiskMonitor:
             "season_month": today.month, "seasonal_threshold": threshold,
             "recent_sensor": "NOAA-20 VIIRS", "refresh_seconds": CACHE_SECONDS,
             "static_screen": self.static_sites is not None, "static_filtered": static_filtered,
+            "border_clipped": self._clipped(countries),
+            "high_min_detections": HIGH_MIN_DETECTIONS, "high_min_days": HIGH_MIN_DAYS,
             "summary": report_summary(cells), "cells": cells,
         }
 
@@ -502,7 +541,8 @@ class RiskMonitor:
             self.snapshots = {k: v for k, v in self.snapshots.items() if k[1] == today}
             self.snapshots[source_key] = (time.monotonic(), snapshot, live_error)
         if snapshot is not None:
-            observations, static_filtered = self._screen(snapshot.observations, True, today)
+            observations = self._inside_borders(snapshot.observations, [country])
+            observations, static_filtered = self._screen(observations, True, today)
             recent = summarize(observations, today, grid, self._mask(cursor))
             through, source = snapshot.through, "live"
         else:
@@ -512,7 +552,9 @@ class RiskMonitor:
                 WHERE country = ? AND platform = 'NOAA20' AND type = 0 AND conf IN ('n', 'h')
                   AND acq_date BETWEEN ? AND ?
             """, [country, first, today]).fetchall()
-            observations, static_filtered = self._screen([Observation(*r) for r in local], False, today)
+            # Recent local rows were fetched by bounding box too.
+            observations = self._inside_borders([Observation(*r) for r in local], [country])
+            observations, static_filtered = self._screen(observations, False, today)
             recent = summarize(observations, today, grid)
             through, source = min(today, self.data_through), "local"
         age = max(0, (today - through).days)
@@ -529,6 +571,8 @@ class RiskMonitor:
             "history_years": years, "season_month": today.month, "seasonal_threshold": threshold,
             "recent_sensor": "NOAA-20 VIIRS", "refresh_seconds": CACHE_SECONDS,
             "static_screen": self.static_sites is not None, "static_filtered": static_filtered,
+            "border_clipped": self._clipped([country]),
+            "high_min_detections": HIGH_MIN_DETECTIONS, "high_min_days": HIGH_MIN_DAYS,
             "summary": report_summary(cells),
             "cells": cells,
         }

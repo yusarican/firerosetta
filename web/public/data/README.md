@@ -2,7 +2,10 @@
 
 `country-boundaries.geojson` contains Argentina, Greece, Italy, Portugal, Spain
 and Türkiye from Natural Earth's 1:50m Admin 0 Countries dataset. These polygons
-are for the visual country highlight; they do not change the fire-data queries.
+draw the visual country highlight. The backend also reads this file to drop recent
+Early Warning detections that fall outside the selected country (the live feed is
+requested by bounding box), with about 5 km of tolerance for the simplified outline.
+Small islands missing at this scale are therefore not covered by the Observed layer.
 
 - Source: https://www.naturalearthdata.com/downloads/50m-cultural-vectors/50m-admin-0-countries-2/
 - Download: https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_50m_admin_0_countries.geojson

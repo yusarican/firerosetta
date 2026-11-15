@@ -2,7 +2,7 @@ import type { ExpressionSpecification } from "maplibre-gl";
 
 // Fixed thresholds keep the same detection count the same shade in every area.
 export const HIGH_PRIORITY_SHADES = [
-  { min: 1, label: "1–4", color: "#e56d5b" },
+  { min: 1, label: "2–4", color: "#e56d5b" }, // High starts at two detections (on separate days)
   { min: 5, label: "5–14", color: "#ca3f34" },
   { min: 15, label: "15–39", color: "#9f2229" },
   { min: 40, label: "40+", color: "#681224" },

@@ -214,6 +214,9 @@ export type RiskReport = {
   refresh_seconds: number;
   static_screen?: boolean; // the static-source detector's flagged sites were available
   static_filtered?: number; // 30-day detections dropped because they sit on such a site
+  border_clipped?: boolean; // recent detections outside the country outline were dropped
+  high_min_detections?: number; // High needs this many detections in 7 days...
+  high_min_days?: number; // ...or detections on this many separate days
   summary: Record<RiskLevel, number> & { recent_7d: number; total_cells: number };
   cells: RiskCell[];
 };
